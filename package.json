@@ -1,5 +1,6 @@
 {
   "scripts": {
-    "start": "cd example && node ../lib/server"
+    "start": "cd example && node ../lib/server",
+    "build": "cd example && NODE_ENV=production webpack -p --config ../lib/webpack.config.js"
   }
 }
