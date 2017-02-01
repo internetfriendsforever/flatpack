@@ -4,7 +4,7 @@ import Books from './Books'
 import Book from './Book'
 
 export default {
-  // template: (html, content) => ``,
+  // template: (partial, content) => `<html>${partial}</html>`,
   // webpack: config => merge(config, {}),
 
   routes: content => [
@@ -25,48 +25,32 @@ export default {
   ]
 }
 
-// window.addEventListener('load', () => {
-//   ReactDOM.render(<Frontpage />, document.getElementById('root'))
-// })
+// also supports:
+// export default <Frontpage />
 
-// export default {
-//   '/': <Frontpage />,
-//   '/collections/:collection.id/books/:books.id': (collectionId, bookId) => (
-//     <Collection id={collectionId}>
-//       <Book id={bookId} />
-//     </Collection>
-//   ),
-//   '/books': <Books />,
-//   '/books/:books.id/': id => <Book id={id} />
-// }
+// and:
+// export default [{
+//   path: '/',
+//   component: <Frontpage />
+// }, {
+//   path: '/books',
+//   component: <Books books={[]} />
+// }]
 
-// export default {
-//   '/': <Frontpage />,
-//   '/books': <Books />,
-//   '/books/:books.id': id => <Book id={id} />,
-//   '/libraries/:libraries.id/books/:books.id/': (libraryId, bookId) => (
-//     <Library id={libraryId}>
-//       <Book id={bookId} />
-//     </Library>
-//   )
-// }
+// and:
+// export default content => [
+//   {
+//     path: '/',
+//     component: <Frontpage />
+//   },
 //
-// export default {
-//   '/': <Frontpage />,
-//   '/books': <Books />,
-//   '/books/:id': id => <Book />
-// }
-
-// <List path='books'>
-//   {id => (
-//     <Link href={`/books/${id}`}>
-//       <Text path={`book/${id}/title`} placeholder='Book title' />
-//     </Link>
-//   )}
-// </List>
-
-/*
-  /books/123456789
-  /books/876543221
-  /books/457876545
-*/
+//   {
+//     path: '/books',
+//     component: <Books books={content.books} />
+//   },
+//
+//   ...content.books.map(book => ({
+//     path: `/books/${book.id}`,
+//     component: <Book id={book.id} />
+//   }))
+// ]
