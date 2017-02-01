@@ -1,4 +1,6 @@
-# **flatpack js** is a static website editor that runs in the browser.
+# flatpack
+
+a static website editor that runs in the browser
 
 ## Prerequisites
 Flatpack requires <a href="https://nodejs.org/">node.js</a> and some familiarity
@@ -6,9 +8,9 @@ with JavaScript&nbsp;(<a href="https://www.ecma-international.org/ecma-262/6.0/"
 <a href="https://yarnpkg.com/">yarn</a>/npm,
 <a href="https://facebook.github.io/react/">React</a> and HTML.
 
-Flatpack should be installed globally, so you can use it from any project: `yarn global add flatpack-js`
-
 ## Getting started
+
+Flatpack should be installed globally, so you can use it from any project: `yarn global add flatpack-js`
 
 1. `cd /project-folder`
 2. `yarn add react`
@@ -16,7 +18,7 @@ Flatpack should be installed globally, so you can use it from any project: `yarn
 
 Open `index.js` in your favourite text editor
 
-```
+```javascript
 import React from 'react'
 import { Text } from 'flatpack-js'
 
