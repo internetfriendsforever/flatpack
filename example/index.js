@@ -6,6 +6,7 @@ import Book from './Book'
 export default {
   // template: (partial, content) => `<html>${partial}</html>`,
   // webpack: config => merge(config, {}),
+  // notFoundRoute: <NotFound />,
 
   routes: content => [
     {
