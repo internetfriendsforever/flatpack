@@ -1,6 +1,6 @@
 import React from 'react'
 import Menu from './Menu'
-import Link from '../lib/components/Link'
+import Link from '../dist/components/Link'
 
 export default class Books extends React.Component {
   componentDidMount () {
