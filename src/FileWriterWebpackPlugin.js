@@ -7,20 +7,20 @@ new FileWriterWebpackPlugin(() => ({
 
 const RawSource = require('webpack-sources/lib/RawSource')
 
-const FileWriterWebpackPlugin = function (getFiles) {
+const FileWriterWebpackPlugin = function (getFiles, callback) {
   this.getFiles = getFiles
 }
 
 FileWriterWebpackPlugin.prototype.apply = function (compiler) {
   compiler.plugin('this-compilation', compilation => {
     compilation.plugin('optimize-assets', (_, done) => {
-      const files = this.getFiles()
+      this.getFiles(files => {
+        Object.keys(files).forEach(filename => {
+          compilation.assets[filename] = new RawSource(files[filename])
+        })
 
-      Object.keys(files).forEach(filename => {
-        compilation.assets[filename] = new RawSource(files[filename])
+        done()
       })
-
-      done()
     })
   })
 }

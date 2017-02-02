@@ -1,6 +1,39 @@
 {
   "scripts": {
-    "start": "cd example && node ../lib/server",
-    "build": "cd example && NODE_ENV=production webpack -p --config ../lib/webpack.config.js"
+    "start": "cd example && node ../dist/server",
+    "build": "rm -rf dist && ./node_modules/.bin/babel src --out-dir dist",
+    "build-watch": "rm -rf dist && ./node_modules/.bin/babel src --out-dir dist -w",
+    "build-example": "yarn run build && cd example && NODE_ENV=production webpack -p --config ../dist/webpack.config.js"
+  },
+  "standard": {
+    "parser": "babel-eslint"
+  },
+  "dependencies": {
+    "amazon-cognito-identity-js": "^1.12.0",
+    "aws-sdk": "^2.9.0",
+    "babel-core": "^6.22.1",
+    "babel-loader": "^6.2.10",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-react": "^6.22.0",
+    "babel-register": "^6.22.0",
+    "color-js": "^1.0.4",
+    "express": "^4.14.1",
+    "history": "^4.5.1",
+    "immutable": "^3.8.1",
+    "react": "^15.4.2",
+    "react-contenteditable": "^2.0.2",
+    "react-dom": "^15.4.2",
+    "redux": "^3.6.0",
+    "redux-logger": "^2.8.0",
+    "redux-thunk": "^2.2.0",
+    "transform-loader": "^0.2.3",
+    "webpack": "^2.2.1",
+    "webpack-dev-middleware": "^1.10.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.22.2",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-react": "^6.22.0",
+    "babel-preset-stage-0": "^6.22.0"
   }
 }
