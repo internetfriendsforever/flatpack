@@ -5,6 +5,7 @@ import createStore from '../createStore'
 
 export default class Provider extends React.Component {
   static propTypes = {
+    config: React.PropTypes.object.isRequired,
     content: React.PropTypes.object.isRequired,
     assets: React.PropTypes.object.isRequired,
     children: React.PropTypes.element.isRequired,
@@ -19,6 +20,7 @@ export default class Provider extends React.Component {
     return {
       flatpack: {
         store: this.store,
+        config: this.props.config,
         content: this.props.content,
         assets: this.props.assets,
         render: this.props.render
@@ -30,10 +32,6 @@ export default class Provider extends React.Component {
     super(props)
 
     this.store = createStore({
-      app: {
-        assets: this.props.assets
-      },
-
       content: {
         session: fromJS(props.content),
         published: fromJS(props.content)

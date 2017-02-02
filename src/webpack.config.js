@@ -17,20 +17,25 @@ import configDefaults from'./config/defaults'
 //   ]
 // }
 
-function renderStatic (component, content) {
+process.env.AWS_SERVICES = 's3,cognitoidentity,cognitoidentityserviceprovider,cloudfront'
+
+function renderWithProvider (component, config, content) {
   return renderToStaticMarkup(
-    <Provider content={content} assets={{}}>
+    <Provider content={content} config={config} assets={{}}>
       {component}
     </Provider>
   )
 }
 
 module.exports = {
-  entry: path.resolve(__dirname, 'client.js'),
+  entry: {
+    client: path.resolve(__dirname, 'client.js')
+  },
 
   output: {
     path: path.resolve(process.cwd(), 'build'),
-    filename: 'client.js'
+    filename: '[name].js',
+    chunkFilename: '[name].js'
   },
 
   module: {
@@ -40,6 +45,23 @@ module.exports = {
         loader: require.resolve('babel-loader'),
         exclude: /node_modules/,
         query: require('./defaultBabelConfig')
+      },
+
+      {
+        test: /aws-sdk/,
+        loader: require.resolve('transform-loader'),
+        query: 'aws-sdk/dist-tools/transform'
+      },
+
+      {
+        test: /\.jsx?$/,
+        include: /amazon-cognito-identity-js/,
+        loader: require.resolve('babel-loader')
+      },
+
+      {
+        test: /\.json$/,
+        loader: 'json-loader'
       }
     ]
   },
@@ -62,14 +84,16 @@ module.exports = {
 
         const files = {}
 
+        // Route files
         routes.forEach(route => {
           const filepath = path.join(route.path, '/index.html').replace(/^\//, '')
-          const html = renderStatic(route.component, content)
+          const html = renderWithProvider(route.component, config, content)
           files[filepath] = template(html, content)
         })
 
+        // 404 file
         if (config.notFoundRoute) {
-          const html = renderStatic(config.notFoundRoute, content)
+          const html = renderWithProvider(config.notFoundRoute, config, content)
           files['404.html'] = template(html, content)
         }
 

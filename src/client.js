@@ -10,29 +10,34 @@ const config = configDefaults(require('config'))
 const content = JSON.parse(window.content || '{}')
 const routes = config.routes(content)
 
-function render (component) {
-  const root = document.getElementById('root')
-
-  ReactDOM.render((
-    <Provider content={content} assets={{}}>
+function withProvider (component, content, callback) {
+  callback(
+    <Provider content={content} config={config} assets={{}}>
       {component}
     </Provider>
-  ), root)
+  )
 }
+
+// function withEditor (component, content, callback) {
+//   require.ensure(['./components/Editor'], () => {
+//     const Editor = require('./components/Editor').default
+//
+//     withProvider((
+//       <Editor>
+//         {component}
+//       </Editor>
+//     ), content, callback)
+//   }, 'editor')
+// }
 
 function route () {
   const pathname = history.location.pathname
   const route = routes.find(route => route.path === pathname)
+  const component = route && route.component || config.notFoundRoute
 
-  if (route) {
-    render(route.component)
-  } else {
-    if (config.notFoundRoute) {
-      render(config.notFoundRoute)
-    } else {
-      console.error(pathname, 'not found, and not notFoundRoute configured')
-    }
-  }
+  withProvider(component, content, result => (
+    ReactDOM.render(result, root)
+  ))
 }
 
 history.listen(route)

@@ -1,7 +1,7 @@
 import { map, filter, mapValues, pick } from 'lodash'
 import { S3 } from 'aws-sdk'
 
-import { isBrowser, environment, s3Bucket, s3Region } from '../constants'
+// import { isBrowser, environment, s3Bucket, s3Region } from '../constants'
 
 export const toggleEditing = () => ({
   type: 'TOGGLE_EDITING'

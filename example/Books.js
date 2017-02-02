@@ -1,6 +1,5 @@
 import React from 'react'
 import Menu from './Menu'
-import Link from '../dist/components/Link'
 
 export default class Books extends React.Component {
   componentDidMount () {
@@ -10,18 +9,8 @@ export default class Books extends React.Component {
   render () {
     return (
       <div>
+        <h1>Book store</h1>
         <Menu />
-        Books
-
-        <ul>
-          {this.props.books.map(book => (
-            <li key={book.id}>
-              <Link href={`books/${book.id}`}>
-                {book.title}
-              </Link>
-            </li>
-          ))}
-        </ul>
       </div>
     )
   }

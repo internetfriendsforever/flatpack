@@ -1,6 +1,6 @@
 import React from 'react'
-// import Frontpage from './Frontpage'
-// import Books from './Books'
+import Frontpage from './Frontpage'
+import Books from './Books'
 // import Book from './Book'
 
 export default {
@@ -14,12 +14,10 @@ export default {
 
   routes: content => [{
     path: '/',
-    component: (
-      <div>
-        <h1>Flatpack example</h1>
-        <p>{content.introductions}</p>
-      </div>
-    )
+    component: <Frontpage />
+  }, {
+    path: '/books',
+    component: <Books />
   }]
 }
 
