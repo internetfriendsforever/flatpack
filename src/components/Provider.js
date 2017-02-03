@@ -28,6 +28,10 @@ export default class Provider extends React.Component {
     }
   }
 
+  state = {
+    Editor: null
+  }
+
   constructor (props) {
     super(props)
 
@@ -41,7 +45,40 @@ export default class Provider extends React.Component {
     this.store.subscribe(::this.forceUpdate)
   }
 
-  render () {
+  componentWillMount () {
+    this.checkForEditor()
+  }
+
+  componentDidUpdate () {
+    this.checkForEditor()
+  }
+
+  checkForEditor () {
+    if (!this.state.Editor && this.store.getState().app.editor) {
+      require.ensure('./Editor', () => {
+        this.setState({
+          Editor: require('./Editor').default
+        })
+      })
+    }
+  }
+
+  renderChild () {
     return React.Children.only(this.props.children)
+  }
+
+  render () {
+    const { Editor } = this.state
+    const { editor } = this.store.getState().app
+
+    if (editor && Editor) {
+      return (
+        <Editor>
+          {this.renderChild()}
+        </Editor>
+      )
+    } else {
+      return this.renderChild()
+    }
   }
 }

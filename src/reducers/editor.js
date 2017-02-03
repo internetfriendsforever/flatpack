@@ -6,7 +6,7 @@ const initialState = {
   releasing: false
 }
 
-export default function app (state = initialState, action) {
+export default function editor (state = initialState, action) {
   switch (action.type) {
     case 'TOGGLE_EDITING':
       return {

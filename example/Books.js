@@ -1,5 +1,5 @@
 import React from 'react'
-import Menu from './Menu'
+import Layout from './Layout'
 
 export default class Books extends React.Component {
   componentDidMount () {
@@ -8,10 +8,9 @@ export default class Books extends React.Component {
 
   render () {
     return (
-      <div>
-        <h1>Book store</h1>
-        <Menu />
-      </div>
+      <Layout>
+        Books
+      </Layout>
     )
   }
 }

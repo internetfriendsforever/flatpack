@@ -20,8 +20,7 @@ const styles = {
     zIndex: 10,
     alignItems: 'stretch',
     justifyContent: 'flex-end',
-    borderBottom: '1px solid',
-    borderBottomColor: colors.darkSlate.setAlpha(0.5)
+    border: `1px solid ${colors.darkSlate.setAlpha(0.5)}`
   },
 
   toggle: {
