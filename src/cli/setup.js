@@ -364,7 +364,8 @@ function createCloudFrontDistribution () {
         reject(err)
       } else {
         console.log(colors.green('Successfully created CloudFront distribution with Id:'), data.Id)
-        console.log(`Deploying ${data.Location} - ready in approximately 15 minutes ☕️`)
+        env.CLOUDFRONT_DISTRIBUTION_ID = data.Id
+        console.log(`Deploying https://${data.DomainName} - ready in approximately 15 minutes ☕️`)
         resolve()
       }
     })
