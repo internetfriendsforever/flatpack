@@ -7,7 +7,7 @@ const getWebpackConfig = require('../getWebpackConfig')
 
 const fs = new MemoryFS()
 
-const config = getWebpackConfig('common')
+const config = Object.assign({}, getWebpackConfig('common'))
 
 config.output.libraryTarget = 'commonjs'
 
