@@ -7,9 +7,8 @@ export default class Provider extends React.Component {
   static propTypes = {
     config: React.PropTypes.object.isRequired,
     content: React.PropTypes.object.isRequired,
-    assets: React.PropTypes.object.isRequired,
-    children: React.PropTypes.element.isRequired,
-    render: React.PropTypes.func
+    scripts: React.PropTypes.array.isRequired,
+    children: React.PropTypes.element.isRequired
   }
 
   static childContextTypes = {
@@ -19,11 +18,10 @@ export default class Provider extends React.Component {
   getChildContext () {
     return {
       flatpack: {
-        store: this.store,
         config: this.props.config,
         content: this.props.content,
-        assets: this.props.assets,
-        render: this.props.render
+        scripts: this.props.scripts,
+        store: this.store
       }
     }
   }

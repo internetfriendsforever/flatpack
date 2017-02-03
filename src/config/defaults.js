@@ -20,15 +20,18 @@ const defaultConfig = {
   webpack: () => {},
   routes: () => [],
   notFoundRoute: <NotFound />,
-  template: (html, content) => {
+  template: (html, content = {}, scripts = []) => {
     return `
       <div id="root">
         ${html}
       </div>
       <script>
         window.content = '${JSON.stringify(content)}';
+        window.scripts = '${JSON.stringify(scripts)}';
       </script>
-      <script src="/client.js"></script>
+      ${scripts.map(script => `
+        <script src="/${script}"></script>
+      `)}
     `
   }
 }
