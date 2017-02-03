@@ -18,8 +18,13 @@ export default function renderRoutes (config, content, scripts, version) {
 
   // Route files
   routes.forEach(route => {
+    if (route.path.slice(-1) !== '/') {
+      throw new Error(`Route path '${route.path}' is missing trailing slash.`)
+    }
+
     const filepath = (`/${route.path}/${prefix}index.html`).split('/').filter(v => !!v).join('/')
     const html = renderWithProvider(route.component, config, content, scripts)
+
     files[filepath] = template(html, content, scripts)
   })
 

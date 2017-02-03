@@ -23,7 +23,6 @@ export default {
 
 // export default {
 //   // template: (partial, content) => `<html>${partial}</html>`,
-//   // webpack: config => merge(config, {}),
 //   // notFoundRoute: <NotFound />,
 //
 //   aws: {
