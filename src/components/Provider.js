@@ -59,7 +59,7 @@ export default class Provider extends React.Component {
         this.setState({
           Editor: require('./Editor').default
         })
-      })
+      }, 'editor')
     }
   }
 
