@@ -1,34 +1,20 @@
 const AWS = require('aws-sdk')
 const prompt = require('prompt')
 const colors = require('colors/safe')
+const getConfig = require('../config/get')
 
-// const configPath = require('../config/path')
-// const configDefaults = require('../config/defaults')
-//
-// const config = configDefaults(require(configPath))
-
-const config = { aws: {} }
-
+let aws = {}
 let credentials = {}
 
 const COGNITO_REGION = 'eu-west-1'
 
-const {
-  s3Bucket,
-  s3Region,
-  cognitoIdentityPoolId,
-  cognitoUserPoolId,
-  cognitoUserPoolClientId,
-  cloudFrontDistributionId
-} = config.aws
-
 module.exports = function destroy () {
   initialPrompt()
+    .then(getAwsConfig)
     .then(teardownCognito)
     .then(emptyBucket)
     .then(deleteBucket)
     .then(disableCloudFrontDistribution)
-    // .then(deleteCloudFrontDistribution)
     .then(finalMessage)
     .catch(err => {
       console.log(err)
@@ -64,6 +50,15 @@ function initialPrompt () {
   })
 }
 
+function getAwsConfig () {
+  return new Promise((resolve, reject) => {
+    getConfig(config => {
+      aws = config.aws
+      resolve()
+    })
+  })
+}
+
 function teardownCognito () {
   return deleteUserPoolClient()
     .then(deleteUserPool)
@@ -78,8 +73,8 @@ function deleteUserPoolClient () {
       region: COGNITO_REGION
     })
     cognitoServiceProvider.deleteUserPoolClient({
-      ClientId: cognitoUserPoolClientId,
-      UserPoolId: cognitoUserPoolId
+      ClientId: aws.cognitoUserPoolClientId,
+      UserPoolId: aws.cognitoUserPoolId
     }, (err, data) => {
       if (err) {
         if (err.code === 'ResourceNotFoundException') {
@@ -104,7 +99,7 @@ function deleteUserPool () {
       region: COGNITO_REGION
     })
     cognitoServiceProvider.deleteUserPool({
-      UserPoolId: cognitoUserPoolId
+      UserPoolId: aws.cognitoUserPoolId
     }, (err, data) => {
       if (err) {
         if (err.code === 'ResourceNotFoundException') {
@@ -129,7 +124,7 @@ function deleteRoles () {
       region: COGNITO_REGION
     })
     cognitoIdentity.getIdentityPoolRoles({
-      IdentityPoolId: cognitoIdentityPoolId
+      IdentityPoolId: aws.cognitoIdentityPoolId
     }, (err, data) => {
       if (err) {
         if (err.code === 'ResourceNotFoundException') {
@@ -241,18 +236,18 @@ function deleteIdentityPool () {
       region: COGNITO_REGION
     })
     cognitoIdentity.deleteIdentityPool({
-      IdentityPoolId: cognitoIdentityPoolId
+      IdentityPoolId: aws.cognitoIdentityPoolId
     }, (err, data) => {
       if (err) {
         if (err.code === 'ResourceNotFoundException') {
           console.log('Identity pool not found, ignoring…')
           resolve()
         } else {
-          console.log('Failed to delete identity pool:', cognitoIdentityPoolId)
+          console.log('Failed to delete identity pool:', aws.cognitoIdentityPoolId)
           reject(err)
         }
       } else {
-        console.log('Successfully deleted identity pool:', cognitoIdentityPoolId)
+        console.log('Successfully deleted identity pool:', aws.cognitoIdentityPoolId)
         resolve()
       }
     })
@@ -266,7 +261,7 @@ function disableCloudFrontDistribution () {
     })
 
     cloudFront.getDistributionConfig({
-      Id: cloudFrontDistributionId
+      Id: aws.cloudFrontDistributionId
     }, (err, data) => {
       const distributionETag = data.ETag
 
@@ -281,7 +276,7 @@ function disableCloudFrontDistribution () {
           distributionConfig.Enabled = false
 
           cloudFront.updateDistribution({
-            Id: cloudFrontDistributionId,
+            Id: aws.cloudFrontDistributionId,
             IfMatch: distributionETag,
             DistributionConfig: distributionConfig
           }, (err, data) => {
@@ -302,48 +297,14 @@ function disableCloudFrontDistribution () {
   })
 }
 
-// TODO: Wait for distribution to be disabled before trying to delete
-// function deleteCloudFrontDistribution () {
-//   return new Promise((resolve, reject) => {
-//     const cloudFront = new AWS.CloudFront({
-//       credentials
-//     })
-//
-//     cloudFront.getDistributionConfig({
-//       Id: cloudFrontDistributionId
-//     }, (err, data) => {
-//       const distributionETag = data.ETag
-//
-//       if (err) {
-//         console.log('Failed to delete CloudFront distribution')
-//         reject()
-//       } else {
-//         cloudFront.deleteDistribution({
-//           Id: cloudFrontDistributionId,
-//           IfMatch: distributionETag
-//         }, (err, data) => {
-//           if (err) {
-//             console.log('Failed to delete CloudFront distribution:', cloudFrontDistributionId)
-//             console.log(err.message)
-//             reject()
-//           } else {
-//             console.log('Successfully deleted CloudFront distribution: ', cloudFrontDistributionId)
-//             resolve()
-//           }
-//         })
-//       }
-//     })
-//   })
-// }
-
 function emptyBucket () {
   return new Promise((resolve, reject) => {
     const s3 = new AWS.S3({
       credentials,
-      region: s3Region
+      region: aws.s3Region
     })
     s3.listObjects({
-      Bucket: s3Bucket
+      Bucket: aws.s3Bucket
     }, (err, data) => {
       if (err) {
         if (err.code === 'NoSuchBucket') {
@@ -366,21 +327,21 @@ function deleteBucket () {
   return new Promise((resolve, reject) => {
     const s3 = new AWS.S3({
       credentials,
-      region: s3Region
+      region: aws.s3Region
     })
     s3.deleteBucket({
-      Bucket: s3Bucket
+      Bucket: aws.s3Bucket
     }, (err, data) => {
       if (err) {
         if (err.code === 'NoSuchBucket') {
           console.log('Bucket not found, ignoring…')
           resolve()
         } else {
-          console.log('Failed to delete bucket', s3Bucket)
+          console.log('Failed to delete bucket', aws.s3Bucket)
           reject(err)
         }
       } else {
-        console.log('Successfully deleted bucket', s3Bucket)
+        console.log('Successfully deleted bucket', aws.s3Bucket)
         resolve()
       }
     })
@@ -391,10 +352,10 @@ function deleteObject (object) {
   return new Promise((resolve, reject) => {
     const s3 = new AWS.S3({
       credentials,
-      region: s3Region
+      region: aws.s3Region
     })
     s3.deleteObject({
-      Bucket: s3Bucket,
+      Bucket: aws.s3Bucket,
       Key: object.Key
     }, (err, data) => {
       if (err) {
@@ -409,5 +370,5 @@ function deleteObject (object) {
 }
 
 function finalMessage () {
-  console.log(colors.green('Flatpack finished cleaning up'), s3Bucket)
+  console.log(colors.green('✨ Flatpack finished cleaning up'), aws.s3Bucket)
 }
