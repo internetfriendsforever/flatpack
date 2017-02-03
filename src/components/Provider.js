@@ -51,11 +51,6 @@ export default class Provider extends React.Component {
     this.checkForEditor()
   }
 
-  componentDidMount () {
-    console.log(this.props.config.routes(this.props.content))
-    console.log(this.props.scripts)
-  }
-
   checkForEditor () {
     if (!this.state.Editor && this.store.getState().app.editor) {
       require.ensure('./Editor', () => {

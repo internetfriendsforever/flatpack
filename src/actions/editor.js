@@ -3,7 +3,7 @@ import { S3 } from 'aws-sdk'
 import renderRoutes from '../renderRoutes'
 
 export const isBrowser = typeof document !== 'undefined'
-export const isDevelopment = process.env.NODE_ENV === 'development'
+export const isDevelopment = process.env.NODE_ENV !== 'production'
 
 export const toggleEditing = () => ({
   type: 'TOGGLE_EDITING'
@@ -20,11 +20,9 @@ export const publish = ({ config, content, scripts, credentials }) => dispatch =
     files: []
   }))
 
-  console.log('Publish', version, content, config, credentials, scripts)
-
-  // if (isBrowser && isDevelopment) {
-  //   promise = dispatch(build())
-  // }
+  if (isBrowser && isDevelopment) {
+    promise = dispatch(build())
+  }
 
   promise.then(buildResult => {
     const finalScripts = buildResult.scripts || scripts
@@ -68,52 +66,52 @@ export const publish = ({ config, content, scripts, credentials }) => dispatch =
   })
 }
 
-// export const build = () => dispatch => {
-//   dispatch({
-//     type: 'BUILD'
-//   })
-//
-//   return new Promise((resolve, reject) => {
-//     const request = new window.XMLHttpRequest()
-//
-//     request.open('post', '/build')
-//
-//     request.addEventListener('readystatechange', () => {
-//       if (request.readyState === window.XMLHttpRequest.DONE) {
-//         if (request.status === 200) {
-//           const result = JSON.parse(request.responseText)
-//           const assets = mapValues(result.stats.assetsByChunkName, asset => `/${asset}`)
-//           const files = result.files.map(file => {
-//             const byteString = window.atob(file.data)
-//             const content = new Uint8Array(byteString.length)
-//
-//             for (let i = 0; i < byteString.length; i++) {
-//               content[i] = byteString.charCodeAt(i)
-//             }
-//
-//             return {
-//               ...file,
-//               data: new window.Blob([content], {
-//                 type: file.type
-//               })
-//             }
-//           })
-//
-//           dispatch({
-//             type: 'BUILD_SUCCESS'
-//           })
-//
-//           resolve({
-//             assets,
-//             files
-//           })
-//         }
-//       }
-//     })
-//
-//     request.send()
-//   })
-// }
+export const build = () => dispatch => {
+  dispatch({
+    type: 'BUILD'
+  })
+
+  return new Promise((resolve, reject) => {
+    const request = new window.XMLHttpRequest()
+
+    request.open('post', '/build')
+
+    request.addEventListener('readystatechange', () => {
+      if (request.readyState === window.XMLHttpRequest.DONE) {
+        if (request.status === 200) {
+          const result = JSON.parse(request.responseText)
+          const scripts = [result.stats.assetsByChunkName.client]
+          const files = result.files.map(file => {
+            const byteString = window.atob(file.data)
+            const content = new Uint8Array(byteString.length)
+
+            for (let i = 0; i < byteString.length; i++) {
+              content[i] = byteString.charCodeAt(i)
+            }
+
+            return {
+              ...file,
+              data: new window.Blob([content], {
+                type: file.type
+              })
+            }
+          })
+
+          dispatch({
+            type: 'BUILD_SUCCESS'
+          })
+
+          resolve({
+            scripts,
+            files
+          })
+        }
+      }
+    })
+
+    request.send()
+  })
+}
 
 export const upload = (aws, files, credentials, version) => dispatch => {
   dispatch({

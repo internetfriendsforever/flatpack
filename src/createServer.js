@@ -1,18 +1,68 @@
+const mimeTypes = require('mime-types')
+const MemoryFS = require('memory-fs')
 const express = require('express')
 const webpack = require('webpack')
 const webpackDevMiddleware = require('webpack-dev-middleware')
-const config = require('./webpack.config.js')
+
+const icon = '🔧'
+
+const configs = {
+  development: require('./webpack.development.config.js'),
+  production: require('./webpack.production.config.js')
+}
+
+const compilers = {
+  development: webpack(configs.development),
+  production: webpack(configs.production)
+}
 
 export default function createDevServer () {
-  const compiler = webpack(config)
-
+  const fs = new MemoryFS()
   const app = express()
 
-  const middleware = webpackDevMiddleware(compiler, {
+  const middleware = webpackDevMiddleware(compilers.development, {
     stats: {
       chunks: false,
       colors: true
     }
+  })
+
+  app.post('/build', (req, res) => {
+    console.log(icon, 'Compiling production scripts…')
+
+    compilers.production.outputFileSystem = fs
+
+    compilers.production.run((error, stats) => {
+      if (error) {
+        console.log(error)
+        return res.status(500).json({ error })
+      }
+
+      const assets = stats.toJson().assets
+
+      console.log(icon, 'Compiled', assets.length, 'scripts')
+
+      const files = assets.map(asset => {
+        console.log(icon, `Reading ${asset.name}…`)
+
+        const path = `${configs.production.output.path}/${asset.name}`
+
+        const data = fs.readFileSync(path)
+
+        return {
+          path: asset.name,
+          type: mimeTypes.lookup(asset.name),
+          data: data.toString('base64')
+        }
+      })
+
+      console.log(icon, 'Done!')
+
+      return res.status(200).json({
+        files,
+        stats: stats.toJson()
+      })
+    })
   })
 
   app.use(middleware)
