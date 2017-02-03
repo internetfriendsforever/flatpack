@@ -16,7 +16,7 @@ export default {
     path: '/',
     component: <Frontpage />
   }, {
-    path: '/books',
+    path: '/books/',
     component: <Books />
   }]
 }

@@ -29,7 +29,7 @@ const defaultConfig = {
         window.scripts = '${JSON.stringify(scripts)}';
       </script>
       ${scripts.map(script => `
-        <script src="/${script}"></script>
+        <script src="${script}"></script>
       `)}
     `
   }

@@ -13,7 +13,8 @@ module.exports = {
   output: {
     path: path.resolve(process.cwd(), 'build'),
     filename: '[name].js',
-    chunkFilename: '[name].js'
+    chunkFilename: '[name].js',
+    publicPath: '/'
   },
 
   plugins: [

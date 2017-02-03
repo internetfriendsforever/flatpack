@@ -10,8 +10,8 @@ module.exports = {
 
   output: {
     path: path.resolve(process.cwd(), 'build'),
-    filename: '[name]-[hash].js',
-    chunkFilename: '[name]-[hash].js'
+    filename: '[name].js',
+    chunkFilename: '[name].js'
   },
 
   module: {

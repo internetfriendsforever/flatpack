@@ -7,7 +7,7 @@ export default ({ children }) => (
 
     <ul>
       <li><Link href='/'>Frontpage</Link></li>
-      <li><Link href='/books'>Books</Link></li>
+      <li><Link href='/books/'>Books</Link></li>
     </ul>
 
     {children}
