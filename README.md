@@ -57,3 +57,7 @@ Editable component for plain text.
 #### Props
 - `path` **string**, see [path](#path)
 - `placeholder` **string** text to show in the editor when `path` does not have data, for example when a new element is created.
+
+
+## Routing
+Routes need to be defined with a trailing slash for compatibility with S3 and CloudFront
