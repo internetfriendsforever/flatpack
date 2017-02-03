@@ -5,8 +5,6 @@ const fs = require('fs')
 const path = require('path')
 const { map } = require('lodash')
 
-prompt.message = '🔧 '
-
 const env = {}
 
 const COGNITO_REGION = 'eu-west-1'
@@ -36,6 +34,7 @@ export default function setup () {
 
 function initialPrompt () {
   return new Promise((resolve, reject) => {
+    prompt.message = '🔧 '
     console.log('Setup will configure AWS with Cognito, S3 and CloudFront')
     prompt.get([{
       name: 'AWS_ACCESS_KEY_ID',

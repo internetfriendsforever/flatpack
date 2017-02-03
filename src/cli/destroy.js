@@ -7,8 +7,6 @@ const configDefaults = require('../config/defaults')
 
 const config = configDefaults(require(configPath))
 
-prompt.message = '💥 '
-
 let credentials = {}
 
 const COGNITO_REGION = 'eu-west-1'
@@ -34,6 +32,7 @@ export default function destroy () {
 
 function initialPrompt () {
   return new Promise((resolve, reject) => {
+    prompt.message = '💥 '
     console.log(
       colors.red('Warning'),
       'this will remove the AWS configuration for your installation and delete the contents of your S3 bucket.'
