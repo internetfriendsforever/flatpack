@@ -1,7 +1,5 @@
 import React from 'react'
-import Frontpage from './Frontpage'
-import Books from './Books'
-// import Book from './Book'
+import { Text, Link, EditButton } from '../dist'
 
 export default {
   aws: {
@@ -14,69 +12,23 @@ export default {
 
   routes: content => [{
     path: '/',
-    component: <Frontpage />
+    component: (
+      <div>
+        <h1>Flatpack sample page</h1>
+        <Text path='introduction' placeholder='This text is editable' />
+        <Link href='/page2/'>Link to page 2</Link>
+        <EditButton />
+      </div>
+    )
   }, {
-    path: '/books/',
-    component: <Books />
+    path: '/page2/',
+    component: (
+      <div>
+        <h1>Page 2</h1>
+        <Text path='page2' placeholder='Text on page 2 is also editable' />
+        <Link href='/'>Back to frontpage</Link>
+        <EditButton />
+      </div>
+    )
   }]
 }
-
-// export default {
-//   // template: (partial, content) => `<html>${partial}</html>`,
-//   // notFoundRoute: <NotFound />,
-//
-//   aws: {
-//     s3Region: 'eu-central-1',
-//     s3Bucket: 'example-site.iff.ninja',
-//     cognitoUserPoolId: 'eu-west-1_F5cZoQJsU',
-//     cognitoUserPoolClientId: '4tmcrkbhkurm2nfv76m849j5l7',
-//     cognitoIdentityPoolId: 'eu-west-1:cb2bdcb0-ecdc-4e49-8816-ea1126eb9f1c'
-//   },
-//
-//   routes: content => [
-//     {
-//       path: '/',
-//       component: <Frontpage />
-//     },
-//
-//     {
-//       path: '/books',
-//       component: <Books books={content.books} />
-//     },
-//
-//     ...content.books.map(book => ({
-//       path: `/books/${book.id}`,
-//       component: <Book id={book.id} />
-//     }))
-//   ]
-// }
-
-// also supports:
-// export default <Frontpage />
-
-// and:
-// export default [{
-//   path: '/',
-//   component: <Frontpage />
-// }, {
-//   path: '/books',
-//   component: <Books books={[]} />
-// }]
-
-// and:
-// export default content => [
-//   {
-//     path: '/',
-//     component: <Frontpage />
-//   },
-//
-//   {
-//     path: '/books',
-//     component: <Books books={content.books} />
-//   },
-//
-//   ...content.books.map(book => ({
-//     path: `/books/${book.id}`,
-//     component: <Book id={book.id} />
-//   }))
-// ]
