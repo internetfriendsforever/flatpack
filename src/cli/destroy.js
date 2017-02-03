@@ -273,16 +273,15 @@ function disableCloudFrontDistribution () {
         console.log(err.message)
         reject()
       } else {
-        const distributionConfig = data
+        const distributionConfig = data.DistributionConfig
 
         if (distributionConfig.Enabled === true) {
           distributionConfig.Enabled = false
-          delete distributionConfig.ETag
 
           cloudFront.updateDistribution({
             Id: cloudFrontDistributionId,
             IfMatch: distributionETag,
-            ...distributionConfig
+            DistributionConfig: distributionConfig
           }, (err, data) => {
             if (err) {
               console.log('Failed to disable distribution', err.message)
