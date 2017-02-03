@@ -5,11 +5,11 @@ import Books from './Books'
 
 export default {
   aws: {
-    s3Region: 'eu-central-1',
-    s3Bucket: 'example-site.iff.ninja',
-    cognitoUserPoolId: 'eu-west-1_F5cZoQJsU',
-    cognitoUserPoolClientId: '4tmcrkbhkurm2nfv76m849j5l7',
-    cognitoIdentityPoolId: 'eu-west-1:cb2bdcb0-ecdc-4e49-8816-ea1126eb9f1c'
+    s3Region: 'eu-west-1',
+    s3Bucket: 'flatpack-tomorrow.iff.ninja',
+    cognitoUserPoolId: 'eu-west-1_PoWmk0gLT',
+    cognitoUserPoolClientId: '577epjsucc4pc5b294pupv3dd5',
+    cognitoIdentityPoolId: 'eu-west-1:c138ec28-be42-42ca-aa56-50fcef6bb3eb'
   },
 
   routes: content => [{
