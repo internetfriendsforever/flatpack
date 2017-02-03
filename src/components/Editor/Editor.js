@@ -56,19 +56,16 @@ export default class Editor extends React.Component {
   }
 
   publish () {
-    const { store, data, render } = this.context.flatpack
+    const { store, config, scripts } = this.context.flatpack
     const { authentication, content } = store.getState()
     const { session } = content
     const { credentials } = authentication
 
     this.context.flatpack.store.dispatch(publish({
-      aws: this.context.flatpack.config.aws,
-      credentials: credentials,
-      renderer: render,
-      data: {
-        content: session.toJS(),
-        assets: data.assets
-      }
+      content: session.toJS(),
+      credentials,
+      config,
+      scripts
     }))
   }
 

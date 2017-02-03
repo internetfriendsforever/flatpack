@@ -14,7 +14,7 @@ const FileWriterWebpackPlugin = function (getFiles, callback) {
 FileWriterWebpackPlugin.prototype.apply = function (compiler) {
   compiler.plugin('this-compilation', compilation => {
     compilation.plugin('optimize-assets', (_, done) => {
-      this.getFiles(files => {
+      this.getFiles(compilation, files => {
         Object.keys(files).forEach(filename => {
           compilation.assets[filename] = new RawSource(files[filename])
         })

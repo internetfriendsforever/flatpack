@@ -8,6 +8,7 @@ import configDefaults from './config/defaults'
 const config = configDefaults(require('config'))
 
 const content = JSON.parse(window.content || '{}')
+const scripts = JSON.parse(window.scripts || '{}')
 const routes = config.routes(content)
 
 function route () {
@@ -16,7 +17,7 @@ function route () {
   const component = route && route.component || config.notFoundRoute
 
   ReactDOM.render((
-    <Provider content={content} config={config} assets={{}}>
+    <Provider content={content} config={config} scripts={scripts}>
       {component}
     </Provider>
   ), root)
