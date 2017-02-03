@@ -20,7 +20,12 @@ module.exports = {
         test: /\.jsx?$/,
         loader: require.resolve('babel-loader'),
         exclude: /node_modules/,
-        query: require('./defaultBabelConfig')
+        query: {
+          presets: [
+            require.resolve('babel-preset-es2015'),
+            require.resolve('babel-preset-react')
+          ]
+        }
       },
 
       {

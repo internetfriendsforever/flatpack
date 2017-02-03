@@ -1,15 +1,12 @@
-require('babel-register')(require('./defaultBabelConfig'))
-
 import path from 'path'
 import FileWriterWebpackPlugin from './FileWriterWebpackPlugin'
 import getAssetsFromCompilation from './getAssetsFromCompilation'
 import fetchRemoteContent from'./fetchRemoteContent'
 import renderRoutes from './renderRoutes'
-import configPath from './config/path'
-import configDefaults from'./config/defaults'
+import getConfig from './config/get'
 
 module.exports = {
-  ...require('./webpack.config.js'),
+  ...require('./webpack.common.config'),
 
   devtool: 'source-map',
 
@@ -31,11 +28,10 @@ module.exports = {
         }
       })
 
-      const projectConfig = require(configPath)
-      const config = configDefaults(projectConfig)
-
-      fetchRemoteContent(config.aws, content => {
-        callback(renderRoutes(config, content, scripts))
+      getConfig(config => {
+        fetchRemoteContent(config.aws, content => {
+          callback(renderRoutes(config, content, scripts))
+        })
       })
     })
   ]

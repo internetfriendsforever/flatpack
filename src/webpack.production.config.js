@@ -2,7 +2,7 @@ import path from 'path'
 import webpack from 'webpack'
 
 module.exports = {
-  ...require('./webpack.config.js'),
+  ...require('./webpack.common.config'),
 
   output: {
     path: path.resolve(process.cwd(), 'build'),

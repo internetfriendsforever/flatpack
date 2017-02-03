@@ -1,1 +1,3 @@
-export default from '../createServer'
+const createServer = require('../createServer')
+
+module.exports = createServer
