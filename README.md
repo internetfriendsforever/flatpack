@@ -60,4 +60,4 @@ Editable component for plain text.
 
 
 ## Routing
-Routes need to be defined with a trailing slash for compatibility with S3 and CloudFront
+Routes need to be defined with a trailing slash for compatibility with S3 and CloudFront, see external article re. ‘[advices for best performance](http://www.michaelgallego.fr/blog/2013/08/27/static-website-on-s3-cloudfront-and-route-53-the-right-way/#advices-for-best-performance)’ 
