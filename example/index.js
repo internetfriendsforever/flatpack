@@ -16,14 +16,13 @@ export default {
     path: '/',
     component: <Frontpage />
   }, {
-    path: '/books',
+    path: '/books/',
     component: <Books />
   }]
 }
 
 // export default {
 //   // template: (partial, content) => `<html>${partial}</html>`,
-//   // webpack: config => merge(config, {}),
 //   // notFoundRoute: <NotFound />,
 //
 //   aws: {

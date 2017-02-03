@@ -16,7 +16,7 @@ let cognitoServiceProvider
 let cognitoIdentity
 let iam
 
-export default function setup () {
+module.exports = function setup () {
   initialPrompt()
     .then(createBucket)
     .then(putBucketWebsite)

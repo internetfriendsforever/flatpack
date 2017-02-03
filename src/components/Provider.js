@@ -53,7 +53,10 @@ export default class Provider extends React.Component {
 
   checkForEditor () {
     if (!this.state.Editor && this.store.getState().app.editor) {
-      require.ensure('./Editor', () => {
+      // window.__webpack_require__.p = '/'
+      console.log(__webpack_require__.p)
+
+      require.ensure('./Editor', require => {
         this.setState({
           Editor: require('./Editor').default
         })

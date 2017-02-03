@@ -2,10 +2,12 @@ const AWS = require('aws-sdk')
 const prompt = require('prompt')
 const colors = require('colors/safe')
 
-const configPath = require('../config/path')
-const configDefaults = require('../config/defaults')
+// const configPath = require('../config/path')
+// const configDefaults = require('../config/defaults')
+//
+// const config = configDefaults(require(configPath))
 
-const config = configDefaults(require(configPath))
+const config = { aws: {} }
 
 let credentials = {}
 
@@ -20,7 +22,7 @@ const {
   cloudFrontDistributionId
 } = config.aws
 
-export default function destroy () {
+module.exports = function destroy () {
   initialPrompt()
     .then(teardownCognito)
     .then(emptyBucket)

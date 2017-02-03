@@ -3,12 +3,13 @@ const MemoryFS = require('memory-fs')
 const express = require('express')
 const webpack = require('webpack')
 const webpackDevMiddleware = require('webpack-dev-middleware')
+const getWebpackConfig = require('./getWebpackConfig')
 
 const icon = '🔧'
 
 const configs = {
-  development: require('./webpack.development.config.js'),
-  production: require('./webpack.production.config.js')
+  development: getWebpackConfig('development'),
+  production: getWebpackConfig('production')
 }
 
 const compilers = {
@@ -16,7 +17,7 @@ const compilers = {
   production: webpack(configs.production)
 }
 
-export default function createDevServer () {
+module.exports = function createDevServer () {
   const fs = new MemoryFS()
   const app = express()
 

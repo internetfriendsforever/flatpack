@@ -17,7 +17,6 @@ const NotFound = require('../components/NotFound').default
 
 const defaultConfig = {
   aws: {},
-  webpack: () => {},
   routes: () => [],
   notFoundRoute: <NotFound />,
   template: (html, content = {}, scripts = []) => {
@@ -30,7 +29,7 @@ const defaultConfig = {
         window.scripts = '${JSON.stringify(scripts)}';
       </script>
       ${scripts.map(script => `
-        <script src="/${script}"></script>
+        <script src="${script}"></script>
       `)}
     `
   }

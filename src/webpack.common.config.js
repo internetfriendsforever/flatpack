@@ -10,8 +10,8 @@ module.exports = {
 
   output: {
     path: path.resolve(process.cwd(), 'build'),
-    filename: '[name]-[hash].js',
-    chunkFilename: '[name]-[hash].js'
+    filename: '[name].js',
+    chunkFilename: '[name].js'
   },
 
   module: {
@@ -20,7 +20,12 @@ module.exports = {
         test: /\.jsx?$/,
         loader: require.resolve('babel-loader'),
         exclude: /node_modules/,
-        query: require('./defaultBabelConfig')
+        query: {
+          presets: [
+            require.resolve('babel-preset-es2015'),
+            require.resolve('babel-preset-react')
+          ]
+        }
       },
 
       {
