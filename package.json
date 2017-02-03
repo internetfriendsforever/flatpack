@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "cd example && node ../dist/server",
+    "start": "cd example && ../dist/cli/index.js start",
     "build": "rm -rf dist && ./node_modules/.bin/babel src --out-dir dist",
     "build-watch": "rm -rf dist && ./node_modules/.bin/babel src --out-dir dist -w",
     "build-example": "yarn run build && cd example && NODE_ENV=production webpack -p --config ../dist/webpack.config.js"
@@ -17,9 +17,12 @@
     "babel-preset-react": "^6.22.0",
     "babel-register": "^6.22.0",
     "color-js": "^1.0.4",
+    "colors": "^1.1.2",
     "express": "^4.14.1",
     "history": "^4.5.1",
     "immutable": "^3.8.1",
+    "lodash": "^4.17.4",
+    "prompt": "^1.0.0",
     "react": "^15.4.2",
     "react-contenteditable": "^2.0.2",
     "react-dom": "^15.4.2",
