@@ -5,8 +5,6 @@ const fs = require('fs')
 const path = require('path')
 const { map } = require('lodash')
 
-prompt.message = '🔧 '
-
 const env = {}
 
 const COGNITO_REGION = 'eu-west-1'
@@ -36,6 +34,7 @@ export default function setup () {
 
 function initialPrompt () {
   return new Promise((resolve, reject) => {
+    prompt.message = '🔧 '
     console.log('Setup will configure AWS with Cognito, S3 and CloudFront')
     prompt.get([{
       name: 'AWS_ACCESS_KEY_ID',
@@ -365,7 +364,8 @@ function createCloudFrontDistribution () {
         reject(err)
       } else {
         console.log(colors.green('Successfully created CloudFront distribution with Id:'), data.Id)
-        console.log(`Deploying ${data.Location} - ready in approximately 15 minutes ☕️`)
+        env.CLOUDFRONT_DISTRIBUTION_ID = data.Id
+        console.log(`Deploying https://${data.DomainName} - ready in approximately 15 minutes ☕️`)
         resolve()
       }
     })

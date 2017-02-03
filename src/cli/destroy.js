@@ -7,8 +7,6 @@ const configDefaults = require('../config/defaults')
 
 const config = configDefaults(require(configPath))
 
-prompt.message = '💥 '
-
 let credentials = {}
 
 const COGNITO_REGION = 'eu-west-1'
@@ -18,7 +16,8 @@ const {
   s3Region,
   cognitoIdentityPoolId,
   cognitoUserPoolId,
-  cognitoUserPoolClientId
+  cognitoUserPoolClientId,
+  cloudFrontDistributionId
 } = config.aws
 
 export default function destroy () {
@@ -26,6 +25,8 @@ export default function destroy () {
     .then(teardownCognito)
     .then(emptyBucket)
     .then(deleteBucket)
+    .then(disableCloudFrontDistribution)
+    // .then(deleteCloudFrontDistribution)
     .then(finalMessage)
     .catch(err => {
       console.log(err)
@@ -34,6 +35,7 @@ export default function destroy () {
 
 function initialPrompt () {
   return new Promise((resolve, reject) => {
+    prompt.message = '💥 '
     console.log(
       colors.red('Warning'),
       'this will remove the AWS configuration for your installation and delete the contents of your S3 bucket.'
@@ -244,7 +246,7 @@ function deleteIdentityPool () {
           console.log('Identity pool not found, ignoring…')
           resolve()
         } else {
-          console.log('Failed to delete identity pool', cognitoIdentityPoolId)
+          console.log('Failed to delete identity pool:', cognitoIdentityPoolId)
           reject(err)
         }
       } else {
@@ -254,6 +256,84 @@ function deleteIdentityPool () {
     })
   })
 }
+
+function disableCloudFrontDistribution () {
+  return new Promise((resolve, reject) => {
+    const cloudFront = new AWS.CloudFront({
+      credentials
+    })
+
+    cloudFront.getDistributionConfig({
+      Id: cloudFrontDistributionId
+    }, (err, data) => {
+      const distributionETag = data.ETag
+
+      if (err) {
+        console.log('Failed to get CloudFront distribution')
+        console.log(err.message)
+        reject()
+      } else {
+        const distributionConfig = data
+
+        if (distributionConfig.Enabled === true) {
+          distributionConfig.Enabled = false
+          delete distributionConfig.ETag
+
+          cloudFront.updateDistribution({
+            Id: cloudFrontDistributionId,
+            IfMatch: distributionETag,
+            ...distributionConfig
+          }, (err, data) => {
+            if (err) {
+              console.log('Failed to disable distribution', err.message)
+              reject()
+            } else {
+              console.log('Successfully disabled distribution:', data.Id)
+              resolve()
+            }
+          })
+        } else {
+          console.log('CloudFront distribution already disabled…')
+          resolve()
+        }
+      }
+    })
+  })
+}
+
+// TODO: Wait for distribution to be disabled before trying to delete
+// function deleteCloudFrontDistribution () {
+//   return new Promise((resolve, reject) => {
+//     const cloudFront = new AWS.CloudFront({
+//       credentials
+//     })
+//
+//     cloudFront.getDistributionConfig({
+//       Id: cloudFrontDistributionId
+//     }, (err, data) => {
+//       const distributionETag = data.ETag
+//
+//       if (err) {
+//         console.log('Failed to delete CloudFront distribution')
+//         reject()
+//       } else {
+//         cloudFront.deleteDistribution({
+//           Id: cloudFrontDistributionId,
+//           IfMatch: distributionETag
+//         }, (err, data) => {
+//           if (err) {
+//             console.log('Failed to delete CloudFront distribution:', cloudFrontDistributionId)
+//             console.log(err.message)
+//             reject()
+//           } else {
+//             console.log('Successfully deleted CloudFront distribution: ', cloudFrontDistributionId)
+//             resolve()
+//           }
+//         })
+//       }
+//     })
+//   })
+// }
 
 function emptyBucket () {
   return new Promise((resolve, reject) => {
