@@ -5,6 +5,10 @@
     "build-watch": "rm -rf dist && ./node_modules/.bin/babel src --out-dir dist -w",
     "build-example": "yarn run build && cd example && NODE_ENV=production webpack -p --config ../dist/webpack.config.js"
   },
+  "main": "dist/index.js",
+  "bin": {
+    "flatpack": "dist/cli/index.js"
+  },
   "standard": {
     "parser": "babel-eslint"
   },
