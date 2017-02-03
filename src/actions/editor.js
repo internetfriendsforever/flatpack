@@ -80,7 +80,10 @@ export const build = () => dispatch => {
       if (request.readyState === window.XMLHttpRequest.DONE) {
         if (request.status === 200) {
           const result = JSON.parse(request.responseText)
-          const scripts = [result.stats.assetsByChunkName.client]
+          const stats = result.stats
+          const clientPath = `${stats.publicPath}${stats.assetsByChunkName.client}`
+          const scripts = [clientPath]
+
           const files = result.files.map(file => {
             const byteString = window.atob(file.data)
             const content = new Uint8Array(byteString.length)
