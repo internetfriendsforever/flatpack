@@ -1,9 +1,17 @@
 {
+  "name": "flatpack-js",
+  "author": "internetfriendsforever <anyone@internetfriendsforever.com>",
+  "version": "0.0.5",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/internetfriendsforever/flatpack-tomorrow.git"
+  },
   "scripts": {
     "start": "cd example && ../dist/cli/index.js start",
     "build": "rm -rf dist && ./node_modules/.bin/babel src --out-dir dist",
     "build-watch": "rm -rf dist && ./node_modules/.bin/babel src --out-dir dist -w",
-    "build-example": "yarn run build && cd example && NODE_ENV=production webpack -p --config ../dist/webpack.config.js"
+    "build-example": "yarn run build && cd example && NODE_ENV=production webpack -p --config ../dist/webpack.config.js",
+    "prepublish": "yarn build"
   },
   "main": "dist/index.js",
   "bin": {
