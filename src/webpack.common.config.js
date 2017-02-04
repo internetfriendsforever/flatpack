@@ -15,34 +15,42 @@ module.exports = {
   },
 
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.jsx?$/,
-        loader: require.resolve('babel-loader'),
         exclude: /node_modules/,
-        query: {
-          presets: [
-            require.resolve('babel-preset-es2015'),
-            require.resolve('babel-preset-react')
-          ]
-        }
+        use: [{
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              require.resolve('babel-preset-es2015'),
+              require.resolve('babel-preset-react')
+            ]
+          }
+        }]
       },
 
       {
         test: /aws-sdk/,
-        loader: require.resolve('transform-loader'),
-        query: 'aws-sdk/dist-tools/transform'
+        use: [{
+          loader: require.resolve('transform-loader'),
+          options: 'aws-sdk/dist-tools/transform'
+        }]
       },
 
       {
         test: /\.jsx?$/,
         include: /amazon-cognito-identity-js/,
-        loader: require.resolve('babel-loader')
+        use: [{
+          loader: require.resolve('babel-loader')
+        }]
       },
 
       {
         test: /\.json$/,
-        loader: 'json-loader'
+        use: [{
+          loader: 'json-loader'
+        }]
       }
     ]
   },
