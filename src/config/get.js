@@ -24,7 +24,11 @@ module.exports = callback => {
 
   compiler.run((err, stats) => {
     if (err) {
-      console.log(err)
+      throw err
+    }
+
+    if (stats.hasErrors()) {
+      throw new Error(stats.toString())
     }
 
     console.log('Done compiling project main...')
