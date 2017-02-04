@@ -1,7 +1,7 @@
 {
   "name": "flatpack-js",
   "author": "internetfriendsforever <anyone@internetfriendsforever.com>",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/internetfriendsforever/flatpack-tomorrow.git"
@@ -13,9 +13,6 @@
     "build-example": "yarn run build && cd example && NODE_ENV=production webpack -p --config ../dist/webpack.config.js",
     "prepublish": "yarn build"
   },
-  "files": [
-    "dist"
-  ],
   "main": "dist/index.js",
   "bin": {
     "flatpack": "dist/cli/index.js"
