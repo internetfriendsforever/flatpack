@@ -1,12 +1,14 @@
 import { CognitoIdentityCredentials, CognitoIdentity } from 'aws-sdk'
 import { CognitoUserPool, AuthenticationDetails, CognitoUser } from 'amazon-cognito-identity-js'
 
-const getPool = aws => new CognitoUserPool({
+const { aws } = window
+
+const getPool = () => new CognitoUserPool({
   UserPoolId: aws.cognitoUserPoolId,
   ClientId: aws.cognitoUserPoolClientId
 })
 
-export const fetchCredentials = (aws) => dispatch => {
+export const fetchCredentials = () => dispatch => {
   const user = getPool(aws).getCurrentUser()
 
   dispatch({
@@ -20,7 +22,7 @@ export const fetchCredentials = (aws) => dispatch => {
           type: 'FETCH_CREDENTIALS_FAILURE'
         })
       } else {
-        createCredentials(aws, user.username, session, credentials => (
+        createCredentials(user.username, session, credentials => (
           dispatch({
             type: 'FETCH_CREDENTIALS_SUCCESS',
             credentials
@@ -35,14 +37,14 @@ export const fetchCredentials = (aws) => dispatch => {
   }
 }
 
-export const signIn = (aws, username, password) => dispatch => {
+export const signIn = (username, password) => dispatch => {
   dispatch({
     type: 'SIGN_IN'
   })
 
   const user = new CognitoUser({
     Username: username,
-    Pool: getPool(aws)
+    Pool: getPool()
   })
 
   const details = new AuthenticationDetails({
@@ -52,7 +54,7 @@ export const signIn = (aws, username, password) => dispatch => {
 
   user.authenticateUser(details, {
     onSuccess: session => {
-      createCredentials(aws, username, session, credentials => (
+      createCredentials(username, session, credentials => (
         dispatch({
           type: 'SIGN_IN_SUCCESS',
           credentials,
@@ -70,8 +72,8 @@ export const signIn = (aws, username, password) => dispatch => {
   })
 }
 
-export const signOut = aws => dispatch => {
-  const user = getPool(aws).getCurrentUser()
+export const signOut = () => dispatch => {
+  const user = getPool().getCurrentUser()
 
   if (user) {
     user.signOut()
@@ -82,7 +84,7 @@ export const signOut = aws => dispatch => {
   })
 }
 
-function createCredentials (aws, username, session, callback) {
+function createCredentials (username, session, callback) {
   const cognitoRegion = aws.cognitoUserPoolId.split('_')[0]
   const cognitoProviderName = `cognito-idp.${cognitoRegion}.amazonaws.com/${aws.cognitoUserPoolId}`
 

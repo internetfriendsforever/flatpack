@@ -1,8 +1,9 @@
 import path from 'path'
 import webpack from 'webpack'
+import commonConfig from './webpack.common.config.js'
 
 module.exports = {
-  ...require('./webpack.common.config'),
+  ...commonConfig,
 
   output: {
     path: path.resolve(process.cwd(), 'build'),
@@ -12,6 +13,8 @@ module.exports = {
   },
 
   plugins: [
+    ...commonConfig.plugins,
+
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production')
     }),

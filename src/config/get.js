@@ -1,3 +1,4 @@
+const path = require('path')
 const MemoryFS = require('memory-fs')
 const webpack = require('webpack')
 const requireFromString = require('require-from-string')
@@ -7,15 +8,15 @@ const getWebpackConfig = require('../getWebpackConfig')
 
 const fs = new MemoryFS()
 
-const config = Object.assign({}, getWebpackConfig('common'))
+const webpackConfig = Object.assign({}, getWebpackConfig('common'))
 
-config.output.libraryTarget = 'commonjs'
+webpackConfig.output.libraryTarget = 'commonjs'
 
-config.entry = {
+webpackConfig.entry = {
   config: configPath
 }
 
-const compiler = webpack(config)
+const compiler = webpack(webpackConfig)
 
 compiler.outputFileSystem = fs
 
@@ -34,11 +35,20 @@ module.exports = callback => {
     console.log('Done compiling project main...')
 
     const filename = stats.toJson().assetsByChunkName.config
-    const path = `${config.output.path}/${filename}`
-    const data = fs.readFileSync(path, 'utf-8')
+    const configPath = `${webpackConfig.output.path}/${filename}`
 
-    const projectConfig = configDefaults(requireFromString(data).default)
-
-    callback(projectConfig)
+    if (fs.existsSync(configPath)) {
+      fs.readFile(configPath, 'utf-8', (err, data) => {
+        if (err) {
+          throw err
+        } else {
+          const getConfig = requireFromString(data).default
+          const config = configDefaults(getConfig)
+          callback(config)
+        }
+      })
+    } else {
+      throw new Error(`Could not read ${path} from MemoryFS filesystem`)
+    }
   })
 }

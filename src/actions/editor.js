@@ -48,13 +48,11 @@ export const publish = ({ config, content, scripts, credentials }) => dispatch =
     ]
 
     dispatch(upload(
-      config.aws,
       files,
       credentials,
       version
     )).then(() => {
       dispatch(releaseVersion(
-        config.aws,
         credentials,
         version
       )).then(() => {
@@ -116,19 +114,19 @@ export const build = () => dispatch => {
   })
 }
 
-export const upload = (aws, files, credentials, version) => dispatch => {
+export const upload = (files, credentials, version) => dispatch => {
   dispatch({
     type: 'UPLOAD'
   })
 
-  const uploads = files.map(file => uploadFile(aws, file, credentials))
+  const uploads = files.map(file => uploadFile(file, credentials))
 
   return Promise.all(uploads).then(() => dispatch({
     type: 'UPLOAD_SUCCESS'
   }))
 }
 
-export const releaseVersion = (aws, credentials, version) => dispatch => {
+export const releaseVersion = (credentials, version) => dispatch => {
   dispatch({
     type: 'RELEASE'
   })
@@ -136,14 +134,14 @@ export const releaseVersion = (aws, credentials, version) => dispatch => {
   return new Promise((resolve, reject) => {
     const s3 = new S3({
       credentials,
-      region: aws.s3Region
+      region: window.aws.s3Region
     })
 
     console.log('Releasing version', version)
     console.log('Updating bucket website config...')
 
     s3.putBucketWebsite({
-      Bucket: aws.s3Bucket,
+      Bucket: window.aws.s3Bucket,
       WebsiteConfiguration: {
         IndexDocument: {
           Suffix: version + '-index.html'
@@ -170,16 +168,16 @@ export const releaseVersion = (aws, credentials, version) => dispatch => {
   })
 }
 
-function uploadFile (aws, file, credentials) {
+function uploadFile (file, credentials) {
   const key = file.path
 
   const s3 = new S3({
     credentials,
-    region: aws.s3Region
+    region: window.aws.s3Region
   })
 
   const params = {
-    Bucket: aws.s3Bucket,
+    Bucket: window.aws.s3Bucket,
     Key: key,
     Body: file.data,
     ContentType: file.type

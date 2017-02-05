@@ -4,9 +4,10 @@ import getAssetsFromCompilation from './getAssetsFromCompilation'
 import fetchRemoteContent from'./fetchRemoteContent'
 import renderRoutes from './renderRoutes'
 import getConfig from './config/get'
+import commonConfig from './webpack.common.config'
 
 module.exports = {
-  ...require('./webpack.common.config'),
+  ...commonConfig,
 
   devtool: 'source-map',
 
@@ -18,6 +19,8 @@ module.exports = {
   },
 
   plugins: [
+    ...commonConfig.plugins,
+
     new FileWriterWebpackPlugin((compilation, callback) => {
       const assets = getAssetsFromCompilation(compilation)
       const scripts = [assets.client]
@@ -30,7 +33,7 @@ module.exports = {
       })
 
       getConfig(config => {
-        fetchRemoteContent(config.aws, content => {
+        fetchRemoteContent(content => {
           callback(renderRoutes(config, content, scripts))
         })
       })

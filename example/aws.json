@@ -1,0 +1,8 @@
+{
+  "s3Region": "eu-west-1",
+  "s3Bucket": "flatpack-tomorrow-example.iff.ninja",
+  "cloudfrontDistributionId": "E3DTXG50XIZHO3",
+  "cognitoUserPoolId": "eu-west-1_skEZnJDwt",
+  "cognitoUserPoolClientId": "i4emsauuufo21t667qm221271",
+  "cognitoIdentityPoolId": "eu-west-1:a903ce8f-36bd-4d96-b547-e2046482d17c"
+}
