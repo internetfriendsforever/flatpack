@@ -16,7 +16,6 @@ const NotFound = require('../components/NotFound').default
 // { routes: content => [{ path: '', component: '' }] }
 
 const defaultConfig = {
-  aws: {},
   routes: () => [],
   notFoundRoute: <NotFound />,
   template: (html, content = {}, scripts = []) => {

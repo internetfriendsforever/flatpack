@@ -46,8 +46,7 @@ export default class Editor extends React.Component {
   }
 
   componentDidMount () {
-    const action = fetchCredentials(this.context.flatpack.config.aws)
-    this.context.flatpack.store.dispatch(action)
+    this.context.flatpack.store.dispatch(fetchCredentials())
   }
 
   hasChanges () {

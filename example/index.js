@@ -2,14 +2,6 @@ import React from 'react'
 import { Text, Link, EditButton } from '../dist'
 
 export default {
-  aws: {
-    s3Region: 'eu-west-1',
-    s3Bucket: 'flatpack-tomorrow.iff.ninja',
-    cognitoUserPoolId: 'eu-west-1_PoWmk0gLT',
-    cognitoUserPoolClientId: '577epjsucc4pc5b294pupv3dd5',
-    cognitoIdentityPoolId: 'eu-west-1:c138ec28-be42-42ca-aa56-50fcef6bb3eb'
-  },
-
   routes: content => [{
     path: '/',
     component: (

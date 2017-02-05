@@ -95,9 +95,7 @@ export default class Toolbar extends React.Component {
   }
 
   onSignOut () {
-    const { aws } = this.context.flatpack.config
-    const action = signOut(aws)
-    this.context.flatpack.store.dispatch(action)
+    this.context.flatpack.store.dispatch(signOut())
   }
 
   toggleDropdown (toggle) {

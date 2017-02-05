@@ -3,9 +3,9 @@ const prompt = require('prompt')
 const colors = require('colors/safe')
 const fs = require('fs')
 const path = require('path')
-const { map } = require('lodash')
+const { mapKeys, camelCase } = require('lodash')
 
-const env = {}
+const config = {}
 
 const COGNITO_REGION = 'eu-west-1'
 let COGNITO_FEDERATED_ID_NAME
@@ -24,7 +24,7 @@ module.exports = function setup () {
     .then(updateCORS)
     .then(createCloudFrontDistribution)
     .then(setUpCognito)
-    .then(writeEnvFile)
+    .then(writeConfigFile)
     .then(createUser)
     .then(confirmUser)
     .catch(err => {
@@ -62,14 +62,14 @@ function initialPrompt () {
           secretAccessKey: result.AWS_SECRET_ACCESS_KEY
         }
 
-        env.S3_REGION = result.S3_REGION
-        env.S3_BUCKET = result.S3_BUCKET
+        config.S3_REGION = result.S3_REGION
+        config.S3_BUCKET = result.S3_BUCKET
 
         s3 = new AWS.S3({
           credentials,
-          region: env.S3_REGION,
+          region: config.S3_REGION,
           params: {
-            Bucket: env.S3_BUCKET,
+            Bucket: config.S3_BUCKET,
             ACL: 'public-read'
           }
         })
@@ -89,7 +89,7 @@ function initialPrompt () {
           region: COGNITO_REGION
         })
 
-        COGNITO_FEDERATED_ID_NAME = env.S3_BUCKET.toLowerCase().replace(/\s+/g, '').replace(/[^a-zA-Z]/g, '')
+        COGNITO_FEDERATED_ID_NAME = config.S3_BUCKET.toLowerCase().replace(/\s+/g, '').replace(/[^a-zA-Z]/g, '')
 
         resolve()
       }
@@ -161,7 +161,7 @@ function createBucketPolicy () {
               "Effect": "Allow",
               "Principal": "*",
               "Action": "s3:GetObject",
-              "Resource": "arn:aws:s3:::${env.S3_BUCKET}/*"
+              "Resource": "arn:aws:s3:::${config.S3_BUCKET}/*"
             }
           ]
       }`
@@ -229,8 +229,8 @@ function createCloudFrontDistribution () {
           Quantity: 1,
           Items: [
             {
-              Id: `S3-${env.S3_BUCKET}`,
-              DomainName: getS3WebsiteEndpoint(env.S3_REGION, env.S3_BUCKET),
+              Id: `S3-${config.S3_BUCKET}`,
+              DomainName: getS3WebsiteEndpoint(config.S3_REGION, config.S3_BUCKET),
               OriginPath: '',
               CustomHeaders: {
                 Quantity: 0,
@@ -253,7 +253,7 @@ function createCloudFrontDistribution () {
           ]
         },
         DefaultCacheBehavior: {
-          TargetOriginId: `S3-${env.S3_BUCKET}`,
+          TargetOriginId: `S3-${config.S3_BUCKET}`,
           ForwardedValues: {
             QueryString: false,
             Cookies: {
@@ -299,7 +299,7 @@ function createCloudFrontDistribution () {
           Items: [
             {
               PathPattern: 'assets/*',
-              TargetOriginId: `S3-${env.S3_BUCKET}`,
+              TargetOriginId: `S3-${config.S3_BUCKET}`,
               ForwardedValues: {
                 QueryString: false,
                 Cookies: {
@@ -364,7 +364,7 @@ function createCloudFrontDistribution () {
         reject(err)
       } else {
         console.log(colors.green('Successfully created CloudFront distribution with Id:'), data.Id)
-        env.CLOUDFRONT_DISTRIBUTION_ID = data.Id
+        config.CLOUDFRONT_DISTRIBUTION_ID = data.Id
         console.log(`Deploying https://${data.DomainName} - ready in approximately 15 minutes ☕️`)
         resolve()
       }
@@ -375,7 +375,7 @@ function createCloudFrontDistribution () {
 function createUserPool () {
   return new Promise((resolve, reject) => {
     cognitoServiceProvider.createUserPool({
-      PoolName: env.S3_BUCKET,
+      PoolName: config.S3_BUCKET,
       AliasAttributes: ['phone_number'],
       AutoVerifiedAttributes: ['email'],
       Policies: {
@@ -394,7 +394,7 @@ function createUserPool () {
         reject(err)
       } else {
         console.log('Successfully created user pool')
-        env.COGNITO_USER_POOL_ID = data.UserPool.Id
+        config.COGNITO_USER_POOL_ID = data.UserPool.Id
         resolve(data.UserPool)
       }
     })
@@ -406,7 +406,7 @@ function createUserPoolClient (userPool) {
     console.log('Creating user pool client (app) for', userPool.Id, '…')
 
     cognitoServiceProvider.createUserPoolClient({
-      ClientName: env.S3_BUCKET,
+      ClientName: config.S3_BUCKET,
       UserPoolId: userPool.Id,
       GenerateSecret: false
     }, (err, data) => {
@@ -415,7 +415,7 @@ function createUserPoolClient (userPool) {
         reject(err)
       } else {
         console.log('Successfully created user pool client with id:', data.UserPoolClient.ClientId)
-        env.COGNITO_USER_POOL_CLIENT_ID = data.UserPoolClient.ClientId
+        config.COGNITO_USER_POOL_CLIENT_ID = data.UserPoolClient.ClientId
         resolve(data.UserPoolClient)
       }
     })
@@ -439,7 +439,7 @@ function createIdentityPool (userPoolClient) {
         reject(err)
       } else {
         console.log('Successfully created federated identity pool:', data.IdentityPoolId)
-        env.COGNITO_IDENTITY_POOL_ID = data.IdentityPoolId
+        config.COGNITO_IDENTITY_POOL_ID = data.IdentityPoolId
         resolve(data.IdentityPoolId)
       }
     })
@@ -564,14 +564,14 @@ function createAuthRole ({ identityPoolId, unauthArn }) {
                   "s3:GetObject",
                   "s3:DeleteObject"
                 ],
-                "Resource": ["arn:aws:s3:::${env.S3_BUCKET}/*"]
+                "Resource": ["arn:aws:s3:::${config.S3_BUCKET}/*"]
               },
               {
                 "Effect": "Allow",
                 "Action": [
                   "s3:PutBucketWebsite"
                 ],
-                "Resource": ["arn:aws:s3:::${env.S3_BUCKET}"]
+                "Resource": ["arn:aws:s3:::${config.S3_BUCKET}"]
               }
             ]
           }`
@@ -627,7 +627,7 @@ function createUser () {
         console.error('All fields are required')
       } else {
         cognitoServiceProvider.signUp({
-          ClientId: env.COGNITO_USER_POOL_CLIENT_ID,
+          ClientId: config.COGNITO_USER_POOL_CLIENT_ID,
           Password: result.password,
           Username: result.email,
           UserAttributes: [
@@ -661,7 +661,7 @@ function confirmUser (email) {
         console.error('Please enter your verification code')
       } else {
         cognitoServiceProvider.confirmSignUp({
-          ClientId: env.COGNITO_USER_POOL_CLIENT_ID,
+          ClientId: config.COGNITO_USER_POOL_CLIENT_ID,
           ConfirmationCode: result.code,
           Username: email
         }, (err, data) => {
@@ -678,15 +678,17 @@ function confirmUser (email) {
   })
 }
 
-function writeEnvFile () {
+function writeConfigFile () {
   return new Promise((resolve, reject) => {
-    const contents = map(env, (value, key) => `${key}=${value}`).join('\n')
-    fs.writeFile(path.join(process.cwd(), '.env'), contents, (err) => {
+    const camelCased = mapKeys(config, (val, key) => camelCase(key))
+    const contents = JSON.stringify(camelCased, null, 2)
+
+    fs.writeFile(path.join(process.cwd(), 'aws.json'), contents, (err) => {
       if (err) {
-        console.log('Could not write .env to filesystem')
+        console.log('Could not write aws.json to filesystem')
         reject(err)
       } else {
-        console.log('Successfully wrote .env to filesystem')
+        console.log('Successfully wrote aws.json to filesystem')
         resolve()
       }
     })

@@ -41,9 +41,7 @@ export default class SignIn extends React.Component {
   onSubmit (e) {
     e.preventDefault()
     const { username, password } = this.state
-    const { aws } = this.context.flatpack.config
-    const action = signIn(aws, username, password)
-    this.context.flatpack.store.dispatch(action)
+    this.context.flatpack.store.dispatch(signIn(username, password))
   }
 
   onInputChange (key, e) {

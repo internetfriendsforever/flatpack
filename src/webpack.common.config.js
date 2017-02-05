@@ -1,5 +1,7 @@
 import path from 'path'
+import webpack from 'webpack'
 import configPath from './config/path'
+import awsConfig from './config/aws'
 
 process.env.AWS_SERVICES = 's3,cognitoidentity,cognitoidentityserviceprovider,cloudfront'
 
@@ -63,5 +65,11 @@ module.exports = {
     alias: {
       config: configPath
     }
-  }
+  },
+
+  plugins: [
+    new webpack.DefinePlugin({
+      'window.aws': JSON.stringify(awsConfig)
+    })
+  ]
 }

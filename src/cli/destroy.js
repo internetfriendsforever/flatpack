@@ -1,7 +1,10 @@
+const path = require('path')
+const fs = require('fs')
 const AWS = require('aws-sdk')
 const prompt = require('prompt')
 const colors = require('colors/safe')
-const getConfig = require('../config/get')
+
+const awsConfigPath = path.resolve(process.cwd(), 'aws.json')
 
 let aws = {}
 let credentials = {}
@@ -15,6 +18,7 @@ module.exports = function destroy () {
     .then(emptyBucket)
     .then(deleteBucket)
     .then(disableCloudFrontDistribution)
+    .then(deleteAwsConfig)
     .then(finalMessage)
     .catch(err => {
       console.log(err)
@@ -52,10 +56,8 @@ function initialPrompt () {
 
 function getAwsConfig () {
   return new Promise((resolve, reject) => {
-    getConfig(config => {
-      aws = config.aws
-      resolve()
-    })
+    aws = require(awsConfigPath)
+    resolve()
   })
 }
 
@@ -261,7 +263,7 @@ function disableCloudFrontDistribution () {
     })
 
     cloudFront.getDistributionConfig({
-      Id: aws.cloudFrontDistributionId
+      Id: aws.cloudfrontDistributionId
     }, (err, data) => {
       const distributionETag = data.ETag
 
@@ -276,7 +278,7 @@ function disableCloudFrontDistribution () {
           distributionConfig.Enabled = false
 
           cloudFront.updateDistribution({
-            Id: aws.cloudFrontDistributionId,
+            Id: aws.cloudfrontDistributionId,
             IfMatch: distributionETag,
             DistributionConfig: distributionConfig
           }, (err, data) => {
@@ -365,6 +367,20 @@ function deleteObject (object) {
         console.log(colors.red('Deleted'), object.Key)
         resolve()
       }
+    })
+  })
+}
+
+function deleteAwsConfig () {
+  return new Promise((resolve, reject) => {
+    fs.unlink(awsConfigPath, (err) => {
+      if (err) {
+        console.log('Failed to delete aws.json')
+        reject(err)
+      }
+
+      console.log(colors.red('Deleted aws.json'))
+      resolve()
     })
   })
 }
