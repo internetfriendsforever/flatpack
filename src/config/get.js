@@ -6,22 +6,23 @@ const configPath = require('./path')
 const configDefaults = require('./defaults')
 const getWebpackConfig = require('../getWebpackConfig')
 
-const fs = new MemoryFS()
-
-const webpackConfig = Object.assign({}, getWebpackConfig('common'))
-
-webpackConfig.output.libraryTarget = 'commonjs'
-
-webpackConfig.entry = {
-  config: configPath
-}
-
-const compiler = webpack(webpackConfig)
-
-compiler.outputFileSystem = fs
-
 module.exports = callback => {
   console.log('Compiling project main...')
+
+  const fs = new MemoryFS()
+
+  const webpackConfig = Object.assign({}, getWebpackConfig('common'))
+
+  webpackConfig.target = 'node'
+  webpackConfig.output.libraryTarget = 'commonjs'
+
+  webpackConfig.entry = {
+    config: configPath
+  }
+
+  const compiler = webpack(webpackConfig)
+
+  compiler.outputFileSystem = fs
 
   compiler.run((err, stats) => {
     if (err) {
