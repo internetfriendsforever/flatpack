@@ -28,13 +28,6 @@ module.exports = {
             ]
           }
         }]
-      },
-
-      {
-        test: /\.json$/,
-        use: [{
-          loader: require.resolve('json-loader')
-        }]
       }
     ]
   },
