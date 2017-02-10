@@ -1,8 +1,6 @@
 import React from 'react'
 import ContentEditable from 'react-contenteditable'
 
-import { set } from '../actions/content'
-
 const styles = {
   container: {
     position: 'relative',
@@ -31,12 +29,9 @@ const styles = {
 
 export default class Text extends React.Component {
   static propTypes = {
-    path: React.PropTypes.string.isRequired,
+    value: React.PropTypes.string,
+    setValue: React.PropTypes.func.isRequired,
     placeholder: React.PropTypes.string
-  };
-
-  static contextTypes = {
-    flatpack: React.PropTypes.object
   };
 
   static defaultProps = {
@@ -44,31 +39,22 @@ export default class Text extends React.Component {
   };
 
   onChange (e) {
-    this.context.flatpack.store.dispatch(set(this.props.path, e.target.value))
+    this.props.setValue(e.target.value)
   }
 
   render () {
-    const { placeholder } = this.props
-    const edit = this.context.flatpack.store.getState().editor.editing
-    const value = this.context.flatpack.store.getContent(this.props.path)
-
-    const style = {
-      ...(edit && styles.text)
-    }
+    const { value, placeholder } = this.props
 
     return (
-      <span style={styles.container}>
+      <div style={styles.container}>
         <ContentEditable
-          style={style}
+          style={styles.text}
           html={value || placeholder}
-          disabled={!edit}
           onChange={::this.onChange}
         />
 
-        {edit && (
-          <span style={styles.overlay} />
-        )}
-      </span>
+        <span style={styles.overlay} />
+      </div>
     )
   }
 }

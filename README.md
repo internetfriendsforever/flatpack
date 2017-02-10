@@ -48,17 +48,8 @@ The text component uses [slate](https://github.com/ianstormtaylor/slate/) to ser
 #### Props
 - `path` **string**, see [path](#path)
 - `placeholder` **string** text to show in the editor when `path` does not have data, for example when a new element is created.
-- `inline` (**array** of inline elements supported, ie. `['i', 'b', 'a', 'strike']`)
-- `block` (**array** of block-level elements like `['h2', 'h3', 'h4', 'p', 'ul', 'ol']` if `block` is **not** defined, no text will be wrapped in a block-level element. Perfect for text inside an existing `<h1>` or `<p>` tag.
-
-
-### The `<PlainText />` component
-Editable component for plain text.
-
-#### Props
-- `path` **string**, see [path](#path)
-- `placeholder` **string** text to show in the editor when `path` does not have data, for example when a new element is created.
-
+- `inline` (**array** of inline elements supported, ie. `['i', 'b', 'a', 'strike']`). Default is `[]`
+- `block` (**array** of block-level elements like `['h2', 'h3', 'h4', 'p', 'ul', 'ol']` if `block` is **not** defined, no text will be wrapped in a block-level element. Perfect for text inside an existing `<h1>` or `<p>` tag. Default is `[]`
 
 ## Routing
 Routes need to be defined with a trailing slash for compatibility with S3 and CloudFront, see external article re. ‘[advices for best performance](http://www.michaelgallego.fr/blog/2013/08/27/static-website-on-s3-cloudfront-and-route-53-the-right-way/#advices-for-best-performance)’
