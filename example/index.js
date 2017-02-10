@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, Link, EditButton } from '../dist'
+import { Text, List, Link, EditButton } from '../dist'
 
 export default [{
   path: '/',
@@ -16,8 +16,19 @@ export default [{
   component: (
     <div>
       <h1>Page 2</h1>
+
       <Text path='page2' placeholder='Text on page 2 is also editable' />
+
+      <List path='list' component='ul'>
+        {(item, key) => (
+          <li key={key}>
+            {key}
+          </li>
+        )}
+      </List>
+
       <Link href='/'>Back to frontpage</Link>
+
       <EditButton />
     </div>
   )
