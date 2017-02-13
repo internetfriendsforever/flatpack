@@ -1,5 +1,5 @@
 import React from 'react'
-import ContentEditable from 'react-contenteditable'
+import { Editor, Raw } from 'slate'
 
 const styles = {
   container: {
@@ -27,32 +27,54 @@ const styles = {
   }
 }
 
-export default class Text extends React.Component {
+export default class EditText extends React.Component {
   static propTypes = {
-    value: React.PropTypes.string,
+    value: React.PropTypes.object,
     setValue: React.PropTypes.func.isRequired,
     placeholder: React.PropTypes.string
-  };
+  }
 
   static defaultProps = {
     placeholder: ''
-  };
+  }
 
-  onChange (e) {
-    this.props.setValue(e.target.value)
+  getSlateState () {
+    if (this.props.value) {
+      return Raw.deserialize(this.props.value, { terse: true })
+    }
+    return Raw.deserialize({
+      nodes: [
+        {
+          kind: 'block',
+          type: 'paragraph',
+          nodes: [
+            {
+              kind: 'text',
+              text: this.props.placeholder
+            }
+          ]
+        }
+      ]
+    }, { terse: true })
+  }
+
+  state = {
+    slateState: this.getSlateState()
+  }
+
+  onChange = (slateState) => {
+    this.props.setValue(Raw.serialize(slateState, { terse: true }))
+
+    this.setState({ slateState })
   }
 
   render () {
-    const { value, placeholder } = this.props
-
     return (
       <div style={styles.container}>
-        <ContentEditable
-          style={styles.text}
-          html={value || placeholder}
+        <Editor
+          state={this.state.slateState}
           onChange={::this.onChange}
-        />
-
+          />
         <span style={styles.overlay} />
       </div>
     )
