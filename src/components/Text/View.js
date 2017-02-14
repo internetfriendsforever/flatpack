@@ -1,15 +1,39 @@
 import React from 'react'
-import { Plain, Raw } from 'slate'
+import { Raw, Html } from 'slate'
+
+const rules = [
+  {
+    serialize (object, children) {
+      if (object.kind !== 'block') return
+      switch (object.type) {
+        case 'paragraph': return <p>{children}</p>
+        case 'code': return <pre><code>{children}</code></pre>
+      }
+    }
+  },
+
+  {
+    serialize (object, children) {
+      if (object.kind !== 'mark') return
+      switch (object.type) {
+        case 'bold': return <b>{children}</b>
+        case 'italic': return <i>{children}</i>
+      }
+    }
+  }
+]
+
+function getHtml (state) {
+  const html = new Html({ rules })
+  return { __html: html.serialize(state) }
+}
 
 export default ({ value }) => {
-  if (value) {
-    const slateState = Raw.deserialize(value, { terse: true })
-    const plainText = Plain.serialize(slateState)
+  if (!value) return null
 
-    return (
-      <div>{ plainText }</div>
-    )
-  }
+  const slateState = Raw.deserialize(value, { terse: true })
 
-  return null
+  return (
+    <div dangerouslySetInnerHTML={getHtml(slateState)} />
+  )
 }
