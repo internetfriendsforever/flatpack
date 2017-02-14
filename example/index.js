@@ -1,6 +1,12 @@
 import React from 'react'
 import { Text, List, Link, EditButton } from '../dist'
 
+const styles = {
+  item: {
+    padding: 10
+  }
+}
+
 export default [{
   path: '/',
   component: (
@@ -19,11 +25,13 @@ export default [{
 
       <Text path='page2' placeholder='Text on page 2 is also editable' />
 
-      <List path='list' component='ul'>
-        {(item, key) => (
-          <li key={key}>
+      <h2>A list:</h2>
+      <List path='list'>
+        {key => (
+          <div style={styles.item} key={key}>
             {key}
-          </li>
+            <Text path={`list-${key}`} placeholder='Item text editable' />
+          </div>
         )}
       </List>
 

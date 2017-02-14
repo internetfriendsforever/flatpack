@@ -1,28 +1,29 @@
 import React from 'react'
 import { map } from 'lodash'
 
+import EditItem from './EditItem'
+
 const styles = {
   container: {
     position: 'relative'
   },
 
-  input: {
-    position: 'absolute',
-    left: 0,
-    bottom: -20,
-    cursor: 'pointer',
-    background: 'black',
-    color: 'white',
-    borderRadius: '50%',
-    width: 20,
-    height: 20,
-    lineHeight: '20px',
-    textAlign: 'center',
-    zIndex: 100
+  addContainer: {
+    position: 'relative'
   },
 
-  item: {
-    position: 'relative'
+  addPlaceholder: {
+    visibility: 'hidden',
+    pointerEvents: 'none'
+  },
+
+  addButton: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    border: 0
   }
 }
 
@@ -33,7 +34,7 @@ styles.remove = {
   left: 'auto'
 }
 
-export default class List extends React.Component {
+export default class EditList extends React.Component {
   static propTypes = {
     value: React.PropTypes.object,
     setValue: React.PropTypes.func.isRequired,
@@ -44,42 +45,61 @@ export default class List extends React.Component {
     value: {}
   }
 
-  onAddClick () {
-    const modified = {
-      ...this.props.value,
-      [Date.now()]: {}
-    }
+  state = {
+    selected: null
+  }
 
+  onSelectItem (key) {
+    this.setState({
+      selected: key
+    })
+  }
+
+  onDeselectItem (key) {
+    if (key === this.state.selected) {
+      this.setState({
+        selected: null
+      })
+    }
+  }
+
+  onAddClick () {
+    const key = Date.now()
+    const modified = { ...this.props.value, [key]: {} }
     this.props.setValue(modified)
   }
 
-  onRemoveItemClick (key) {
-    const modified = {
-      ...this.props.value
-    }
-
+  onRemoveItem (key) {
+    const modified = { ...this.props.value }
     delete modified[key]
-
     this.props.setValue(modified)
   }
 
   render () {
+    const { selected } = this.state
+    const render = this.props.children
+
     return (
       <div style={styles.container}>
-        {map(this.props.value, (item, key) => (
-          <div style={styles.item} key={key}>
-            {this.props.children(item, key)}
-
-            <div
-              style={styles.remove}
-              onClick={() => this.onRemoveItemClick(key)}
-              children='−'
-            />
-          </div>
+        {map(this.props.value, (value, key) => (
+          <EditItem
+            key={key}
+            selected={selected === key}
+            render={() => render(key)}
+            onSelect={() => this.onSelectItem(key)}
+            onDeselect={() => this.onDeselectItem(key)}
+            onRemove={() => this.onRemoveItem(key)}
+          />
         ))}
 
-        <div style={styles.input}>
-          <div onClick={::this.onAddClick}>+</div>
+        <div style={styles.addContainer}>
+          <div style={styles.addPlaceholder}>
+            {render('new')}
+          </div>
+
+          <button style={styles.addButton} onClick={::this.onAddClick}>
+            Add
+          </button>
         </div>
       </div>
     )
