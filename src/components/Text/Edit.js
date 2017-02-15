@@ -2,6 +2,7 @@ import React from 'react'
 import { Editor, Raw } from 'slate'
 import position from 'selection-position'
 
+import ContentContainer from '../ContentContainer'
 import EditIndicator from '../EditIndicator'
 import FormatMenu from './FormatMenu'
 
@@ -40,7 +41,7 @@ const schema = {
   }
 }
 
-export default class EditText extends React.Component {
+class EditText extends React.Component {
   static propTypes = {
     value: React.PropTypes.object,
     setValue: React.PropTypes.func.isRequired,
@@ -216,3 +217,5 @@ export default class EditText extends React.Component {
     )
   }
 }
+
+export default ContentContainer(EditText)

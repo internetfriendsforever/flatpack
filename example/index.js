@@ -1,7 +1,18 @@
 import React from 'react'
-import { Text, List, Link, EditButton } from '../dist'
+import { Text, List, ListItem, Link, EditButton } from '../dist'
 
 const styles = {
+  books: {
+    display: 'flex',
+    flexWrap: 'wrap'
+  },
+
+  book: {
+    flex: '0 0 200px',
+    margin: 10,
+    padding: 10,
+    background: '#ddd'
+  }
 }
 
 export default [{
@@ -23,12 +34,12 @@ export default [{
       <Text path='page2' placeholder='Text on page 2 is also editable' />
 
       <h2>Books:</h2>
-      <List path='books'>
+      <List path='books' axis='xy' reverse attrs={{ style: styles.books }}>
         {key => (
-          <div style={styles.item} key={key}>
+          <ListItem attrs={{ style: styles.book }} key={key}>
             {key}
             <Text path={`books/${key}/title`} placeholder='Book title…' />
-          </div>
+          </ListItem>
         )}
       </List>
 
