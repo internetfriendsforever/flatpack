@@ -15,17 +15,6 @@ const styles = {
     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif'
   },
 
-  editOverlay: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    background: 'rgba(0, 0, 0, 0.5)',
-    zIndex: 1,
-    pointerEvents: 'none'
-  },
-
   contentPushedDown: {
     position: 'relative',
     paddingTop: 50
@@ -129,10 +118,6 @@ export default class Editor extends React.Component {
         <div style={contentStyles}>
           {this.props.children}
         </div>
-
-        {state.editor.editing && (
-          <div style={styles.editOverlay} />
-        )}
       </div>
     )
   }

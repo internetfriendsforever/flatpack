@@ -16,8 +16,13 @@ export default (View, getEdit) => (
       Component: View
     }
 
-    componentWillMount () {
+    componentDidMount () {
+      this.mounted = true
       this.updateComponent()
+    }
+
+    componentWillUnmount () {
+      this.mounted = false
     }
 
     componentWillReceiveProps () {
@@ -30,9 +35,17 @@ export default (View, getEdit) => (
 
     updateComponent () {
       if (this.isEditing() && getEdit) {
-        getEdit(Component => this.setState({ Component }))
+        getEdit(Component => {
+          this.setComponent(Component)
+        })
       } else {
-        this.setState({ Component: View })
+        this.setComponent(View)
+      }
+    }
+
+    setComponent (Component) {
+      if (this.mounted) {
+        this.setState({ Component })
       }
     }
 

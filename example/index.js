@@ -1,12 +1,15 @@
 import React from 'react'
 import { Text, List, Link, EditButton } from '../dist'
 
+const styles = {
+}
+
 export default [{
   path: '/',
   component: (
     <div>
       <h1>Flatpack sample page</h1>
-      <Text path='introduction' placeholder='This text is editable' />
+      <Text path='home/introduction' placeholder='This text is editable' />
       <Link href='/page2/'>Link to page 2</Link>
       <EditButton />
     </div>
@@ -19,11 +22,13 @@ export default [{
 
       <Text path='page2' placeholder='Text on page 2 is also editable' />
 
-      <List path='list' component='ul'>
-        {(item, key) => (
-          <li key={key}>
+      <h2>Books:</h2>
+      <List path='books'>
+        {key => (
+          <div style={styles.item} key={key}>
             {key}
-          </li>
+            <Text path={`books/${key}/title`} placeholder='Book title…' />
+          </div>
         )}
       </List>
 

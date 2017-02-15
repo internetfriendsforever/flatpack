@@ -1,86 +1,115 @@
 import React from 'react'
-import { map } from 'lodash'
+import { map, sortBy, keyBy, mapValues, omit, indexOf } from 'lodash'
+import { arrayMove } from 'react-sortable-hoc'
 
-const styles = {
-  container: {
-    position: 'relative'
-  },
+import EditList from './EditList'
 
-  input: {
-    position: 'absolute',
-    left: 0,
-    bottom: -20,
-    cursor: 'pointer',
-    background: 'black',
-    color: 'white',
-    borderRadius: '50%',
-    width: 20,
-    height: 20,
-    lineHeight: '20px',
-    textAlign: 'center',
-    zIndex: 100
-  },
+/*
+  Serialized (stored) state:
+  { _order: ['a', 'b'], a: {}, b: {}}
 
-  item: {
-    position: 'relative'
+  Deserialized (internal) state:
+  [{ key: 'a', value: {}}, { key: 'b', value: {}}]
+*/
+
+function isDescendantOfContentEditable (node) {
+  while (node && node.parentNode) {
+    if (node.isContentEditable || node.parentNode.isContentEditable) {
+      return true
+    } else {
+      node = node.parentNode
+    }
   }
 }
 
-styles.remove = {
-  ...styles.input,
-  top: 0,
-  right: 0,
-  left: 'auto'
-}
-
-export default class List extends React.Component {
+export default class Edit extends React.Component {
   static propTypes = {
     value: React.PropTypes.object,
     setValue: React.PropTypes.func.isRequired,
-    children: React.PropTypes.func
+    children: React.PropTypes.func.isRequired,
+    reverse: React.PropTypes.bool
   }
 
   static defaultProps = {
-    value: {}
+    value: {},
+    reverse: false
   }
 
-  onAddClick () {
-    const modified = {
-      ...this.props.value,
-      [Date.now()]: {}
-    }
+  onSortEnd = ({ oldIndex, newIndex }) => {
+    const items = this.deserialize(this.props.value)
+    const sorted = arrayMove(items, oldIndex, newIndex)
 
-    this.props.setValue(modified)
+    this.props.setValue(this.serialize(sorted))
   }
 
-  onRemoveItemClick (key) {
-    const modified = {
-      ...this.props.value
-    }
+  serialize (value) {
+    const order = map(value, ({ key }) => key)
+    const items = mapValues(keyBy(value, 'key'), 'item')
 
+    return {
+      _order: order,
+      ...items
+    }
+  }
+
+  deserialize (value) {
+    const onlyItems = omit(value, '_order')
+    const items = map(onlyItems, (item, key) => ({ key, item }))
+
+    return sortBy(items, ({item, key}) => (
+      indexOf(value._order, key)
+    ))
+  }
+
+  onAddClick = () => {
+    const { reverse, value } = this.props
+    const modified = this.deserialize(value)
+
+    modified[reverse ? 'unshift' : 'push']({
+      key: Date.now().toString(),
+      item: {}
+    })
+
+    this.props.setValue(this.serialize(modified))
+  }
+
+  onRemoveItem = key => {
+    const modified = { ...this.props.value }
     delete modified[key]
-
     this.props.setValue(modified)
+  }
+
+  renderAddButton () {
+    return (
+      <button onClick={this.onAddClick}>
+        Add
+      </button>
+    )
+  }
+
+  shouldCancelStart = e => {
+    if (isDescendantOfContentEditable(e.target)) {
+      return true
+    }
   }
 
   render () {
+    const { value, reverse } = this.props
+
     return (
-      <div style={styles.container}>
-        {map(this.props.value, (item, key) => (
-          <div style={styles.item} key={key}>
-            {this.props.children(item, key)}
+      <div>
+        {reverse && this.renderAddButton()}
 
-            <div
-              style={styles.remove}
-              onClick={() => this.onRemoveItemClick(key)}
-              children='−'
-            />
-          </div>
-        ))}
+        <EditList
+          distance={10}
+          shouldCancelStart={this.shouldCancelStart}
+          items={this.deserialize(value)}
+          render={this.props.children}
+          onSortEnd={this.onSortEnd}
+          onRemoveItem={this.onRemoveItem}
+        />
 
-        <div style={styles.input}>
-          <div onClick={::this.onAddClick}>+</div>
-        </div>
+        {!reverse && this.renderAddButton()}
       </div>
     )
   }
