@@ -12,6 +12,16 @@ import EditList from './EditList'
   [{ key: 'a', value: {}}, { key: 'b', value: {}}]
 */
 
+function isDescendantOfContentEditable (node) {
+  while (node && node.parentNode) {
+    if (node.isContentEditable || node.parentNode.isContentEditable) {
+      return true
+    } else {
+      node = node.parentNode
+    }
+  }
+}
+
 export default class Edit extends React.Component {
   static propTypes = {
     value: React.PropTypes.object,
@@ -35,8 +45,6 @@ export default class Edit extends React.Component {
   serialize (value) {
     const order = map(value, ({ key }) => key)
     const items = mapValues(keyBy(value, 'key'), 'item')
-
-    console.log(order)
 
     return {
       _order: order,
@@ -79,6 +87,12 @@ export default class Edit extends React.Component {
     )
   }
 
+  shouldCancelStart = e => {
+    if (isDescendantOfContentEditable(e.target)) {
+      return true
+    }
+  }
+
   render () {
     const { value, reverse } = this.props
 
@@ -87,6 +101,7 @@ export default class Edit extends React.Component {
         {reverse && this.renderAddButton()}
 
         <EditList
+          shouldCancelStart={this.shouldCancelStart}
           items={this.deserialize(value)}
           render={this.props.children}
           onSortEnd={this.onSortEnd}
