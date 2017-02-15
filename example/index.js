@@ -2,9 +2,6 @@ import React from 'react'
 import { Text, List, Link, EditButton } from '../dist'
 
 const styles = {
-  item: {
-    padding: 10
-  }
 }
 
 export default [{

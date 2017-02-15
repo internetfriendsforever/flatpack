@@ -12,7 +12,9 @@ const styles = {
   },
 
   removeButton: {
-    display: 'none'
+    position: 'absolute',
+    top: 0,
+    right: 0
   }
 }
 

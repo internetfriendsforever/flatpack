@@ -6,24 +6,6 @@ import EditItem from './EditItem'
 const styles = {
   container: {
     position: 'relative'
-  },
-
-  addContainer: {
-    position: 'relative'
-  },
-
-  addPlaceholder: {
-    visibility: 'hidden',
-    pointerEvents: 'none'
-  },
-
-  addButton: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    border: 0
   }
 }
 
@@ -92,15 +74,9 @@ export default class EditList extends React.Component {
           />
         ))}
 
-        <div style={styles.addContainer}>
-          <div style={styles.addPlaceholder}>
-            {render('new')}
-          </div>
-
-          <button style={styles.addButton} onClick={::this.onAddClick}>
-            Add
-          </button>
-        </div>
+        <button onClick={::this.onAddClick}>
+          Add
+        </button>
       </div>
     )
   }
