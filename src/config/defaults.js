@@ -24,7 +24,7 @@ const defaultConfig = {
         ${html}
       </div>
       <script>
-        window.content = '${JSON.stringify(content)}';
+        window.content = '${JSON.stringify(content).replace(/'/gi, '\\\'')}';
         window.scripts = '${JSON.stringify(scripts)}';
       </script>
       ${scripts.map(script => `
