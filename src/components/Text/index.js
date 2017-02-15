@@ -1,5 +1,5 @@
 import View from './View'
-import createContentComponent from '../../createContentComponent'
+import EditorContainer from '../EditorContainer'
 
 const getEditComponent = callback => (
   require.ensure('./Edit', () => {
@@ -7,4 +7,4 @@ const getEditComponent = callback => (
   }, 'editor')
 )
 
-export default createContentComponent(View, getEditComponent)
+export default EditorContainer(View, getEditComponent)

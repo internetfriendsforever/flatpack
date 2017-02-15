@@ -1,6 +1,8 @@
 import React from 'react'
 import { Raw, Html } from 'slate'
 
+import ContentContainer from '../ContentContainer'
+
 const rules = [
   {
     serialize (object, children) {
@@ -43,7 +45,7 @@ function getHtml (state) {
   return { __html: html.serialize(state) }
 }
 
-export default ({ value }) => {
+export default ContentContainer(({ value }) => {
   if (!value) return null
 
   const slateState = Raw.deserialize(value, { terse: true })
@@ -51,4 +53,4 @@ export default ({ value }) => {
   return (
     <div dangerouslySetInnerHTML={getHtml(slateState)} />
   )
-}
+})
