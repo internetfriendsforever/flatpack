@@ -2,6 +2,7 @@ import React from 'react'
 import { Editor, Raw } from 'slate'
 import position from 'selection-position'
 
+import EditIndicator from '../EditIndicator'
 import FormatMenu from './FormatMenu'
 
 const styles = {
@@ -14,19 +15,6 @@ const styles = {
     position: 'relative',
     outline: 0,
     zIndex: 4
-  },
-
-  overlay: {
-    position: 'absolute',
-    display: 'block',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 3,
-    background: 'rgba(255, 255, 255, 1)',
-    mixBlendMode: 'overlay',
-    pointerEvents: 'none'
   }
 }
 
@@ -133,20 +121,21 @@ export default class EditText extends React.Component {
     const { slateState } = this.state
 
     return (
-      <div style={styles.container}>
-        <FormatMenu
-          onClickMarkButton={this.onClickMarkButton}
-          onFormatMenuOpen={this.onFormatMenuOpen}
-          hasMark={this.hasMark}
-        />
-
-        <Editor
-          schema={schema}
-          state={slateState}
-          onChange={::this.onChange}
+      <EditIndicator>
+        <div style={styles.container}>
+          <FormatMenu
+            onClickMarkButton={this.onClickMarkButton}
+            onFormatMenuOpen={this.onFormatMenuOpen}
+            hasMark={this.hasMark}
           />
-        <span style={styles.overlay} />
-      </div>
+
+          <Editor
+            schema={schema}
+            state={slateState}
+            onChange={::this.onChange}
+            />
+        </div>
+      </EditIndicator>
     )
   }
 }
