@@ -101,6 +101,7 @@ export default class Edit extends React.Component {
         {reverse && this.renderAddButton()}
 
         <EditList
+          distance={10}
           shouldCancelStart={this.shouldCancelStart}
           items={this.deserialize(value)}
           render={this.props.children}
