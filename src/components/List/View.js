@@ -1,6 +1,7 @@
 import React from 'react'
-import { map, omit } from 'lodash'
+import { map } from 'lodash'
 
+import deserialize from './deserialize'
 import ContentContainer from '../ContentContainer'
 import DOMComponent from '../DOMComponent'
 
@@ -13,11 +14,11 @@ class ViewList extends React.Component {
   render () {
     const { value, children } = this.props
 
-    const items = omit(value, '_order')
+    const items = deserialize(value)
 
     return (
       <DOMComponent {...this.props}>
-        {map(items, (item, key) => children(key))}
+        {map(items, ({ item, key }) => children(key))}
       </DOMComponent>
     )
   }

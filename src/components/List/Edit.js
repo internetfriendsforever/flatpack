@@ -1,17 +1,11 @@
 import React from 'react'
-import { map, sortBy, keyBy, mapValues, omit, indexOf } from 'lodash'
+import { map } from 'lodash'
 import { arrayMove } from 'react-sortable-hoc'
 
-import ListContainer from './ListContainer'
+import serialize from './serialize'
+import deserialize from './deserialize'
+import EditContainer from './EditContainer'
 import ContentContainer from '../ContentContainer'
-
-/*
-  Serialized (stored) state:
-  { _order: ['a', 'b'], a: {}, b: {}}
-
-  Deserialized (internal) state:
-  [{ key: 'a', value: {}}, { key: 'b', value: {}}]
-*/
 
 const styles = {
   container: {
@@ -61,41 +55,22 @@ class EditList extends React.Component {
   }
 
   onSortEnd = ({ oldIndex, newIndex }) => {
-    const items = this.deserialize(this.props.value)
+    const items = deserialize(this.props.value)
     const sorted = arrayMove(items, oldIndex, newIndex)
 
-    this.props.setValue(this.serialize(sorted))
-  }
-
-  serialize (value) {
-    const order = map(value, ({ key }) => key)
-    const items = mapValues(keyBy(value, 'key'), 'item')
-
-    return {
-      _order: order,
-      ...items
-    }
-  }
-
-  deserialize (value) {
-    const onlyItems = omit(value, '_order')
-    const items = map(onlyItems, (item, key) => ({ key, item }))
-
-    return sortBy(items, ({item, key}) => (
-      indexOf(value._order, key)
-    ))
+    this.props.setValue(serialize(sorted))
   }
 
   onAddClick = () => {
     const { reverse, value } = this.props
-    const modified = this.deserialize(value)
+    const modified = deserialize(value)
 
     modified[reverse ? 'unshift' : 'push']({
       key: Date.now().toString(),
       item: {}
     })
 
-    this.props.setValue(this.serialize(modified))
+    this.props.setValue(serialize(modified))
   }
 
   onRemoveItem = key => {
@@ -128,7 +103,7 @@ class EditList extends React.Component {
   renderChildren () {
     const { value } = this.props
     const render = this.props.children
-    const items = this.deserialize(value)
+    const items = deserialize(value)
 
     return map(items, ({ item, key }, index) => {
       const child = render(key)
@@ -153,7 +128,7 @@ class EditList extends React.Component {
     }
 
     return (
-      <ListContainer
+      <EditContainer
         {...this.props}
         attrs={attrs}
         onSortEnd={this.onSortEnd}
@@ -162,7 +137,7 @@ class EditList extends React.Component {
       >
         {this.renderChildren()}
         {this.renderAddButton()}
-      </ListContainer>
+      </EditContainer>
     )
   }
 }
