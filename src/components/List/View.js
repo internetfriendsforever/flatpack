@@ -1,5 +1,5 @@
 import React from 'react'
-import { map } from 'lodash'
+import { map, omit } from 'lodash'
 
 export default class View extends React.Component {
   static propTypes = {
@@ -15,8 +15,10 @@ export default class View extends React.Component {
   render () {
     const { value, children, component } = this.props
 
+    const items = omit(value, '_order')
+
     return React.createElement(component, {
-      children: map(value, (item, key) => children(key))
+      children: map(items, (item, key) => children(key))
     })
   }
 }

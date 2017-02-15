@@ -9,7 +9,7 @@ export default [{
   component: (
     <div>
       <h1>Flatpack sample page</h1>
-      <Text path='introduction' placeholder='This text is editable' />
+      <Text path='home/introduction' placeholder='This text is editable' />
       <Link href='/page2/'>Link to page 2</Link>
       <EditButton />
     </div>
@@ -22,12 +22,12 @@ export default [{
 
       <Text path='page2' placeholder='Text on page 2 is also editable' />
 
-      <h2>A list:</h2>
-      <List path='list'>
+      <h2>Books:</h2>
+      <List path='books'>
         {key => (
           <div style={styles.item} key={key}>
             {key}
-            <Text path={`list-${key}`} placeholder='Item text editable' />
+            <Text path={`books/${key}/title`} placeholder='Book title…' />
           </div>
         )}
       </List>

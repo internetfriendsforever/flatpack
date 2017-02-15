@@ -1,14 +1,11 @@
 import React from 'react'
-import { findDOMNode } from 'react-dom'
+import { SortableElement } from 'react-sortable-hoc'
 
 import EditIndicator from '../EditIndicator'
 
 const styles = {
   container: {
     position: 'relative'
-  },
-
-  selected: {
   },
 
   removeButton: {
@@ -18,12 +15,9 @@ const styles = {
   }
 }
 
-export default class EditItem extends React.Component {
+class EditItem extends React.Component {
   static propTypes = {
-    selected: React.PropTypes.bool.isRequired,
     render: React.PropTypes.func.isRequired,
-    onSelect: React.PropTypes.func.isRequired,
-    onDeselect: React.PropTypes.func.isRequired,
     onRemove: React.PropTypes.func.isRequired
   }
 
@@ -35,30 +29,12 @@ export default class EditItem extends React.Component {
     document.removeEventListener('mousedown', this.checkDeselect)
   }
 
-  checkDeselect = e => {
-    const element = findDOMNode(this)
-
-    if (element !== e.target && !element.contains(e.target)) {
-      this.props.onDeselect()
-    }
-  }
-
-  onMouseDown (e) {
-    e.stopPropagation()
-    this.props.onSelect()
-  }
-
   render () {
-    const { render, selected, onRemove } = this.props
-
-    const style = {
-      ...styles.container,
-      ...(selected && styles.selected)
-    }
+    const { render, onRemove } = this.props
 
     return (
       <EditIndicator>
-        <div style={style} onMouseDown={::this.onMouseDown}>
+        <div style={styles.container}>
           {render()}
 
           <button style={styles.removeButton} onClick={onRemove}>
@@ -69,3 +45,5 @@ export default class EditItem extends React.Component {
     )
   }
 }
+
+export default SortableElement(EditItem)
