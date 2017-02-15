@@ -20,14 +20,23 @@ const styles = {
 
 const schema = {
   marks: {
-    bold: props => <strong>{props.children}</strong>,
+    bold: props => <b>{props.children}</b>,
+    italic: props => <i>{props.children}</i>,
     code: props => <code>{props.children}</code>,
-    italic: props => <em>{props.children}</em>,
     underlined: props => <u>{props.children}</u>
   },
 
   nodes: {
-    paragraph: props => <p {...props.attributes}>{props.children}</p>
+    paragraph: props => <p {...props.attributes}>{props.children}</p>,
+    heading1: props => <h1 {...props.attributes}>{props.children}</h1>,
+    heading2: props => <h2 {...props.attributes}>{props.children}</h2>,
+    heading3: props => <h3 {...props.attributes}>{props.children}</h3>,
+    heading4: props => <h4 {...props.attributes}>{props.children}</h4>,
+    link: (props) => {
+      const { data } = props.node
+      const href = data.get('href')
+      return <a href={href} {...props.attributes}>{props.children}</a>
+    }
   }
 }
 
@@ -79,13 +88,77 @@ export default class EditText extends React.Component {
     return slateState.marks.some(mark => mark.type === type)
   }
 
-  onClickMarkButton = (e, type) => {
+  hasLink = () => {
+    const { slateState } = this.state
+    return slateState.inlines.some(inline => inline.type === 'link')
+  }
+
+  isBlock = (type) => {
+    const { slateState } = this.state
+    return slateState.blocks.some(block => block.type === type)
+  }
+
+  onMarkButtonClick = (e, type) => {
     e.preventDefault()
     let { slateState } = this.state
 
     slateState = slateState
       .transform()
       .toggleMark(type)
+      .apply()
+
+    this.props.setValue(Raw.serialize(slateState, { terse: true }))
+    this.setState({ slateState })
+  }
+
+  onLinkButtonClick = (e, type) => {
+    e.preventDefault()
+    let { slateState } = this.state
+    const hasLink = this.hasLink()
+
+    if (hasLink) {
+      slateState = slateState
+        .transform()
+        .unwrapInline('link')
+        .apply()
+    } else if (slateState.isExpanded) {
+      const href = window.prompt('Enter link URL')
+
+      slateState = slateState
+        .transform()
+        .wrapInline({
+          type: 'link',
+          data: { href }
+        })
+        .collapseToEnd()
+        .apply()
+    } else {
+      const href = window.prompt('Enter link URL')
+      const text = window.prompt('Enter link text')
+
+      slateState = slateState
+        .transform()
+        .insertText(text)
+        .extendBackward(text.length)
+        .wrapInline({
+          type: 'link',
+          data: { href }
+        })
+        .collapseToEnd()
+        .apply()
+    }
+
+    this.props.setValue(Raw.serialize(slateState, { terse: true }))
+    this.setState({ slateState })
+  }
+
+  onBlockButtonClick = (e, type) => {
+    e.preventDefault()
+    let { slateState } = this.state
+
+    slateState = slateState
+      .transform()
+      .setBlock(type)
       .apply()
 
     this.props.setValue(Raw.serialize(slateState, { terse: true }))
@@ -124,16 +197,20 @@ export default class EditText extends React.Component {
       <EditIndicator>
         <div style={styles.container}>
           <FormatMenu
-            onClickMarkButton={this.onClickMarkButton}
+            onMarkButtonClick={this.onMarkButtonClick}
+            onBlockButtonClick={this.onBlockButtonClick}
+            onLinkButtonClick={this.onLinkButtonClick}
             onFormatMenuOpen={this.onFormatMenuOpen}
             hasMark={this.hasMark}
+            hasLink={this.hasLink}
+            isBlock={this.isBlock}
           />
 
           <Editor
             schema={schema}
             state={slateState}
             onChange={::this.onChange}
-            />
+          />
         </div>
       </EditIndicator>
     )
