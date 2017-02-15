@@ -4,6 +4,14 @@ import { arrayMove } from 'react-sortable-hoc'
 
 import EditList from './EditList'
 
+/*
+  Serialized (stored) state:
+  { _order: ['a', 'b'], a: {}, b: {}}
+
+  Deserialized (internal) state:
+  [{ key: 'a', value: {}}, { key: 'b', value: {}}]
+*/
+
 export default class Edit extends React.Component {
   static propTypes = {
     value: React.PropTypes.object,
