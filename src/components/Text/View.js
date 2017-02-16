@@ -13,6 +13,9 @@ const rules = [
         case 'heading2': return <h2>{children}</h2>
         case 'heading3': return <h3>{children}</h3>
         case 'heading4': return <h4>{children}</h4>
+        case 'unorderedList': return <ul>{children}</ul>
+        case 'orderedList': return <ol>{children}</ol>
+        case 'listItem': return <li>{children}</li>
         case 'code': return <pre><code>{children}</code></pre>
       }
     }

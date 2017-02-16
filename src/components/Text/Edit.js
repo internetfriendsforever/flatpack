@@ -19,6 +19,8 @@ const styles = {
   }
 }
 
+const DEFAULT_NODE = 'paragraph'
+
 const schema = {
   marks: {
     bold: props => <b>{props.children}</b>,
@@ -33,6 +35,9 @@ const schema = {
     heading2: props => <h2 {...props.attributes}>{props.children}</h2>,
     heading3: props => <h3 {...props.attributes}>{props.children}</h3>,
     heading4: props => <h4 {...props.attributes}>{props.children}</h4>,
+    unorderedList: props => <ul {...props.attributes}>{props.children}</ul>,
+    orderedList: props => <ol {...props.attributes}>{props.children}</ol>,
+    listItem: props => <li {...props.attributes}>{props.children}</li>,
     link: (props) => {
       const { data } = props.node
       const href = data.get('href')
@@ -78,10 +83,34 @@ class EditText extends React.Component {
       return
     }
 
-    const rect = position()
+    function getMenuPosition () {
+      const rect = position()
+
+      if (window.innerWidth - rect.left < menuWrapper.offsetWidth / 2) {
+        // Outside right screen
+        return {
+          top: `${rect.top + window.scrollY - menuWrapper.offsetHeight}px`,
+          left: `${window.innerWidth - menuWrapper.offsetWidth}px`
+        }
+      }
+
+      if (rect.left < menuWrapper.offsetWidth / 2 - rect.width / 2) {
+        // Outside left screen
+        return {
+          top: `${rect.top + window.scrollY - menuWrapper.offsetHeight}px`,
+          left: `${window.scrollX}px`
+        }
+      }
+
+      return {
+        top: `${rect.top + window.scrollY - menuWrapper.offsetHeight}px`,
+        left: `${rect.left + window.scrollX - menuWrapper.offsetWidth / 2 + rect.width / 2}px`
+      }
+    }
+
     menuWrapper.style.display = 'block'
-    menuWrapper.style.top = `${rect.top + window.scrollY - menuWrapper.offsetHeight}px`
-    menuWrapper.style.left = `${rect.left + window.scrollX - menuWrapper.offsetWidth / 2 + rect.width / 2}px`
+    menuWrapper.style.top = getMenuPosition().top
+    menuWrapper.style.left = getMenuPosition().left
   }
 
   hasMark = (type) => {
@@ -94,9 +123,9 @@ class EditText extends React.Component {
     return slateState.inlines.some(inline => inline.type === 'link')
   }
 
-  isBlock = (type) => {
+  hasBlock = (type) => {
     const { slateState } = this.state
-    return slateState.blocks.some(block => block.type === type)
+    return slateState.blocks.some(node => node.type === type)
   }
 
   onMarkButtonClick = (e, type) => {
@@ -156,11 +185,45 @@ class EditText extends React.Component {
   onBlockButtonClick = (e, type) => {
     e.preventDefault()
     let { slateState } = this.state
+    let transform = slateState.transform()
+    const { document } = slateState
 
-    slateState = slateState
-      .transform()
-      .setBlock(type)
-      .apply()
+    if (type !== 'unorderedList' && type !== 'orderedList') {
+      const isActive = this.hasBlock(type)
+      const isList = this.hasBlock('listItem')
+
+      if (isList) {
+        transform
+          .setBlock(isActive ? DEFAULT_NODE : type)
+          .unwrapBlock('orderedList')
+          .unwrapBlock('unorderedList')
+      } else {
+        transform
+          .setBlock(isActive ? DEFAULT_NODE : type)
+      }
+    } else {
+      const isList = this.hasBlock('listItem')
+      const isType = slateState.blocks.some(block => {
+        return !!document.getClosest(block.key, parent => parent.type === type)
+      })
+
+      if (isList && isType) {
+        transform
+          .setBlock(DEFAULT_NODE)
+          .unwrapBlock('orderedList')
+          .unwrapBlock('unorderedList')
+      } else if (isList) {
+        transform
+          .unwrapBlock(type === 'unorderedList' ? 'orderedList' : 'unorderedList')
+          .wrapBlock(type)
+      } else {
+        transform
+          .setBlock('listItem')
+          .wrapBlock(type)
+      }
+    }
+
+    slateState = transform.apply()
 
     this.props.setValue(Raw.serialize(slateState, { terse: true }))
     this.setState({ slateState })
@@ -204,7 +267,7 @@ class EditText extends React.Component {
             onFormatMenuOpen={this.onFormatMenuOpen}
             hasMark={this.hasMark}
             hasLink={this.hasLink}
-            isBlock={this.isBlock}
+            hasBlock={this.hasBlock}
           />
 
           <Editor
