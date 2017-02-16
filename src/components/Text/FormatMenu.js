@@ -75,8 +75,9 @@ export default class FormatMenu extends React.Component {
     )
   }
 
-  renderBlockButton = (type, icon) => {
-    const isActive = this.props.isBlock(type)
+  renderBlockButton = (type, icon, child = null) => {
+    const isActive = this.props.hasBlock(type)
+
     const onMouseDown = e => this.props.onBlockButtonClick(e, type)
 
     const style = {
@@ -102,6 +103,8 @@ export default class FormatMenu extends React.Component {
             {this.renderBlockButton('paragraph', 'P')}
             {this.renderBlockButton('heading1', 'H1')}
             {this.renderBlockButton('heading2', 'H2')}
+            {this.renderBlockButton('unorderedList', 'ul', 'listItem')}
+            {this.renderBlockButton('orderedList', 'ol', 'listItem')}
 
             {this.renderMarkButton('bold', 'B')}
             {this.renderMarkButton('italic', 'I')}
