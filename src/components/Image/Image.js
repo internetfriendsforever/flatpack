@@ -1,65 +1,31 @@
 import React from 'react'
-import { isString } from 'lodash'
 
-export default class Image extends React.Component {
+import ContentContainer from '../ContentContainer'
+
+class Image extends React.Component {
   static propTypes = {
-    value: React.PropTypes.object.isRequired
+    path: React.PropTypes.string.isRequired,
+    value: React.PropTypes.object
   }
 
   static defaultProps = {
     value: {}
   }
 
-  state = {
-    dataUrl: null
-  }
-
-  componentDidMount () {
-    this.mounted = true
-    this.checkValueForBlob(this.props.value)
-  }
-
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.value.url !== this.props.value.url) {
-      this.checkValueForBlob(nextProps.value)
-    }
-  }
-
-  componentWillUnmount () {
-    this.mounted = false
-  }
-
-  checkValueForBlob (value) {
-    if (value.url instanceof window.Blob) {
-      this.readBlob(value.url)
-    }
-  }
-
-  readBlob (blob) {
-    const reader = new window.FileReader()
-    reader.addEventListener('load', this.onReadDataUrl)
-    reader.readAsDataURL(blob)
-  }
-
-  onReadDataUrl = (e) => {
-    if (this.mounted) {
-      this.setState({
-        dataUrl: e.target.result
-      })
-    }
+  static contextTypes = {
+    flatpack: React.PropTypes.object
   }
 
   getSrc () {
-    const { dataUrl } = this.state
-    const { value } = this.props
+    const { url } = this.props.value
+    const { uploads } = this.context.flatpack.store.getState().content
+    const upload = uploads[this.props.path]
 
-    if (isString(value.url)) {
-      return value.url
+    if (upload) {
+      return upload.preview
     }
 
-    if (dataUrl) {
-      return dataUrl
-    }
+    return url
   }
 
   render () {
@@ -74,3 +40,5 @@ export default class Image extends React.Component {
     return null
   }
 }
+
+export default ContentContainer(Image)

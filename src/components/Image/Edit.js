@@ -4,6 +4,7 @@ import { first } from 'lodash'
 import Image from './Image'
 import ContentContainer from '../ContentContainer'
 import DOMComponent from '../DOMComponent'
+import { setImageUpload } from '../../actions/content'
 
 const styles = {
   container: {
@@ -19,6 +20,7 @@ const styles = {
 
 class EditImage extends React.Component {
   static propTypes = {
+    path: React.PropTypes.string.isRequired,
     value: React.PropTypes.object,
     setValue: React.PropTypes.func.isRequired,
     attrs: React.PropTypes.object
@@ -27,6 +29,10 @@ class EditImage extends React.Component {
   static defaultProps = {
     value: {},
     attrs: {}
+  }
+
+  static contextTypes = {
+    flatpack: React.PropTypes.object
   }
 
   state = {
@@ -61,9 +67,8 @@ class EditImage extends React.Component {
       const imagePattern = /^image\//
 
       if (imagePattern.test(file.type)) {
-        this.props.setValue({
-          url: file
-        })
+        const action = setImageUpload(this.props.path, file)
+        this.context.flatpack.store.dispatch(action)
       } else {
         this.onDropError()
       }
@@ -100,7 +105,7 @@ class EditImage extends React.Component {
 
     return (
       <DOMComponent {...this.props} attrs={attrs}>
-        <Image value={this.props.value} />
+        <Image path={this.props.path} />
       </DOMComponent>
     )
   }

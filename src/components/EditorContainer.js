@@ -38,7 +38,7 @@ export default (View, getEdit) => (
     }
 
     setComponent (Component) {
-      if (this.mounted) {
+      if (this.mounted && Component !== this.state.Component) {
         this.setState({ Component })
       }
     }

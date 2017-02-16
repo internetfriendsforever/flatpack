@@ -1,4 +1,5 @@
 import React from 'react'
+import { map } from 'lodash'
 
 import Message from './Message'
 import Window from './Window'
@@ -48,12 +49,14 @@ export default class Editor extends React.Component {
     const { authentication, content } = store.getState()
     const { session } = content
     const { credentials } = authentication
+    const uploads = map(content.uploads, upload => upload.payload)
 
     this.context.flatpack.store.dispatch(publish({
       content: session.toJS(),
       credentials,
       config,
-      scripts
+      scripts,
+      uploads
     }))
   }
 

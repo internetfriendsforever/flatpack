@@ -4,6 +4,9 @@ const express = require('express')
 const webpack = require('webpack')
 const webpackDevMiddleware = require('webpack-dev-middleware')
 const getWebpackConfig = require('./getWebpackConfig')
+const aws = require('./config/aws')
+
+const proxy = require('express-http-proxy')
 
 const icon = '🔧'
 
@@ -27,6 +30,12 @@ module.exports = function createDevServer () {
       colors: true
     }
   })
+
+  app.use('/uploads', proxy(aws.s3Bucket + '.s3.amazonaws.com', {
+    forwardPath: function (req, res) {
+      return '/uploads' + require('url').parse(req.url).path
+    }
+  }))
 
   app.post('/build', (req, res) => {
     console.log(icon, 'Compiling production scripts…')

@@ -7,7 +7,7 @@ import DOMComponent from '../DOMComponent'
 export default ContentContainer(props => {
   return (
     <DOMComponent {...props}>
-      <Image value={props.value} />
+      <Image path={props.path} />
     </DOMComponent>
   )
 })
