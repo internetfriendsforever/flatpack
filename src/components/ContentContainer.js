@@ -1,4 +1,5 @@
 import React from 'react'
+import { Iterable } from 'immutable'
 
 import { set } from '../actions/content'
 
@@ -20,11 +21,17 @@ export default Component => (
       this.context.flatpack.store.dispatch(set(this.props.path, value))
     }
 
-    render () {
+    getValue () {
       const store = this.context.flatpack.store
-      const value = store.getContent(this.props.path)
+      const state = store.getState().content.session
+      const value = state.getIn(this.props.path.split('/'))
+      return Iterable.isIterable(value) ? value.toJS() : value
+    }
 
-      const props = { value }
+    render () {
+      const props = {
+        value: this.getValue()
+      }
 
       if (this.isEditing) {
         props.setValue = ::this.setValue

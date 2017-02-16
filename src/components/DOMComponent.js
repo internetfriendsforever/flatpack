@@ -8,7 +8,8 @@ export default class DOMComponent extends React.Component {
   }
 
   static defaultProps = {
-    component: 'div'
+    component: 'div',
+    attrs: {}
   }
 
   render () {

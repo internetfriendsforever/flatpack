@@ -2,7 +2,8 @@ import { Map, fromJS } from 'immutable'
 
 const initialState = {
   published: Map({}),
-  session: Map({})
+  session: Map({}),
+  uploads: {}
 }
 
 export default function content (state = initialState, action) {
@@ -17,6 +18,29 @@ export default function content (state = initialState, action) {
         )
       }
 
+    case 'SET_FILE_UPLOAD':
+      return {
+        ...state,
+        uploads: {
+          ...state.uploads,
+          [action.key]: {
+            payload: action.payload
+          }
+        }
+      }
+
+    case 'SET_FILE_UPLOAD_PREVIEW':
+      return {
+        ...state,
+        uploads: {
+          ...state.uploads,
+          [action.key]: {
+            ...state.uploads[action.key],
+            preview: action.preview
+          }
+        }
+      }
+
     case 'DISCARD':
       return {
         ...state,
@@ -26,7 +50,8 @@ export default function content (state = initialState, action) {
     case 'RELEASE_SUCCESS':
       return {
         ...state,
-        published: state.session
+        published: state.session,
+        uploads: {}
       }
   }
 

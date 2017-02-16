@@ -1,4 +1,5 @@
 import path from 'path'
+import webpack from 'webpack'
 import FileWriterWebpackPlugin from './FileWriterWebpackPlugin'
 import getAssetsFromCompilation from './getAssetsFromCompilation'
 import fetchRemoteContent from'./fetchRemoteContent'
@@ -20,6 +21,10 @@ module.exports = {
 
   plugins: [
     ...commonConfig.plugins,
+
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('development')
+    }),
 
     new FileWriterWebpackPlugin((compilation, callback) => {
       const assets = getAssetsFromCompilation(compilation)

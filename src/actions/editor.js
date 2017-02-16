@@ -9,7 +9,7 @@ export const toggleEditing = () => ({
   type: 'TOGGLE_EDITING'
 })
 
-export const publish = ({ config, content, scripts, credentials }) => dispatch => {
+export const publish = ({ config, content, scripts, credentials, uploads }) => dispatch => {
   dispatch({
     type: 'PUBLISH'
   })
@@ -43,6 +43,7 @@ export const publish = ({ config, content, scripts, credentials }) => dispatch =
 
     const files = [
       contentFile,
+      ...uploads,
       ...buildResult.files,
       ...renderedFiles
     ]

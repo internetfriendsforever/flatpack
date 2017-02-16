@@ -36,7 +36,8 @@ export default class Provider extends React.Component {
     this.store = createStore({
       content: {
         session: fromJS(props.content),
-        published: fromJS(props.content)
+        published: fromJS(props.content),
+        uploads: {}
       }
     })
 
@@ -53,9 +54,6 @@ export default class Provider extends React.Component {
 
   checkForEditor () {
     if (!this.state.Editor && this.store.getState().app.editor) {
-      // window.__webpack_require__.p = '/'
-      console.log(__webpack_require__.p)
-
       require.ensure('./Editor', require => {
         this.setState({
           Editor: require('./Editor').default
