@@ -78,10 +78,34 @@ class EditText extends React.Component {
       return
     }
 
-    const rect = position()
+    function getMenuPosition () {
+      const rect = position()
+
+      if (window.innerWidth - rect.left < menuWrapper.offsetWidth / 2) {
+        // Outside right screen
+        return {
+          top: `${rect.top + window.scrollY - menuWrapper.offsetHeight}px`,
+          left: `${window.innerWidth - menuWrapper.offsetWidth}px`
+        }
+      }
+
+      if (rect.left < menuWrapper.offsetWidth / 2 - rect.width / 2) {
+        // Outside left screen
+        return {
+          top: `${rect.top + window.scrollY - menuWrapper.offsetHeight}px`,
+          left: `${window.scrollX}px`
+        }
+      }
+
+      return {
+        top: `${rect.top + window.scrollY - menuWrapper.offsetHeight}px`,
+        left: `${rect.left + window.scrollX - menuWrapper.offsetWidth / 2 + rect.width / 2}px`
+      }
+    }
+
     menuWrapper.style.display = 'block'
-    menuWrapper.style.top = `${rect.top + window.scrollY - menuWrapper.offsetHeight}px`
-    menuWrapper.style.left = `${rect.left + window.scrollX - menuWrapper.offsetWidth / 2 + rect.width / 2}px`
+    menuWrapper.style.top = getMenuPosition().top
+    menuWrapper.style.left = getMenuPosition().left
   }
 
   hasMark = (type) => {
