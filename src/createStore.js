@@ -1,7 +1,6 @@
 import thunk from 'redux-thunk'
 import createLogger from 'redux-logger'
 import { createStore, applyMiddleware } from 'redux'
-import { Map } from 'immutable'
 
 import reducers from './reducers'
 
@@ -18,12 +17,6 @@ export default initialState => {
       logger
     )
   )
-
-  store.getContent = path => {
-    const state = store.getState().content.session
-    const value = state.getIn(path.split('/'))
-    return value instanceof Map ? value.toJS() : value
-  }
 
   return store
 }
