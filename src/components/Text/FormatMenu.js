@@ -5,46 +5,33 @@ const styles = {
   menuWrapper: {
     zIndex: 5,
     position: 'absolute',
-    fontFamily: 'Iosevka, monospaced',
-    fontSize: '0.8em'
+    fontFamily: 'Iosevka, monospaced'
   },
 
   menu: {
     background: '#5B5E6D',
     border: '1px solid #414554',
     borderRadius: '2px',
-    padding: 5,
     display: 'flex'
   },
 
-  markButton: {
-    width: 22,
-    height: 22,
-    lineHeight: '22px',
+  formatButton: {
+    width: 32,
+    height: 32,
+    lineHeight: '32px',
     textAlign: 'center',
     color: 'rgba(255, 255, 255, 0.7)',
     cursor: 'pointer',
     flex: 1
   },
 
-  markButtonActive: {
+  formatButtonHover: {
+    color: 'white'
+  },
+
+  formatButtonActive: {
     color: 'white',
     background: '#414554'
-  },
-
-  blockButton: {
-    width: 22,
-    height: 22,
-    lineHeight: '22px',
-    textAlign: 'center',
-    color: 'rgba(0, 0, 0, 0.7)',
-    cursor: 'pointer',
-    flex: 1,
-    background: '#9C9EA7'
-  },
-
-  blockButtonActive: {
-    color: 'black'
   }
 }
 
@@ -61,8 +48,8 @@ export default class FormatMenu extends React.Component {
     const onMouseDown = e => this.props.onMarkButtonClick(e, type)
 
     const style = {
-      ...styles.markButton,
-      ...(isActive && {...styles.markButtonActive})
+      ...styles.formatButton,
+      ...(isActive && {...styles.formatButtonActive})
     }
 
     return (
@@ -77,8 +64,8 @@ export default class FormatMenu extends React.Component {
     const onMouseDown = e => this.props.onLinkButtonClick(e, type)
 
     const style = {
-      ...styles.markButton,
-      ...(isActive && {...styles.markButtonActive})
+      ...styles.formatButton,
+      ...(isActive && {...styles.formatButtonActive})
     }
 
     return (
@@ -93,12 +80,15 @@ export default class FormatMenu extends React.Component {
     const onMouseDown = e => this.props.onBlockButtonClick(e, type)
 
     const style = {
-      ...styles.blockButton,
-      ...(isActive && {...styles.blockButtonActive})
+      ...styles.formatButton,
+      ...(isActive && {...styles.formatButtonActive})
     }
 
     return (
-      <span onMouseDown={onMouseDown} style={style}>
+      <span
+        onMouseDown={onMouseDown}
+        style={style}
+      >
         <span>{icon}</span>
       </span>
     )
