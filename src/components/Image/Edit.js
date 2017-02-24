@@ -4,7 +4,13 @@ import { first } from 'lodash'
 import Image from './Image'
 import ContentContainer from '../ContentContainer'
 import DOMComponent from '../DOMComponent'
-import { setImageUpload } from '../../actions/content'
+import createThumbnail from './createThumbnail'
+import fileToImage from './fileToImage'
+import { set, setImageUpload } from '../../actions/content'
+
+function isImage (file) {
+  return /^image\//.test(file.type)
+}
 
 const styles = {
   container: {
@@ -36,8 +42,7 @@ class EditImage extends React.Component {
   }
 
   state = {
-    dragOver: false,
-    preview: null
+    dragOver: false
   }
 
   componentWillReceiveProps (nextProps) {
@@ -61,29 +66,31 @@ class EditImage extends React.Component {
   onDrop = e => {
     e.preventDefault()
 
-    const file = first(e.dataTransfer.files)
-
-    if (file) {
-      const imagePattern = /^image\//
-
-      if (imagePattern.test(file.type)) {
-        const action = setImageUpload(this.props.path, file)
-        this.context.flatpack.store.dispatch(action)
-      } else {
-        this.onDropError()
-      }
-    } else {
-      this.onDropError()
-    }
-
     this.setState({
       dragOver: false
     })
-  }
 
-  onDropError () {
-    // TODO: Notify user of wrong filetype
-    console.log('Not an image')
+    const file = first(e.dataTransfer.files)
+
+    if (file && isImage(file)) {
+      const uploadAction = setImageUpload(this.props.path, file)
+
+      this.context.flatpack.store.dispatch(uploadAction)
+
+      fileToImage(file, image => {
+        const metaUpdateAction = set(this.props.path, {
+          ...this.props.value,
+          width: image.width,
+          height: image.height,
+          thumbnail: createThumbnail(image, 10).src
+        })
+
+        this.context.flatpack.store.dispatch(metaUpdateAction)
+      })
+    } else {
+      // TODO: Notify user of wrong filetype
+      console.log('Not an image')
+    }
   }
 
   render () {
