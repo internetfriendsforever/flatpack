@@ -4,7 +4,7 @@ export const set = (path, value) => ({
   value
 })
 
-export const setImageUpload = (contentPath, image) => dispatch => {
+export const setImageUpload = (contentPath, file) => dispatch => {
   const filePath = `uploads/${Date.now()}`
 
   dispatch({
@@ -12,13 +12,13 @@ export const setImageUpload = (contentPath, image) => dispatch => {
     key: contentPath,
     payload: {
       path: filePath,
-      type: image.type,
-      data: image
+      type: file.type,
+      data: file
     }
   })
 
   dispatch(set(contentPath, {
-    url: filePath
+    url: `/${filePath}`
   }))
 
   const reader = new window.FileReader()
@@ -31,7 +31,7 @@ export const setImageUpload = (contentPath, image) => dispatch => {
     })
   })
 
-  reader.readAsDataURL(image)
+  reader.readAsDataURL(file)
 }
 
 export const discard = () => ({
