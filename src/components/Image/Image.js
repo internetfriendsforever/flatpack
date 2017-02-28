@@ -33,17 +33,25 @@ class Image extends React.Component {
     const src = this.getSrc()
 
     const style = {
-      width,
-      height,
+      width: '100%',
+      maxWidth: width,
+      maxHeight: height,
       backgroundImage: `url(${thumbnail})`,
       backgroundSize: 'cover'
+    }
+
+    const imageStyle = {
+      width: '100%'
     }
 
     if (thumbnail) {
       return (
         <div style={style}>
           {src && (
-            <img src={src} />
+            <img
+              style={imageStyle}
+              src={src}
+            />
           )}
         </div>
       )
