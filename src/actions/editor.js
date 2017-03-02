@@ -29,16 +29,18 @@ export const publish = ({ config, content, scripts, credentials, uploads }) => d
 
     const contentFile = {
       path: 'content.json',
-      data: JSON.stringify(content),
-      type: 'application/json'
+      data: new window.Blob([JSON.stringify(content)], {
+        type: 'application/json'
+      })
     }
 
     const renderedRoutes = renderRoutes(config, content, finalScripts, version)
 
-    const renderedFiles = map(renderedRoutes, (data, path) => ({
-      type: 'text/html',
+    const renderedFiles = map(renderedRoutes, (html, path) => ({
       path,
-      data
+      data: new window.Blob([html], {
+        type: 'text/html'
+      })
     }))
 
     const files = [
@@ -181,7 +183,7 @@ function uploadFile (file, credentials) {
     Bucket: window.aws.s3Bucket,
     Key: key,
     Body: file.data,
-    ContentType: file.type
+    ContentType: file.type || file.data.type
   }
 
   console.log('Uploading', key)
