@@ -20,18 +20,25 @@ const defaultConfig = {
   notFoundRoute: <NotFound />,
   template: (html, title, content = {}, scripts = []) => {
     return `
-      <title>${title}</title>
-
-      <div id="root">
-        ${html}
-      </div>
-      <script>
-        window.content = '${JSON.stringify(content).replace(/'/gi, '\\\'')}';
-        window.scripts = '${JSON.stringify(scripts)}';
-      </script>
-      ${scripts.map(script => `
-        <script src="${script}"></script>
-      `)}
+      <!doctype html>
+      <html>
+      <head>
+        <meta charset="utf-8" />
+        <title>${title}</title>
+      </head>
+      <body>
+        <div id="root">
+          ${html}
+        </div>
+        <script>
+          window.content = '${JSON.stringify(content).replace(/'/gi, '\\\'')}';
+          window.scripts = '${JSON.stringify(scripts)}';
+        </script>
+        ${scripts.map(script => `
+          <script src="${script}"></script>
+        `)}
+      </body>
+      </html>
     `
   }
 }
