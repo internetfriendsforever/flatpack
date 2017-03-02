@@ -24,18 +24,7 @@ export default function content (state = initialState, action) {
         uploads: {
           ...state.uploads,
           [action.key]: {
-            payload: action.payload
-          }
-        }
-      }
-
-    case 'SET_FILE_UPLOAD_PREVIEW':
-      return {
-        ...state,
-        uploads: {
-          ...state.uploads,
-          [action.key]: {
-            ...state.uploads[action.key],
+            files: action.files,
             preview: action.preview
           }
         }
@@ -44,7 +33,8 @@ export default function content (state = initialState, action) {
     case 'DISCARD':
       return {
         ...state,
-        session: state.published
+        session: state.published,
+        uploads: {}
       }
 
     case 'RELEASE_SUCCESS':
