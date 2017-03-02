@@ -52,6 +52,10 @@ export default class Provider extends React.Component {
     this.checkForEditor()
   }
 
+  componentWillReceiveProps (nextProps) {
+    document.title = nextProps.title
+  }
+
   checkForEditor () {
     if (!this.state.Editor && this.store.getState().app.editor) {
       require.ensure('./Editor', require => {

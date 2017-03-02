@@ -25,13 +25,13 @@ export default function renderRoutes (config, content, scripts, version) {
     const filepath = (`/${route.path}/${prefix}index.html`).split('/').filter(v => !!v).join('/')
     const html = renderWithProvider(route.component, config, content, scripts)
 
-    files[filepath] = template(html, content, scripts)
+    files[filepath] = template(html, route.title, content, scripts)
   })
 
   // 404 file
   if (config.notFoundRoute) {
     const html = renderWithProvider(config.notFoundRoute, config, content, scripts)
-    files[`${prefix}404.html`] = template(html, content)
+    files[`${prefix}404.html`] = template(html, config.notFoundRoute.title, content)
   }
 
   return files
