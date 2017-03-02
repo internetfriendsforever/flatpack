@@ -17,6 +17,7 @@ const styles = {
 
 export default [{
   path: '/',
+  title: 'Home',
   component: (
     <div>
       <h1>Flatpack sample page</h1>
@@ -28,6 +29,7 @@ export default [{
   )
 }, {
   path: '/page2/',
+  title: 'Page 2',
   component: (
     <div>
       <h1>Page 2</h1>

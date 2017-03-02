@@ -17,7 +17,7 @@ function route () {
   const component = route && route.component || config.notFoundRoute
 
   ReactDOM.render((
-    <Provider content={content} config={config} scripts={scripts}>
+    <Provider title={route.title} content={content} config={config} scripts={scripts}>
       {component}
     </Provider>
   ), root)

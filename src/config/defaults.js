@@ -18,8 +18,10 @@ const NotFound = require('../components/NotFound').default
 const defaultConfig = {
   routes: () => [],
   notFoundRoute: <NotFound />,
-  template: (html, content = {}, scripts = []) => {
+  template: (html, title, content = {}, scripts = []) => {
     return `
+      <title>${title}</title>
+
       <div id="root">
         ${html}
       </div>
