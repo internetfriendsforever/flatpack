@@ -17,7 +17,10 @@ const NotFound = require('../components/NotFound').default
 
 const defaultConfig = {
   routes: () => [],
-  notFoundRoute: <NotFound />,
+  notFoundRoute: {
+    title: '404 not found',
+    component: <NotFound />
+  },
   template: (html, title, content = {}, scripts = []) => {
     return `
       <!doctype html>
