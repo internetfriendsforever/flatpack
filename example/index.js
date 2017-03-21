@@ -24,6 +24,8 @@ export default [{
       <Image path='home/image' />
       <Text path='home/introduction' placeholder='This text is editable' />
       <Link href='/page2/'>Link to page 2</Link>
+      <br />
+      <Link href='/ingensteds'>Link to ingensteds</Link>
       <EditButton />
     </div>
   )

@@ -13,11 +13,11 @@ const routes = config.routes(content)
 
 function route () {
   const pathname = history.location.pathname
-  const route = routes.find(route => route.path === pathname)
-  const component = route && route.component || config.notFoundRoute
+  const route = routes.find(route => route.path === pathname) || config.notFoundRoute
+  const { component, title } = route
 
   ReactDOM.render((
-    <Provider title={route.title} content={content} config={config} scripts={scripts}>
+    <Provider title={title} content={content} config={config} scripts={scripts}>
       {component}
     </Provider>
   ), root)
