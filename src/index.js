@@ -1,6 +1,7 @@
 export Link from './components/Link'
 export EditButton from './components/EditButton'
 export Text from './components/Text'
+export PlainText from './components/PlainText'
 export Image from './components/Image'
 export List from './components/List'
 export ListItem from './components/ListItem'
