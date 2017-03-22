@@ -18,7 +18,7 @@ class ViewList extends React.Component {
 
     return (
       <DOMComponent {...this.props}>
-        {map(items, ({ item, key }) => children(key))}
+        {map(items, ({ item, key }, i) => children(key, i))}
       </DOMComponent>
     )
   }

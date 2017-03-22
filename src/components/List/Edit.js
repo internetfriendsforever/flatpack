@@ -106,7 +106,7 @@ class EditList extends React.Component {
     const items = deserialize(value)
 
     return map(items, ({ item, key }, index) => {
-      const child = render(key)
+      const child = render(key, index)
 
       return React.cloneElement(child, {
         ...child.props,
