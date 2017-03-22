@@ -1,11 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { createBrowserHistory } from 'history'
 import Provider from './components/Provider'
-import history from './history'
 import configDefaults from './config/defaults'
 
 // Provided through webpack resolve alias in webpack.config.js
 const config = configDefaults(require('config'))
+
+const history = createBrowserHistory()
 
 const content = JSON.parse(window.content || '{}')
 const scripts = JSON.parse(window.scripts || '{}')
@@ -17,9 +19,14 @@ function route () {
   const { component, title } = route
 
   ReactDOM.render((
-    <Provider title={title} content={content} config={config} scripts={scripts}>
-      {component}
-    </Provider>
+    <Provider
+      title={title}
+      content={content}
+      config={config}
+      scripts={scripts}
+      history={history}
+      children={component}
+    />
   ), root)
 }
 

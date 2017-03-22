@@ -1,14 +1,18 @@
 import React from 'react'
-import history from '../history'
 
 export default class Link extends React.Component {
   static propTypes = {
     onClick: React.PropTypes.func
   }
 
+  static contextTypes = {
+    flatpack: React.PropTypes.object
+  }
+
   onClick (e) {
     e.preventDefault()
-    history.push(e.currentTarget.pathname)
+
+    this.context.flatpack.history.push(e.currentTarget.pathname)
 
     if (this.props.onClick) {
       this.props.onClick(e)

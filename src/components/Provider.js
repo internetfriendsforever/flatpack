@@ -8,6 +8,7 @@ export default class Provider extends React.Component {
     config: React.PropTypes.object.isRequired,
     content: React.PropTypes.object.isRequired,
     scripts: React.PropTypes.array.isRequired,
+    history: React.PropTypes.object.isRequired,
     children: React.PropTypes.element.isRequired
   }
 
@@ -21,6 +22,7 @@ export default class Provider extends React.Component {
         config: this.props.config,
         content: this.props.content,
         scripts: this.props.scripts,
+        history: this.props.history,
         store: this.store
       }
     }

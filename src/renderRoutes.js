@@ -30,7 +30,7 @@ export default function renderRoutes (config, content, scripts, version) {
 
   // 404 file
   if (config.notFoundRoute) {
-    const html = renderWithProvider(config.notFoundRoute, config, content, scripts)
+    const html = renderWithProvider(config.notFoundRoute.component, config, content, scripts)
     files[`${prefix}404.html`] = template(html, config.notFoundRoute.title, content)
   }
 
