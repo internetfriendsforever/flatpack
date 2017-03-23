@@ -15,6 +15,13 @@ const NotFound = require('../components/NotFound').default
 // 4. Object
 // { routes: content => [{ path: '', component: '' }] }
 
+function sanitizeJSON (string) {
+  return string
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029')
+    .replace(/'/g, '\\u0027')
+}
+
 const defaultConfig = {
   routes: () => [],
   notFoundRoute: {
@@ -35,7 +42,7 @@ const defaultConfig = {
           ${html}
         </div>
         <script>
-          window.content = '${JSON.stringify(content).replace(/'/gi, '\\\u0027')}';
+          window.content = '${sanitizeJSON(JSON.stringify(content))}';
           window.scripts = '${JSON.stringify(scripts)}';
         </script>
         ${scripts.map(script => `

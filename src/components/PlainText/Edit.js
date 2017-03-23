@@ -37,8 +37,18 @@ class EditPlainText extends React.Component {
     this.props.setValue(e.target.value.replace(/\n/gi, ' '))
   }
 
+  onKeyDown = (e) => {
+    if (e.keyCode === 13) {
+      e.preventDefault()
+    }
+  }
+
   componentDidMount () {
     autosize(ReactDOM.findDOMNode(this.refs.textarea))
+  }
+
+  componentWillUnmount () {
+    autosize.destroy(ReactDOM.findDOMNode(this.refs.textarea))
   }
 
   render () {
@@ -50,9 +60,11 @@ class EditPlainText extends React.Component {
           <textarea
             style={styles.input}
             placeholder={placeholder}
-            onChange={::this.onChange}
+            onChange={this.onChange}
+            onKeyDown={this.onKeyDown}
             ref='textarea'
             value={value}
+            rows={1}
           />
         </span>
       </EditIndicator>

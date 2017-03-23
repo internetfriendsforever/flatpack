@@ -2,7 +2,8 @@ import React from 'react'
 
 const styles = {
   container: {
-    position: 'relative'
+    position: 'relative',
+    display: 'block'
   },
 
   overlay: {
@@ -13,7 +14,8 @@ const styles = {
     left: 0,
     boxShadow: '0 0 0 1px rgba(255, 210, 0, 0.5)',
     background: 'rgba(255, 210, 0, 0.1)',
-    pointerEvents: 'none'
+    pointerEvents: 'none',
+    display: 'block'
   }
 }
 
@@ -24,10 +26,10 @@ export default class Editable extends React.Component {
 
   render () {
     return (
-      <div style={styles.container}>
+      <span style={styles.container}>
         {this.props.children}
-        <div style={styles.overlay} />
-      </div>
+        <span style={styles.overlay} />
+      </span>
     )
   }
 }
