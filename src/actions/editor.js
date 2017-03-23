@@ -34,33 +34,37 @@ export const publish = ({ config, content, scripts, credentials, uploads }) => d
       })
     }
 
-    const renderedRoutes = renderRoutes(config, content, finalScripts, version)
+    renderRoutes({ config, content, finalScripts, version }, (err, renderedRoutes) => {
+      if (err) {
+        return console.error('Error rendering routes:', err)
+      }
 
-    const renderedFiles = map(renderedRoutes, (html, path) => ({
-      path,
-      data: new window.Blob([html], {
-        type: 'text/html'
-      })
-    }))
+      const renderedFiles = map(renderedRoutes, (html, path) => ({
+        path,
+        data: new window.Blob([html], {
+          type: 'text/html'
+        })
+      }))
 
-    const files = [
-      contentFile,
-      ...uploads,
-      ...buildResult.files,
-      ...renderedFiles
-    ]
+      const files = [
+        contentFile,
+        ...uploads,
+        ...buildResult.files,
+        ...renderedFiles
+      ]
 
-    dispatch(upload(
-      files,
-      credentials,
-      version
-    )).then(() => {
-      dispatch(releaseVersion(
+      dispatch(upload(
+        files,
         credentials,
         version
       )).then(() => {
-        dispatch({
-          type: 'PUBLISH_SUCCESS'
+        dispatch(releaseVersion(
+          credentials,
+          version
+        )).then(() => {
+          dispatch({
+            type: 'PUBLISH_SUCCESS'
+          })
         })
       })
     })

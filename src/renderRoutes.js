@@ -17,7 +17,7 @@ function sanitizeJSON (string) {
     .replace(/'/g, '\\u0027')
 }
 
-export default function renderRoutes (config, content, scripts, version) {
+export default function renderRoutes ({ config, content, scripts, version }, callback) {
   const prefix = version ? `${version}-` : ''
   const routes = config.routes(content)
   const template = config.template
@@ -26,7 +26,7 @@ export default function renderRoutes (config, content, scripts, version) {
   // Route files
   routes.forEach(route => {
     if (route.path.slice(-1) !== '/') {
-      throw new Error(`Route path '${route.path}' is missing trailing slash.`)
+      callback(new Error(`Route path '${route.path}' is missing trailing slash.`))
     }
 
     const filepath = (`/${route.path}/${prefix}index.html`).split('/').filter(v => !!v).join('/')
@@ -60,5 +60,5 @@ export default function renderRoutes (config, content, scripts, version) {
     files[`${prefix}404.html`] = template(html, config.notFoundRoute.title, content)
   }
 
-  return files
+  callback(null, files)
 }
