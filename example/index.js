@@ -1,5 +1,6 @@
 import React from 'react'
 import { Text, List, ListItem, Image, Link, EditButton } from '../dist'
+import Home from './Home'
 
 const styles = {
   books: {
@@ -19,15 +20,7 @@ export default [{
   path: '/',
   title: 'Home',
   component: (
-    <div>
-      <h1>Flatpack sample page</h1>
-      <Image path='home/image' />
-      <Text path='home/introduction' placeholder='This text is editable' />
-      <Link href='/page2/'>Link to page 2</Link>
-      <br />
-      <Link href='/ingensteds'>Link to ingensteds</Link>
-      <EditButton />
-    </div>
+    <Home />
   )
 }, {
   path: '/page2/',

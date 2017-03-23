@@ -16,6 +16,7 @@ FileWriterWebpackPlugin.prototype.apply = function (compiler) {
     compilation.plugin('optimize-assets', (_, done) => {
       this.getFiles(compilation, (err, files) => {
         if (err) {
+          console.log(err)
           compilation.errors.push(err)
         } else {
           Object.keys(files).forEach(filename => {
