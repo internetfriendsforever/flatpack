@@ -13,6 +13,10 @@ const styles = {
     position: 'relative',
     outline: 0,
     zIndex: 4
+  },
+
+  input: {
+    all: 'inherit'
   }
 }
 
@@ -38,11 +42,12 @@ class EditPlainText extends React.Component {
       <EditIndicator>
         <span style={styles.container}>
           <input
+            style={styles.input}
             type='text'
             value={value || placeholder}
             onChange={::this.onChange}
           />
-      </span>
+        </span>
       </EditIndicator>
     )
   }
