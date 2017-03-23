@@ -44,7 +44,8 @@ class EditPlainText extends React.Component {
           <input
             style={styles.input}
             type='text'
-            value={value || placeholder}
+            value={value}
+            placeholder={placeholder}
             onChange={::this.onChange}
           />
         </span>
