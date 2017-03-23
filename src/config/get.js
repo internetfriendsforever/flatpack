@@ -1,15 +1,14 @@
 const path = require('path')
+// const fs = require('fs')
 const MemoryFS = require('memory-fs')
-const webpack = require('webpack')
 const requireFromString = require('require-from-string')
+const webpack = require('webpack')
 const configPath = require('./path')
 const configDefaults = require('./defaults')
 const getWebpackConfig = require('../getWebpackConfig')
 
 module.exports = callback => {
   console.log('Compiling project main...')
-
-  const fs = new MemoryFS()
 
   const webpackConfig = Object.assign({}, getWebpackConfig('common'))
 
@@ -20,7 +19,16 @@ module.exports = callback => {
     config: configPath
   }
 
+  if (!webpackConfig.resolve) {
+    webpackConfig.resolve = {}
+  }
+
+  webpackConfig.resolve.aliasFields = ['server']
+  webpackConfig.resolve.mainFields = ['module', 'main']
+
   const compiler = webpack(webpackConfig)
+
+  const fs = new MemoryFS()
 
   compiler.outputFileSystem = fs
 

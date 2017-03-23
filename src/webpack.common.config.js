@@ -3,13 +3,15 @@ import webpack from 'webpack'
 import configPath from './config/path'
 import awsConfig from './config/aws'
 
+process.noDeprecation = true
+
 module.exports = {
   entry: {
     client: path.resolve(__dirname, 'client.js')
   },
 
   output: {
-    path: path.resolve(process.cwd(), 'build'),
+    path: path.resolve(process.cwd(), '.flatpack'),
     filename: '[name].js',
     chunkFilename: '[name].js'
   },
