@@ -37,9 +37,23 @@ module.exports = {
         }
       })
 
-      getConfig(config => {
-        fetchRemoteContent(content => {
-          callback(renderRoutes(config, content, scripts))
+      getConfig((err, config) => {
+        if (err) {
+          return callback(err)
+        }
+
+        fetchRemoteContent((err, content) => {
+          if (err) {
+            return callback(err)
+          }
+
+          renderRoutes({ config, content, scripts }, (err, files) => {
+            if (err) {
+              return callback(err)
+            }
+
+            callback(null, files)
+          })
         })
       })
     })

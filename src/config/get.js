@@ -34,11 +34,11 @@ module.exports = callback => {
 
   compiler.run((err, stats) => {
     if (err) {
-      throw err
+      callback(err)
     }
 
     if (stats.hasErrors()) {
-      throw new Error(stats.toString())
+      callback(new Error(stats.toString()))
     }
 
     console.log('Done compiling project main...')
@@ -49,15 +49,19 @@ module.exports = callback => {
     if (fs.existsSync(configPath)) {
       fs.readFile(configPath, 'utf-8', (err, data) => {
         if (err) {
-          throw err
-        } else {
+          callback(err)
+        }
+
+        try {
           const getConfig = requireFromString(data).default
           const config = configDefaults(getConfig)
-          callback(config)
+          callback(null, config)
+        } catch (e) {
+          callback(e)
         }
       })
     } else {
-      throw new Error(`Could not read ${path} from MemoryFS filesystem`)
+      callback(new Error(`Could not read ${path} from MemoryFS filesystem`))
     }
   })
 }

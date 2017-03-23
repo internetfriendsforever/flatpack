@@ -13,9 +13,9 @@ module.exports = callback => {
     Key: 'content.json'
   }, (err, data) => {
     if (err) {
-      callback({})
+      callback(err)
     } else {
-      callback(JSON.parse(data.Body.toString()))
+      callback(null, JSON.parse(data.Body.toString()))
     }
   })
 }
