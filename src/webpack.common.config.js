@@ -26,7 +26,8 @@ module.exports = {
   output: {
     path: path.resolve(process.cwd(), '.flatpack'),
     filename: '[name].js',
-    chunkFilename: '[name].js'
+    chunkFilename: '[name].js',
+    publicPath: '/'
   },
 
   module: {
