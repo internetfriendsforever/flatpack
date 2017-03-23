@@ -52,9 +52,8 @@ class EditPlainText extends React.Component {
             placeholder={placeholder}
             onChange={::this.onChange}
             ref='textarea'
-          >
-            {value}
-          </textarea>
+            value={value}
+          />
         </span>
       </EditIndicator>
     )
