@@ -1,4 +1,6 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
+import autosize from 'autosize'
 
 import ContentContainer from '../ContentContainer'
 import EditIndicator from '../EditIndicator'
@@ -35,6 +37,10 @@ class EditPlainText extends React.Component {
     this.props.setValue(e.target.value)
   }
 
+  componentDidMount () {
+    autosize(ReactDOM.findDOMNode(this.refs.textarea))
+  }
+
   render () {
     const { value, placeholder } = this.props
 
@@ -45,6 +51,7 @@ class EditPlainText extends React.Component {
             style={styles.input}
             placeholder={placeholder}
             onChange={::this.onChange}
+            ref='textarea'
           >
             {value}
           </textarea>
