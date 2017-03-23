@@ -34,7 +34,12 @@ export const publish = ({ config, content, scripts, credentials, uploads }) => d
       })
     }
 
-    renderRoutes({ config, content, finalScripts, version }, (err, renderedRoutes) => {
+    renderRoutes({
+      config,
+      content,
+      version,
+      scripts: finalScripts
+    }, (err, renderedRoutes) => {
       if (err) {
         return console.error('Error rendering routes:', err)
       }
