@@ -12,6 +12,8 @@ export default class Link extends React.Component {
   onClick (e) {
     e.preventDefault()
 
+    window.scrollTo(0, 0)
+
     this.context.flatpack.history.push(e.currentTarget.pathname)
 
     if (this.props.onClick) {
