@@ -15,20 +15,13 @@ const NotFound = require('../components/NotFound').default
 // 4. Object
 // { routes: content => [{ path: '', component: '' }] }
 
-function sanitizeJSON (string) {
-  return string
-    .replace(/\u2028/g, '\\u2028')
-    .replace(/\u2029/g, '\\u2029')
-    .replace(/'/g, '\\u0027')
-}
-
 const defaultConfig = {
   routes: () => [],
   notFoundRoute: {
     title: '404 not found',
     component: <NotFound />
   },
-  template: (html, title, content = {}, scripts = []) => {
+  template: (html, title) => {
     return `
       <!doctype html>
       <html>
@@ -41,13 +34,6 @@ const defaultConfig = {
         <div id="root">
           ${html}
         </div>
-        <script>
-          window.content = '${sanitizeJSON(JSON.stringify(content))}';
-          window.scripts = '${JSON.stringify(scripts)}';
-        </script>
-        ${scripts.map(script => `
-          <script src="${script}"></script>
-        `)}
       </body>
       </html>
     `
