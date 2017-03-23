@@ -3,7 +3,7 @@ import { toggleEditor } from '../actions/app'
 
 const styles = {
   button: {
-    position: 'absolute',
+    position: 'fixed',
     bottom: 10,
     right: 10
   }
