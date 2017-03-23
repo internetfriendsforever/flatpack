@@ -10,6 +10,13 @@ function renderWithProvider (component, config, content, scripts) {
   )
 }
 
+function sanitizeJSON (string) {
+  return string
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029')
+    .replace(/'/g, '\\u0027')
+}
+
 export default function renderRoutes (config, content, scripts, version) {
   const prefix = version ? `${version}-` : ''
   const routes = config.routes(content)
@@ -25,7 +32,26 @@ export default function renderRoutes (config, content, scripts, version) {
     const filepath = (`/${route.path}/${prefix}index.html`).split('/').filter(v => !!v).join('/')
     const html = renderWithProvider(route.component, config, content, scripts)
 
-    files[filepath] = template(html, route.title, content, scripts)
+    const injectBefore = '</body>'
+    const injection = `
+      <script>
+        window.content = '${sanitizeJSON(JSON.stringify(content))}';
+        window.scripts = '${JSON.stringify(scripts)}';
+      </script>
+      ${scripts.map(script => `
+        <script src="${script}"></script>
+      `)}
+    `
+
+    let rendered = template(html, route.title)
+
+    if (rendered.indexOf(injectBefore) === -1) {
+      rendered += injection
+    } else {
+      rendered.replace(injectBefore, `${injection}${injectBefore}`)
+    }
+
+    files[filepath] = rendered
   })
 
   // 404 file
