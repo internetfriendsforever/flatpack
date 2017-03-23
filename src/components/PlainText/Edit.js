@@ -41,13 +41,13 @@ class EditPlainText extends React.Component {
     return (
       <EditIndicator>
         <span style={styles.container}>
-          <input
+          <textarea
             style={styles.input}
-            type='text'
-            value={value}
             placeholder={placeholder}
             onChange={::this.onChange}
-          />
+          >
+            {value}
+          </textarea>
         </span>
       </EditIndicator>
     )
