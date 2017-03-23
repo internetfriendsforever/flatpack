@@ -34,7 +34,7 @@ class EditPlainText extends React.Component {
   }
 
   onChange = (e) => {
-    this.props.setValue(e.target.value)
+    this.props.setValue(e.target.value.replace(/\n/gi, ' '))
   }
 
   componentDidMount () {
