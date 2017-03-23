@@ -34,7 +34,7 @@ class EditPlainText extends React.Component {
   }
 
   onChange = (e) => {
-    this.props.setValue(e.target.value)
+    this.props.setValue(JSON.stringify(e.target.value))
   }
 
   componentDidMount () {
@@ -52,9 +52,8 @@ class EditPlainText extends React.Component {
             placeholder={placeholder}
             onChange={::this.onChange}
             ref='textarea'
-          >
-            {value}
-          </textarea>
+            value={value}
+          />
         </span>
       </EditIndicator>
     )
