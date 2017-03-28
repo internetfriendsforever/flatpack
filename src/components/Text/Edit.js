@@ -254,12 +254,25 @@ class EditText extends React.Component {
     this.setState({ slateState })
   }
 
+  preventDefault = e => {
+    e.preventDefault()
+  }
+
+  onContainerRef = ref => {
+    if (ref) {
+      this.containerRef = ref
+      this.containerRef.addEventListener('click', this.preventDefault)
+    } else if (this.containerRef) {
+      this.containerRef.removeEventListener('click', this.preventDefault)
+    }
+  }
+
   render () {
     const { slateState } = this.state
 
     return (
       <EditIndicator>
-        <div style={styles.container}>
+        <div style={styles.container} ref={this.onContainerRef}>
           <FormatMenu
             onMarkButtonClick={this.onMarkButtonClick}
             onBlockButtonClick={this.onBlockButtonClick}

@@ -17,8 +17,9 @@ const styles = {
     zIndex: 4
   },
 
-  input: {
-    all: 'inherit'
+  textarea: {
+    all: 'inherit',
+    width: '100%'
   }
 }
 
@@ -33,11 +34,11 @@ class EditPlainText extends React.Component {
     placeholder: ''
   }
 
-  onChange = (e) => {
+  onChange = e => {
     this.props.setValue(e.target.value.replace(/\n/gi, ' '))
   }
 
-  onKeyDown = (e) => {
+  onKeyDown = e => {
     if (e.keyCode === 13) {
       e.preventDefault()
     }
@@ -51,14 +52,27 @@ class EditPlainText extends React.Component {
     autosize.destroy(ReactDOM.findDOMNode(this.refs.textarea))
   }
 
+  preventDefault = e => {
+    e.preventDefault()
+  }
+
+  onContainerRef = ref => {
+    if (ref) {
+      this.containerRef = ref
+      this.containerRef.addEventListener('click', this.preventDefault)
+    } else if (this.containerRef) {
+      this.containerRef.removeEventListener('click', this.preventDefault)
+    }
+  }
+
   render () {
     const { value, placeholder } = this.props
 
     return (
       <EditIndicator>
-        <span style={styles.container}>
+        <span style={styles.container} ref={this.onContainerRef}>
           <textarea
-            style={styles.input}
+            style={styles.textarea}
             placeholder={placeholder}
             onChange={this.onChange}
             onKeyDown={this.onKeyDown}
