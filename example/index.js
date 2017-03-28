@@ -35,7 +35,6 @@ export default [{
       <List path='books' axis='xy' reverse attrs={{ style: styles.books }}>
         {key => (
           <ListItem attrs={{ style: styles.book }} key={key}>
-            {key}
             <Image path={`books/${key}/cover`} />
             <Text path={`books/${key}/title`} placeholder='Book title…' />
           </ListItem>
