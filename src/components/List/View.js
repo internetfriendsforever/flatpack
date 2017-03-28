@@ -1,7 +1,7 @@
 import React from 'react'
 import { map } from 'lodash'
 
-import deserialize from './deserialize'
+import { deserialize } from './utils'
 import ContentContainer from '../ContentContainer'
 import DOMComponent from '../DOMComponent'
 

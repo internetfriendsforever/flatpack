@@ -1,11 +1,15 @@
 import React from 'react'
 import { map } from 'lodash'
 import { arrayMove } from 'react-sortable-hoc'
+import { SortableContainer } from 'react-sortable-hoc'
 
-import serialize from './serialize'
-import deserialize from './deserialize'
-import EditContainer from './EditContainer'
+import { serialize, deserialize } from './utils'
 import ContentContainer from '../ContentContainer'
+import DOMComponent from '../DOMComponent'
+
+const EditContainer = SortableContainer(props => (
+  <DOMComponent {...props} />
+))
 
 const styles = {
   container: {
@@ -44,6 +48,7 @@ class EditList extends React.Component {
     value: React.PropTypes.object,
     setValue: React.PropTypes.func.isRequired,
     children: React.PropTypes.func.isRequired,
+    slug: React.PropTypes.string,
     attrs: React.PropTypes.object,
     reverse: React.PropTypes.bool
   }
