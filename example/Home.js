@@ -12,6 +12,8 @@ export default class Home extends React.Component {
         </h1>
 
         <Image path='home/image' />
+        <Image path='home/image2' />
+
         <Text path='home/introduction' placeholder='This text is editable' />
         <Link href='/page2/'>Link to page 2</Link>
         <br />

@@ -15,6 +15,7 @@ function isImage (file) {
 
 const styles = {
   container: {
+    position: 'relative',
     border: '1px blue solid',
     minHeight: 50,
     minWidth: 50
@@ -22,6 +23,12 @@ const styles = {
 
   dragOver: {
     background: 'yellow'
+  },
+
+  removeButton: {
+    position: 'absolute',
+    top: 0,
+    right: 0
   }
 }
 
@@ -104,7 +111,12 @@ class EditImage extends React.Component {
     }
   }
 
+  onRemoveImageClick = () => {
+    this.props.setValue({})
+  }
+
   render () {
+    const { value } = this.props
     const { dragOver } = this.state
 
     const style = {
@@ -124,6 +136,9 @@ class EditImage extends React.Component {
     return (
       <DOMComponent {...this.props} attrs={attrs}>
         <Image path={this.props.path} />
+        {value.path && (
+          <button style={styles.removeButton} onClick={this.onRemoveImageClick}>Remove image</button>
+        )}
       </DOMComponent>
     )
   }
