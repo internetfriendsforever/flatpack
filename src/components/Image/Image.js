@@ -3,6 +3,16 @@ import { first, map } from 'lodash'
 
 import ContentContainer from '../ContentContainer'
 
+const styles = {
+  container: {
+    width: '100%'
+  },
+
+  image: {
+    display: 'block'
+  }
+}
+
 class Image extends React.Component {
   static propTypes = {
     path: React.PropTypes.string.isRequired,
@@ -52,7 +62,7 @@ class Image extends React.Component {
     const { width, height, thumbnail } = this.props.value
 
     const style = {
-      width: '100%',
+      ...styles.container,
       maxWidth: width,
       maxHeight: height,
       ...(!this.hasImage() && {
@@ -62,6 +72,7 @@ class Image extends React.Component {
     }
 
     const imageStyle = {
+      ...styles.image,
       width: '100%'
     }
 
