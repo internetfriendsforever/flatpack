@@ -4,19 +4,25 @@ import { first, pick } from 'lodash'
 import Image from './Image'
 import ContentContainer from '../ContentContainer'
 import DOMComponent from '../DOMComponent'
+import EditIndicator from '../EditIndicator'
 import createThumbnail from './createThumbnail'
 import fileToImage from './fileToImage'
 import createImageVariations from './createImageVariations'
 import { set, setUpload } from '../../actions/content'
 
-function isImage (file) {
-  return /^image\//.test(file.type)
+const supportedMimes = [
+  'image/jpeg',
+  'image/png',
+  'image/gif'
+]
+
+function isFileSupported (file) {
+  return supportedMimes.indexOf(file.type) > -1
 }
 
 const styles = {
   container: {
     position: 'relative',
-    border: '1px blue solid',
     minHeight: 50,
     minWidth: 50
   },
@@ -29,6 +35,13 @@ const styles = {
     position: 'absolute',
     top: 0,
     right: 0
+  },
+
+  instructions: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)'
   }
 }
 
@@ -80,7 +93,7 @@ class EditImage extends React.Component {
 
     const file = first(e.dataTransfer.files)
 
-    if (file && isImage(file)) {
+    if (file && isFileSupported(file)) {
       fileToImage(file, image => {
         createImageVariations(file, variations => {
           const uploadPath = `uploads/${Date.now()}`
@@ -106,8 +119,8 @@ class EditImage extends React.Component {
         })
       })
     } else {
-      // TODO: Notify user of wrong filetype
-      console.log('Not an image')
+      const supportedFormatsFriendly = supportedMimes.map(mime => mime.split('/')[1]).join(', ')
+      window.alert(`Only images of types ${supportedFormatsFriendly} are supported`)
     }
   }
 
@@ -134,12 +147,21 @@ class EditImage extends React.Component {
     }
 
     return (
-      <DOMComponent {...this.props} attrs={attrs}>
-        <Image path={this.props.path} />
-        {value.path && (
-          <button style={styles.removeButton} onClick={this.onRemoveImageClick}>Remove image</button>
-        )}
-      </DOMComponent>
+      <EditIndicator>
+        <DOMComponent {...this.props} attrs={attrs}>
+          <Image path={this.props.path} />
+
+          {value.path && (
+            <button style={styles.removeButton} onClick={this.onRemoveImageClick}>Remove image</button>
+          )}
+
+          {!value.path && (
+            <div style={styles.instructions}>
+              Drop image file here…
+            </div>
+          )}
+        </DOMComponent>
+      </EditIndicator>
     )
   }
 }
