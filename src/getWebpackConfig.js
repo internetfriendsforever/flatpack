@@ -1,7 +1,12 @@
 const path = require('path')
 const fs = require('fs')
-const isPlainObject = require('lodash').isPlainObject
-const merge = require('./merge').default
+const { assignWith, isUndefined, isPlainObject, isArray } = require('lodash')
+
+const merge = (...objs) => assignWith({}, ...objs, (objValue, srcValue) => (
+  isPlainObject(objValue) && isPlainObject(srcValue) ? merge(srcValue, objValue)
+  : isArray(objValue) && isArray(srcValue) ? [...srcValue, ...objValue]
+  : isUndefined(objValue) ? srcValue : objValue
+))
 
 module.exports = function getWebpackConfig (environment) {
   const baseConfig = require(`./webpack.${environment}.config.js`)
