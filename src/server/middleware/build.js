@@ -1,7 +1,7 @@
 const mimeTypes = require('mime-types')
 const MemoryFS = require('memory-fs')
 const webpack = require('webpack')
-const getWebpackConfig = require('../getWebpackConfig')
+const getWebpackConfig = require('../../getWebpackConfig')
 
 const icon = '🔧'
 
