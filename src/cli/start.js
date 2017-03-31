@@ -1,3 +1,3 @@
-const createServer = require('../createServer')
+const createServer = require('../server')
 
 module.exports = createServer
