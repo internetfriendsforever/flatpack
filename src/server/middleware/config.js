@@ -1,5 +1,6 @@
 const webpack = require('webpack')
 const chalk = require('chalk')
+const cloneDeep = require('lodash').cloneDeep
 const requireFromString = require('require-from-string')
 const MemoryFS = require('memory-fs')
 const configPath = require('../../config/path')
@@ -8,7 +9,7 @@ const getWebpackConfig = require('../../getWebpackConfig')
 const webpackBuilder = require('./webpackBuilder')
 
 const fs = new MemoryFS()
-const webpackConfig = Object.assign({}, getWebpackConfig('common'))
+const webpackConfig = cloneDeep(getWebpackConfig('common'))
 
 webpackConfig.target = 'node'
 webpackConfig.output.libraryTarget = 'commonjs'

@@ -30,7 +30,7 @@ module.exports = (compiler, name) => {
 
     console.log(errors
       ? chalk.red(`✘ Error bundling ${name}`)
-      : chalk.green(`✔︎ Successfully bundled ${name}!`)
+      : chalk.green(`✔︎ Successfully bundled ${name}`)
     )
 
     if (state.queue.length) {
