@@ -4,11 +4,11 @@ const getWebpackConfig = require('../../getWebpackConfig')
 const fetchRemoteContent = require('../../fetchRemoteContent')
 const renderRoutes = require('../../renderRoutes').default
 
-const config = getWebpackConfig('development')
+const webpackConfig = getWebpackConfig('development')
 
 const statics = (req, res, next) => {
   const assets = []
-  const publicPath = config.output.publicPath || ''
+  const publicPath = webpackConfig.output.publicPath || ''
   const assetsByChunkName = res.locals.webpack.scripts.stats.toJson().assetsByChunkName
 
   Object.keys(assetsByChunkName).map(chunkName => {
@@ -24,7 +24,7 @@ const statics = (req, res, next) => {
   const assetIndex = assets.indexOf(req.path)
 
   if (assetIndex > -1) {
-    res.sendFile(path.join(config.output.path, assets[assetIndex]))
+    res.sendFile(path.join(webpackConfig.output.path, assets[assetIndex]))
   } else {
     next()
   }
@@ -34,7 +34,7 @@ const pages = (req, res, next) => {
   const config = res.locals.config
   const clientScripts = res.locals.webpack.scripts.stats.toJson().assetsByChunkName.client
   const clientScript = clientScripts instanceof Array ? clientScripts[0] : clientScripts
-  const scripts = [clientScript]
+  const scripts = [path.join(webpackConfig.output.publicPath, clientScript)]
 
   if (config) {
     console.log('🚚 Fetching remote content...')
@@ -51,20 +51,18 @@ const pages = (req, res, next) => {
           console.log(chalk.red(`✘ Could not render routes:`, err.message))
         }
 
+        console.log(Object.keys(files))
+        console.log(req.path.slice(1), path.join(req.path.slice(1), 'index.html'))
+
         const matchedKey = Object.keys(files).find(key => (
-          key === req.path || `${req.path}/index.html`
+          key === req.path.slice(1) || key === path.join(req.path.slice(1), 'index.html')
         ))
 
         if (matchedKey) {
           res.status(200).send(files[matchedKey])
-          // console.log()
-          // console.log('Matched:', matchedKey, Object.keys(files))
-          // res.status(200).send(files[matchedKey])
         } else {
           next()
         }
-
-        // callback(null, files)
       })
     })
   }
