@@ -84,6 +84,59 @@ class EditImage extends React.Component {
     })
   }
 
+  createOriginalUpload (file) {
+    fileToImage(file, image => {
+      const uploadPath = `uploads/${Date.now()}`
+
+      const uploadAction = setUpload(this.props.path, {
+        preview: image.src,
+        files: {
+          path: `${uploadPath}`,
+          data: file
+        }
+      })
+
+      const valueAction = set(this.props.path, {
+        path: `/${uploadPath}`,
+        type: file.type,
+        width: image.width,
+        height: image.height,
+        thumbnail: createThumbnail(image, 10).src
+      })
+
+      this.context.flatpack.store.dispatch(uploadAction)
+      this.context.flatpack.store.dispatch(valueAction)
+    })
+  }
+
+  createResizedUpload (file) {
+    fileToImage(file, image => {
+      createImageVariations(file, variations => {
+        const uploadPath = `uploads/${Date.now()}`
+
+        const uploadAction = setUpload(this.props.path, {
+          preview: image.src,
+          files: variations.map(({ width, blob }) => ({
+            path: `${uploadPath}/${width}`,
+            data: blob
+          }))
+        })
+
+        const valueAction = set(this.props.path, {
+          path: `/${uploadPath}`,
+          type: file.type,
+          width: image.width,
+          height: image.height,
+          variations: variations.map(variation => pick(variation, ['width', 'height'])),
+          thumbnail: createThumbnail(image, 10).src
+        })
+
+        this.context.flatpack.store.dispatch(uploadAction)
+        this.context.flatpack.store.dispatch(valueAction)
+      })
+    })
+  }
+
   onDrop = e => {
     e.preventDefault()
 
@@ -94,30 +147,11 @@ class EditImage extends React.Component {
     const file = first(e.dataTransfer.files)
 
     if (file && isFileSupported(file)) {
-      fileToImage(file, image => {
-        createImageVariations(file, variations => {
-          const uploadPath = `uploads/${Date.now()}`
-
-          const uploadAction = setUpload(this.props.path, {
-            preview: image.src,
-            files: variations.map(({ width, blob }) => ({
-              path: `${uploadPath}/${width}`,
-              data: blob
-            }))
-          })
-
-          const setValueAction = set(this.props.path, {
-            path: `/${uploadPath}`,
-            width: image.width,
-            height: image.height,
-            variations: variations.map(variation => pick(variation, ['width', 'height'])),
-            thumbnail: createThumbnail(image, 10).src
-          })
-
-          this.context.flatpack.store.dispatch(uploadAction)
-          this.context.flatpack.store.dispatch(setValueAction)
-        })
-      })
+      if (file.type === 'image/gif') {
+        this.createOriginalUpload(file)
+      } else {
+        this.createResizedUpload(file)
+      }
     } else {
       const supportedFormatsFriendly = supportedMimes.map(mime => mime.split('/')[1]).join(', ')
       window.alert(`Only images of types ${supportedFormatsFriendly} are supported`)

@@ -52,6 +52,12 @@ class Image extends React.Component {
         ).join(', ')
       }
     }
+
+    if (path) {
+      return {
+        src: path
+      }
+    }
   }
 
   hasImage () {
