@@ -57,7 +57,7 @@ module.exports = (compiler, name) => {
     }
 
     if (state.compiling) {
-      console.log(`🕥 Build in progress: ${name}. Queuing request...`)
+      console.log(`🕥 Build in progress ${name}…`)
       state.queue.push(proceed)
     } else {
       res.locals.webpack[name] = state
