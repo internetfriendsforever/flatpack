@@ -37,18 +37,20 @@ const pages = (req, res, next) => {
   const scripts = [path.join(webpackConfig.output.publicPath, clientScript)]
 
   if (config) {
-    console.log('🚚 Fetching remote content...')
+    console.log('🕗 Fetching remote content…')
 
     fetchRemoteContent((err, content) => {
       if (err) {
-        console.log(chalk.red(`✘ Could not fetch remote config:`, err.message))
+        console.log(chalk.red(`✘ Error fetching remote config:`, err.message))
       }
 
-      console.log('🖌 Rendering routes...')
+      console.log('🕗 Rendering routes…')
 
       renderRoutes({ config, content, scripts }, (err, files) => {
         if (err) {
-          console.log(chalk.red(`✘ Could not render routes:`, err.message))
+          console.log(chalk.red(`✘ Error rendering routes:`))
+          console.error(err)
+          return res.status(500).send(err.toString())
         }
 
         const matchedKey = Object.keys(files).find(key => (
@@ -57,6 +59,7 @@ const pages = (req, res, next) => {
 
         if (matchedKey) {
           res.status(200).send(files[matchedKey])
+          console.log(chalk.green(`✔︎ Successfully served '${req.path}'`))
         } else {
           next()
         }
