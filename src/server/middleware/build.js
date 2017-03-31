@@ -3,7 +3,7 @@ const MemoryFS = require('memory-fs')
 const webpack = require('webpack')
 const getWebpackConfig = require('../../getWebpackConfig')
 
-const icon = '🔧'
+const icon = '🛠'
 
 const config = getWebpackConfig('production')
 const compiler = webpack(config)

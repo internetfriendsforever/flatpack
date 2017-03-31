@@ -9,7 +9,7 @@ module.exports = (compiler, name) => {
 
   compiler.plugin('compile', function () {
     state.compiling = true
-    console.log(`🔨 Building ${name}...`)
+    console.log(`🛠 Bundling ${name}...`)
   })
 
   compiler.plugin('done', function (stats) {
@@ -25,14 +25,11 @@ module.exports = (compiler, name) => {
     state.compiling = false
     state.stats = stats
 
-    console.log('')
-    console.log(statsString)
-    console.log('')
-    console.log(
-      errors
-      ? chalk.red(`✘ Build error: ${name}`)
-      : chalk.green(`✔︎ Build success: ${name}`)
-    )
+    if (errors) {
+      console.log(statsString)
+    }
+
+    console.log('🛠', errors ? `Error bundling ${name}` : `Successfully bundled ${name}!`)
 
     if (state.queue.length) {
       state.queue.forEach(next => next())
@@ -57,7 +54,7 @@ module.exports = (compiler, name) => {
     }
 
     if (state.compiling) {
-      console.log(`🕥 Build in progress ${name}…`)
+      console.log(`🕓 Bundling in progress (${name}). Queueing request…`)
       state.queue.push(proceed)
     } else {
       res.locals.webpack[name] = state

@@ -51,9 +51,6 @@ const pages = (req, res, next) => {
           console.log(chalk.red(`✘ Could not render routes:`, err.message))
         }
 
-        console.log(Object.keys(files))
-        console.log(req.path.slice(1), path.join(req.path.slice(1), 'index.html'))
-
         const matchedKey = Object.keys(files).find(key => (
           key === req.path.slice(1) || key === path.join(req.path.slice(1), 'index.html')
         ))
