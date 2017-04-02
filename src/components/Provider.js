@@ -9,7 +9,7 @@ export default class Provider extends React.Component {
     content: React.PropTypes.object.isRequired,
     scripts: React.PropTypes.array.isRequired,
     children: React.PropTypes.element.isRequired,
-    history: React.PropTypes.object
+    history: React.PropTypes.object.isRequired
   }
 
   static childContextTypes = {

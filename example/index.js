@@ -41,6 +41,7 @@ export default [{
         )}
       </List>
 
+      <Link href='/page2/'>Page 2</Link>
       <Link href='/'>Back to frontpage</Link>
 
       <EditButton />

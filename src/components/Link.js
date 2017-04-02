@@ -1,8 +1,22 @@
 import React from 'react'
+import { omit } from 'lodash'
 
 export default class Link extends React.Component {
   static propTypes = {
-    onClick: React.PropTypes.func
+    href: React.PropTypes.string,
+    onClick: React.PropTypes.func,
+    activeFunc: React.PropTypes.func,
+    activeAttrs: React.PropTypes.object
+  }
+
+  static defaultProps = {
+    activeFunc: (href, history) => (
+      href === history.location.pathname
+    ),
+
+    activeAttrs: {
+      className: 'active'
+    }
   }
 
   static contextTypes = {
@@ -22,8 +36,17 @@ export default class Link extends React.Component {
   }
 
   render () {
+    const { history } = this.context.flatpack
+    const { activeAttrs, activeFunc } = this.props
+    const active = activeFunc(this.props.href, history)
+
+    const attrs = {
+      ...omit(this.props, 'activeAttrs', 'activeFunc'),
+      ...(active && activeAttrs)
+    }
+
     return (
-      <a onClick={::this.onClick} {...this.props} />
+      <a onClick={::this.onClick} {...attrs} />
     )
   }
 }
