@@ -76,9 +76,15 @@ const pages = (req, res, next) => {
           key === req.path.slice(1) || key === path.join(req.path.slice(1), 'index.html')
         ))
 
+        const notFoundKey = '404.html'
+        const notFoundFile = files[notFoundKey]
+
         if (matchedKey) {
           res.status(200).send(files[matchedKey])
           console.log(chalk.green(`✔︎ Successfully served '${req.path}'`))
+        } else if (notFoundFile) {
+          res.status(200).send(notFoundFile)
+          console.log(chalk.green(`✔︎ Successfully served '${notFoundKey}'`))
         } else {
           next()
         }
