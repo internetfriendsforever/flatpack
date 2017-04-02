@@ -1,10 +1,11 @@
 import React from 'react'
-import Provider from './components/Provider'
+import { createMemoryHistory } from 'history'
 import { renderToStaticMarkup } from 'react-dom/server'
+import Provider from './components/Provider'
 
 function renderWithProvider (component, config, content, scripts) {
   return renderToStaticMarkup(
-    <Provider content={content} config={config} assets={{}} scripts={scripts}>
+    <Provider content={content} config={config} assets={{}} scripts={scripts} history={createMemoryHistory()}>
       {component}
     </Provider>
   )
