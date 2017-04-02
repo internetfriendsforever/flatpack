@@ -3,12 +3,37 @@ import { createMemoryHistory } from 'history'
 import { renderToStaticMarkup } from 'react-dom/server'
 import Provider from './components/Provider'
 
+function inject (html, content, scripts) {
+  let result = html
+
+  const injectBefore = '</body>'
+  const injection = `
+    <script>
+      window.content = '${sanitizeJSON(JSON.stringify(content))}';
+      window.scripts = '${JSON.stringify(scripts)}';
+    </script>
+    ${scripts.map(script => `
+      <script src="${script}"></script>
+    `)}
+  `
+
+  if (result.indexOf(injectBefore) === -1) {
+    result += injection
+  } else {
+    result = result.replace(injectBefore, `${injection}${injectBefore}`)
+  }
+
+  return result
+}
+
 function renderWithProvider (component, config, content, scripts) {
-  return renderToStaticMarkup(
+  const html = renderToStaticMarkup(
     <Provider content={content} config={config} assets={{}} scripts={scripts} history={createMemoryHistory()}>
       {component}
     </Provider>
   )
+
+  return inject(html, content, scripts)
 }
 
 function sanitizeJSON (string) {
@@ -34,26 +59,7 @@ export default function renderRoutes ({ config, content, scripts, version }, cal
       const filepath = (`/${route.path}/${prefix}index.html`).split('/').filter(v => !!v).join('/')
       const html = renderWithProvider(route.component, config, content, scripts)
 
-      const injectBefore = '</body>'
-      const injection = `
-        <script>
-          window.content = '${sanitizeJSON(JSON.stringify(content))}';
-          window.scripts = '${JSON.stringify(scripts)}';
-        </script>
-        ${scripts.map(script => `
-          <script src="${script}"></script>
-        `)}
-      `
-
-      let rendered = template(html, route.title)
-
-      if (rendered.indexOf(injectBefore) === -1) {
-        rendered += injection
-      } else {
-        rendered = rendered.replace(injectBefore, `${injection}${injectBefore}`)
-      }
-
-      files[filepath] = rendered
+      files[filepath] = template(html, route.title)
     })
 
     // 404 file
