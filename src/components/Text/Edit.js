@@ -1,10 +1,17 @@
 import React from 'react'
 import { Editor, Raw } from 'slate'
+import SoftBreak from 'slate-soft-break'
 import position from 'selection-position'
 
 import ContentContainer from '../ContentContainer'
 import EditIndicator from '../EditIndicator'
 import FormatMenu from './FormatMenu'
+
+const plugins = [
+  SoftBreak({
+    shift: true
+  })
+]
 
 const styles = {
   container: {
@@ -141,9 +148,7 @@ class EditText extends React.Component {
     this.setState({ slateState })
   }
 
-  onLinkButtonClick = (e, type) => {
-    e.preventDefault()
-    let { slateState } = this.state
+  makeLink = (slateState) => {
     const hasLink = this.hasLink()
 
     if (hasLink) {
@@ -180,6 +185,13 @@ class EditText extends React.Component {
 
     this.props.setValue(Raw.serialize(slateState, { terse: true }))
     this.setState({ slateState })
+  }
+
+  onLinkButtonClick = (e, type) => {
+    e.preventDefault()
+    let { slateState } = this.state
+
+    this.makeLink(slateState)
   }
 
   onBlockButtonClick = (e, type) => {
@@ -254,6 +266,38 @@ class EditText extends React.Component {
     this.setState({ slateState })
   }
 
+  onKeyDown = (e, data, slateState) => {
+    if (!data.isMod) return
+    let mark
+
+    if (data.key === 'k') {
+      this.makeLink(slateState)
+      e.preventDefault()
+      return
+    }
+
+    switch (data.key) {
+      case 'b':
+        mark = 'bold'
+        break
+      case 'i':
+        mark = 'italic'
+        break
+      default:
+        return
+    }
+
+    slateState = slateState
+      .transform()
+      .toggleMark(mark)
+      .apply()
+
+    e.preventDefault(e)
+
+    this.props.setValue(Raw.serialize(slateState, { terse: true }))
+    this.setState({ slateState })
+  }
+
   preventDefault = e => {
     e.preventDefault()
   }
@@ -284,9 +328,11 @@ class EditText extends React.Component {
           />
 
           <Editor
+            plugins={plugins}
             schema={schema}
             state={slateState}
-            onChange={::this.onChange}
+            onChange={this.onChange}
+            onKeyDown={this.onKeyDown}
           />
         </div>
       </EditIndicator>
