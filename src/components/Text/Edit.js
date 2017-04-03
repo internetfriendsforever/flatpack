@@ -261,6 +261,30 @@ class EditText extends React.Component {
     this.setState({ slateState })
   }
 
+  onKeyDown = (e, data, slateState) => {
+    if (!data.isMod) return
+    let mark
+
+    switch (data.key) {
+      case 'b':
+        mark = 'bold'
+        break
+      case 'i':
+        mark = 'italic'
+        break
+      default:
+        return
+    }
+
+    slateState = slateState
+      .transform()
+      .toggleMark(mark)
+      .apply()
+
+    e.preventDefault(e)
+    return slateState
+  }
+
   preventDefault = e => {
     e.preventDefault()
   }
@@ -294,7 +318,8 @@ class EditText extends React.Component {
             plugins={plugins}
             schema={schema}
             state={slateState}
-            onChange={::this.onChange}
+            onChange={this.onChange}
+            onKeyDown={this.onKeyDown}
           />
         </div>
       </EditIndicator>
