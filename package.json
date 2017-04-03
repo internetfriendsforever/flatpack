@@ -53,6 +53,7 @@
     "require-from-string": "^1.2.1",
     "selection-position": "^1.0.0",
     "slate": "^0.16.14",
+    "slate-soft-break": "^0.3.0",
     "transform-loader": "^0.2.3",
     "webpack": "^2.2.1",
     "webpack-dev-middleware": "^1.10.0",

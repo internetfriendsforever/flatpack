@@ -1,10 +1,17 @@
 import React from 'react'
 import { Editor, Raw } from 'slate'
+import SoftBreak from 'slate-soft-break'
 import position from 'selection-position'
 
 import ContentContainer from '../ContentContainer'
 import EditIndicator from '../EditIndicator'
 import FormatMenu from './FormatMenu'
+
+const plugins = [
+  SoftBreak({
+    shift: true
+  })
+]
 
 const styles = {
   container: {
@@ -284,6 +291,7 @@ class EditText extends React.Component {
           />
 
           <Editor
+            plugins={plugins}
             schema={schema}
             state={slateState}
             onChange={::this.onChange}
