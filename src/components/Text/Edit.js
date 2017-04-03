@@ -148,9 +148,7 @@ class EditText extends React.Component {
     this.setState({ slateState })
   }
 
-  onLinkButtonClick = (e, type) => {
-    e.preventDefault()
-    let { slateState } = this.state
+  makeLink = (slateState) => {
     const hasLink = this.hasLink()
 
     if (hasLink) {
@@ -187,6 +185,13 @@ class EditText extends React.Component {
 
     this.props.setValue(Raw.serialize(slateState, { terse: true }))
     this.setState({ slateState })
+  }
+
+  onLinkButtonClick = (e, type) => {
+    e.preventDefault()
+    let { slateState } = this.state
+
+    this.makeLink(slateState)
   }
 
   onBlockButtonClick = (e, type) => {
@@ -265,6 +270,12 @@ class EditText extends React.Component {
     if (!data.isMod) return
     let mark
 
+    if (data.key === 'k') {
+      this.makeLink(slateState)
+      e.preventDefault()
+      return
+    }
+
     switch (data.key) {
       case 'b':
         mark = 'bold'
@@ -282,7 +293,9 @@ class EditText extends React.Component {
       .apply()
 
     e.preventDefault(e)
-    return slateState
+
+    this.props.setValue(Raw.serialize(slateState, { terse: true }))
+    this.setState({ slateState })
   }
 
   preventDefault = e => {
