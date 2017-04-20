@@ -1,9 +1,8 @@
 import React from 'react'
 import { first, pick } from 'lodash'
 
-import Image from './Image'
+import View from './View'
 import ContentContainer from '../ContentContainer'
-import DOMComponent from '../DOMComponent'
 import EditIndicator from '../EditIndicator'
 import createThumbnail from './createThumbnail'
 import fileToImage from './fileToImage'
@@ -50,7 +49,7 @@ class EditImage extends React.Component {
     path: React.PropTypes.string.isRequired,
     value: React.PropTypes.object,
     setValue: React.PropTypes.func.isRequired,
-    attrs: React.PropTypes.object
+    style: React.PropTypes.object
   }
 
   static defaultProps = {
@@ -166,24 +165,15 @@ class EditImage extends React.Component {
     const { value } = this.props
     const { dragOver } = this.state
 
-    const style = {
-      ...this.props.attrs.style,
+    const containerStyle = {
       ...styles.container,
       ...(dragOver && styles.dragOver)
     }
 
-    const attrs = {
-      ...this.props.attrs,
-      style,
-      onDrop: this.onDrop,
-      onDragOver: this.onDragOver,
-      onDragLeave: this.onDragLeave
-    }
-
     return (
       <EditIndicator>
-        <DOMComponent {...this.props} attrs={attrs}>
-          <Image path={this.props.path} />
+        <div style={containerStyle} onDrop={this.onDrop} onDragOver={this.onDragOver} onDragLeave={this.onDragLeave}>
+          <View path={this.props.path} style={this.props.style} />
 
           {value.path && (
             <button style={styles.removeButton} onClick={this.onRemoveImageClick}>Remove image</button>
@@ -194,7 +184,7 @@ class EditImage extends React.Component {
               Drop image file here…
             </div>
           )}
-        </DOMComponent>
+        </div>
       </EditIndicator>
     )
   }
