@@ -2,6 +2,7 @@ import React from 'react'
 import { createMemoryHistory } from 'history'
 import { renderToStaticMarkup } from 'react-dom/server'
 import Provider from './components/Provider'
+import objectToString from './utils/objectToString'
 
 function inject (html, content, scripts) {
   let result = html
@@ -9,8 +10,8 @@ function inject (html, content, scripts) {
   const injectBefore = '</body>'
   const injection = `
     <script>
-      window.content = '${sanitizeJSON(JSON.stringify(content))}';
-      window.scripts = '${JSON.stringify(scripts)}';
+      window.content = '${objectToString(content)}';
+      window.scripts = '${objectToString(scripts)}';
     </script>
     ${scripts.map(script => `
       <script src="${script}"></script>
@@ -34,13 +35,6 @@ function renderWithProvider (component, config, content, scripts) {
   )
 
   return inject(html, content, scripts)
-}
-
-function sanitizeJSON (string) {
-  return string
-    .replace(/\u2028/g, '\\u2028')
-    .replace(/\u2029/g, '\\u2029')
-    .replace(/'/g, '\\u0027')
 }
 
 export default function renderRoutes ({ config, content, scripts, version }, callback) {
