@@ -40,6 +40,7 @@ function sanitizeJSON (string) {
   return string
     .replace(/\u2028/g, '\\u2028')
     .replace(/\u2029/g, '\\u2029')
+    .replace(/\n/g, '\\\\n')
     .replace(/'/g, '\\u0027')
 }
 
