@@ -73,8 +73,6 @@ class View extends React.Component {
       ...this.props.style
     }
 
-    console.log(style)
-
     return <img style={style} {...this.getImageProps()} />
   }
 }
