@@ -17,8 +17,7 @@ const styles = {
   },
 
   contentPushedDown: {
-    position: 'relative',
-    paddingTop: 50
+    transform: 'translateY(50px)'
   }
 }
 
