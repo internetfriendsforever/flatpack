@@ -11,10 +11,10 @@ with JavaScript&nbsp;(<a href="https://www.ecma-international.org/ecma-262/6.0/"
 
 ## Getting started
 
-Flatpack should be installed globally, so you can use it from any project: `yarn global add flatpack-js`
+Flatpack should be installed locally, so that different projects can use different versions of flatpack.
 
 1. `cd /project-folder`
-2. `yarn add react`
+2. `yarn add flatpack-js react`
 3. `touch index.js`
 
 Open `index.js` in your favourite text editor
@@ -36,7 +36,7 @@ for your content to live in.
 This can be done in a separate file and imported, but for brevity,
 lets define it in `index.js`.
 
-Now you should be able to run <code>flatpack dev</code> from
+Now you should be able to run `flatpack dev` from
 the command line and see your example running at `http://localhost:3000/`
 
 ## Components
