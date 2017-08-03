@@ -36,7 +36,14 @@ for your content to live in.
 This can be done in a separate file and imported, but for brevity,
 lets define it in `index.js`.
 
-Now you should be able to run `flatpack dev` from
+### AWS setup
+You will need to set up some Amazon web services to get going. Flatpack has a built-in setup script that will take care of this for you. 
+
+You will need an `AWS access key id` and `AWS secret access key` with credentials for S3, Cloudfront and Cognito.
+
+Run `flatpack setup` and follow the prompt.
+
+After the setup prompt has finished you should be able to run `flatpack dev` from
 the command line and see your example running at `http://localhost:3000/`
 
 ## Components
