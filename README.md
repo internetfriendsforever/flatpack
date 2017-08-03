@@ -21,12 +21,13 @@ Open `index.js` in your favourite text editor
 
 ```javascript
 import React from 'react'
-import { Text } from 'flatpack-js'
+import { Text, EditButton } from 'flatpack-js'
 
 export default (
   <div>
     <h1>Hello flatpack!</h1>
     <Text path='introduction' placeholder='Introduction goes here…' />
+    <EditButton />
   </div>
 )
 ```
