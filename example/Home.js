@@ -1,5 +1,5 @@
 import React from 'react'
-import { PlainText, Text, Image, Link, EditButton } from '../dist'
+import { PlainText, Text, Image, Link, EditButton, Embed } from '../dist'
 
 export default class Home extends React.Component {
   render () {
@@ -13,6 +13,8 @@ export default class Home extends React.Component {
 
         <Image path='home/image' />
         <Image path='home/image2' />
+
+        <Embed path='home/vimeotest' />
 
         <hr />
         <h3><Link href='/picker/'>Mr. Picker! An exiting new feature.</Link></h3>
