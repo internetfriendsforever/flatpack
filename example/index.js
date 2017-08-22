@@ -1,60 +1,64 @@
-import React from 'react'
-import { Text, List, ListItem, Image, Link, EditButton } from '../dist'
-import Home from './Home'
-import MrPicker from './MrPicker'
+import flatpack from '../lib/flatpack'
+import map from 'lodash/map'
+import frontpage from './frontpage'
+import about from './about'
+import book from './book'
 
-const styles = {
-  books: {
-    display: 'flex',
-    flexWrap: 'wrap'
+flatpack({
+  path: '/edit',
+
+  aws: {
+    s3Region: 'eu-west-1',
+    s3Bucket: 'books.iff.ninja',
+    cloudfrontDistributionId: 'E2R23UKINJCRNI',
+    cognitoUserPoolId: 'eu-west-1_wsv33WPaO',
+    cognitoUserPoolClientId: '5d3m81tnmv5ffokol7v9rel08o',
+    cognitoIdentityPoolId: 'eu-west-1:f6e15082-cd98-4f7f-a71c-559e92e99f88'
   },
 
-  book: {
-    flex: '0 0 200px',
-    margin: 10,
-    padding: 10,
-    background: '#ddd'
-  }
-}
+  fields: ({ text, list, image }) => ({
+    name: text(),
+    about: text(),
+    books: list({
+      fields: {
+        title: text(),
+        slug: text(),
+        cover: image(),
+        synopsis: text()
+      }
+    })
+  }),
 
-export default [
-  {
-    path: '/picker/',
-    title: 'Picker',
-    component: (
-      <MrPicker />
-    )
+  defaultValue: {
+    name: 'IFF Books',
+    about: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tristique consequat fringilla. Ut nisl erat, volutpat ac lorem et, consectetur iaculis lacus',
+    books: [{
+      title: 'Book of Love',
+      slug: 'the-book-of-love',
+      synopsis: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tristique consequat fringilla. Ut nisl erat, volutpat ac lorem et, consectetur iaculis lacus'
+    }, {
+      title: 'Book of Death',
+      slug: 'the-book-of-death',
+      synopsis: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tristique consequat fringilla. Ut nisl erat, volutpat ac lorem et, consectetur iaculis lacus'
+    }]
   },
-  {
-    path: '/',
-    title: 'Home',
-    component: (
-      <Home />
-    )
-  }, {
-    path: '/page2/',
-    title: 'Page 2',
-    component: (
-      <div>
-        <h1>Page 2</h1>
 
-        <Text path='page2' placeholder='Text on page 2 is also editable' />
+  router: value => [
+    {
+      path: '/',
+      render: frontpage(value)
+    },
 
-        <h2>Books:</h2>
-        <List path='books' axis='xy' reverse attrs={{ style: styles.books }}>
-          {key => (
-            <ListItem attrs={{ style: styles.book }} key={key}>
-              <Image path={`books/${key}/cover`} />
-              <Text path={`books/${key}/title`} placeholder='Book title…' />
-            </ListItem>
-          )}
-        </List>
+    {
+      path: '/about',
+      render: about(value)
+    },
 
-        <Link href='/page2/'>Page 2</Link>
-        <Link href='/'>Back to frontpage</Link>
-
-        <EditButton />
-      </div>
-    )
-  }
-]
+    ...map(value.books, item => {
+      return {
+        path: `/book/${item.slug}`,
+        render: book(item)
+      }
+    })
+  ]
+})
