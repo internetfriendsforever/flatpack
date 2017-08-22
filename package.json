@@ -8,9 +8,9 @@
   },
   "main": "lib/flatpack.js",
   "scripts": {
-    "start": "./node_modules/.bin/webpack-dev-server --config example/webpack.config.js --inline false --history-api-fallback --compress",
-    "watch": "./node_modules/.bin/webpack -w",
-    "build": "./node_modules/.bin/webpack",
+    "start": "./node_modules/.bin/webpack-dev-server --config example/webpack.config.js -p --inline false --history-api-fallback --compress",
+    "watch": "./node_modules/.bin/webpack -p -w",
+    "build": "./node_modules/.bin/webpack -p",
     "prepublish": "yarn build"
   },
   "standard": {
