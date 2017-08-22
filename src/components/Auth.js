@@ -1,10 +1,14 @@
 import React, { Component } from 'react'
-import { CognitoIdentityCredentials, CognitoIdentity } from 'aws-sdk'
-import { CognitoUserPool, AuthenticationDetails, CognitoUser } from 'amazon-cognito-identity-js'
+import { CognitoIdentityCredentials, CognitoIdentity } from 'aws-sdk/global'
+import CognitoUserPool from 'amazon-cognito-identity-js/lib/CognitoUserPool'
+import AuthenticationDetails from 'amazon-cognito-identity-js/lib/AuthenticationDetails'
+import CognitoUser from 'amazon-cognito-identity-js/lib/CognitoUser'
 import Button from '../ui/Button'
 import Message from '../ui/Message'
 import InputEmail from '../ui/InputEmail'
 import InputPassword from '../ui/InputPassword'
+
+console.log(CognitoIdentityCredentials)
 
 const styles = {
   container: {
