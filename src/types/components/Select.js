@@ -1,5 +1,5 @@
 import React from 'react'
-import { map } from 'lodash'
+import map from 'lodash/map'
 import InputSelect from '../../ui/InputSelect'
 
 export default ({ value, onChange, children, options }) => {

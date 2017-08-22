@@ -1,4 +1,4 @@
-import { zipObject } from 'lodash'
+import zipObject from 'lodash/zipObject'
 
 // Get files from ./fields
 const typeContext = require.context('./Components', false, /\.js$/)
