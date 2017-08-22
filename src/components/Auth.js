@@ -154,13 +154,7 @@ export default class Auth extends Component {
     }
 
     if (fetchingCredentials) {
-      return (
-        <div style={styles.container}>
-          <Message>
-            Authenticating…
-          </Message>
-        </div>
-      )
+      return null
     }
 
     return (
