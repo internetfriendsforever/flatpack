@@ -1,4 +1,5 @@
 import 'history-events'
+import trimEnd from 'lodash/trimEnd'
 import isUrlExternal from './utils/isUrlExternal'
 import loadScript from './utils/loadScript'
 
@@ -7,6 +8,8 @@ export default ({ defaultValue, aws, path, fields, routes }) => {
     .then(res => res.json())
     .then(manifest => {
       const value = manifest.value || defaultValue || {}
+
+      console.log(manifest)
 
       const loadAsyncModule = (() => {
         const modules = {}
@@ -24,13 +27,13 @@ export default ({ defaultValue, aws, path, fields, routes }) => {
       })()
 
       function match (expression) {
-        return window.location.pathname === expression
+        return trimEnd(window.location.pathname, '/') === expression
       }
 
       function render () {
         if (match(path)) {
           loadAsyncModule('edit').then(edit => {
-            edit({ value, aws, fields, routes })
+            edit({ value, aws, fields, routes, manifest, path })
           })
         }
 

@@ -12,6 +12,8 @@ import Fields from './Fields'
 import Button from '../ui/Button'
 import FieldLink from './FieldLink'
 import Preview from './Preview'
+import publish from '../actions/publish'
+import pack from '../actions/pack'
 
 const styles = {
   container: {
@@ -63,7 +65,7 @@ const requiredAWSKeys = [
 
 export default class Editor extends Component {
   state = {
-    user: null,
+    publishing: false,
     value: {}
   }
 
@@ -102,8 +104,32 @@ export default class Editor extends Component {
   onPreviewPathSelectChange = e => this.updatePreviewPath(e.currentTarget.value)
   onPreviewNavigate = path => this.updatePreviewPath(path)
 
-  onPublishClick = () => {
-    console.log('Publish!')
+  onPublishClick = credentials => {
+    const { aws, routes, manifest, path } = this.props
+    const { value } = this.state
+
+    pack({
+      path,
+      manifest,
+      routes,
+      value
+    }).then(files => publish({
+      files,
+      credentials,
+      aws
+    }).then(() => {
+      this.setState({
+        publishing: false
+      })
+    }).catch(() => {
+      this.setState({
+        publishing: false
+      })
+    }))
+
+    this.setState({
+      publishing: true
+    })
   }
 
   getFieldPath () {
@@ -186,7 +212,7 @@ export default class Editor extends Component {
   }
 
   render () {
-    const { value } = this.state
+    const { value, publishing } = this.state
     const { aws, routes } = this.props
     const previewPath = getQuery().preview || '/'
     const currentRoutes = routes(value)
@@ -214,8 +240,8 @@ export default class Editor extends Component {
               <div style={styles.fields}>
                 {this.renderFields()}
 
-                <Button onClick={this.onPublishClick} primary>
-                  Publish
+                <Button onClick={this.onPublishClick.bind(this, credentials)} disabled={publishing} primary>
+                  {publishing ? 'Publishing…' : 'Publish'}
                 </Button>
 
                 <Button onClick={signOut}>
