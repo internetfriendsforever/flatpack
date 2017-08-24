@@ -1,9 +1,5 @@
 import React, { Component } from 'react'
-
-const isUrlExternal = url => {
-  const domain = url => url.replace('http://', '').replace('https://', '').split('/')[0]
-  return domain(window.location.href) !== domain(url)
-}
+import isUrlExternal from '../utils/isUrlExternal'
 
 const styles = {
   iframe: {

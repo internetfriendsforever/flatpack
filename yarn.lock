@@ -2121,6 +2121,10 @@ he@1.1.x:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/he/-/he-1.1.1.tgz#93410fd21b009735151f8868c2f271f3427e23fd"
 
+history-events@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/history-events/-/history-events-1.0.4.tgz#a1115329817d92d4342ecb98bf1e71dce53afedf"
+
 hmac-drbg@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/hmac-drbg/-/hmac-drbg-1.0.1.tgz#d2745701025a6c775a6c545793ed502fc0c649a1"
@@ -2987,12 +2991,6 @@ p-locate@^2.0.0:
 p-map@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/p-map/-/p-map-1.1.1.tgz#05f5e4ae97a068371bc2a5cc86bfbdbc19c4ae7a"
-
-page.js@^4.13.3:
-  version "4.13.3"
-  resolved "https://registry.yarnpkg.com/page.js/-/page.js-4.13.3.tgz#d5f7febedd15ac851ad18d3e4ff45d54c320276e"
-  dependencies:
-    path-to-regexp "0.1.7"
 
 pako@~0.2.0:
   version "0.2.9"

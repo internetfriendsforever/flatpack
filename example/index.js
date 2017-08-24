@@ -55,7 +55,7 @@ flatpack({
     }]
   },
 
-  router: value => [
+  routes: value => [
     {
       path: '/',
       render: frontpage(value)

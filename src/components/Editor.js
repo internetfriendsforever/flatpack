@@ -5,6 +5,7 @@ import setInObject from 'lodash/set'
 import find from 'lodash/find'
 import difference from 'lodash/difference'
 import keys from 'lodash/keys'
+import { getQuery, updateQuery } from '../utils/query'
 import Setup from './Setup'
 import Auth from './Auth'
 import Fields from './Fields'
@@ -63,7 +64,6 @@ const requiredAWSKeys = [
 export default class Editor extends Component {
   state = {
     user: null,
-    previewPath: '/',
     value: {}
   }
 
@@ -93,20 +93,21 @@ export default class Editor extends Component {
     this.setState({ value })
   }
 
-  onPreviewPathChange = e => this.setState({
-    previewPath: e.currentTarget.value
-  })
+  updatePreviewPath (path) {
+    updateQuery({
+      preview: path !== '/' ? path : ''
+    })
+  }
 
-  onPreviewNavigate = path => this.setState({
-    previewPath: path
-  })
+  onPreviewPathSelectChange = e => this.updatePreviewPath(e.currentTarget.value)
+  onPreviewNavigate = path => this.updatePreviewPath(path)
 
   onPublishClick = () => {
     console.log('Publish!')
   }
 
   getFieldPath () {
-    return this.props.location.query.path
+    return getQuery().content
   }
 
   renderFieldPathNavigation () {
@@ -185,10 +186,11 @@ export default class Editor extends Component {
   }
 
   render () {
-    const { previewPath, value } = this.state
-    const { aws, router } = this.props
-    const routes = this.props.router(value)
-    const route = find(routes, { path: previewPath })
+    const { value } = this.state
+    const { aws, routes } = this.props
+    const previewPath = getQuery().preview || '/'
+    const currentRoutes = routes(value)
+    const route = find(currentRoutes, { path: previewPath })
 
     if (difference(requiredAWSKeys, keys(aws)).length) {
       return <Setup />
@@ -200,8 +202,8 @@ export default class Editor extends Component {
           {(credentials, signOut) => (
             <div style={styles.editor}>
               <div style={styles.preview}>
-                <select value={previewPath} onChange={this.onPreviewPathChange}>
-                  {map(router(value), route => (
+                <select value={previewPath} onChange={this.onPreviewPathSelectChange}>
+                  {map(currentRoutes, route => (
                     <option key={route.path}>{route.path}</option>
                   ))}
                 </select>

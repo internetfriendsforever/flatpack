@@ -1,18 +1,8 @@
-import page from 'page.js'
-import qs from 'qs'
+import 'history-events'
+import isUrlExternal from './utils/isUrlExternal'
+import loadScript from './utils/loadScript'
 
-function loadScript (src, callback) {
-  return new Promise((resolve, reject) => {
-    const script = document.createElement('script')
-    script.src = src
-    document.body.appendChild(script)
-    script.addEventListener('load', () => {
-      resolve()
-    })
-  })
-}
-
-export default ({ defaultValue, aws, path, fields, router }) => {
+export default ({ defaultValue, aws, path, fields, routes }) => {
   window.fetch('/flatpack/manifest.json')
     .then(res => res.json())
     .then(manifest => {
@@ -33,23 +23,41 @@ export default ({ defaultValue, aws, path, fields, router }) => {
         })
       })()
 
-      page((context, next) => {
-        context.query = qs.parse(context.querystring)
-        next()
-      })
+      function match (expression) {
+        return window.location.pathname === expression
+      }
 
-      page(path, location => {
-        loadAsyncModule('edit').then(edit => {
-          edit({ location, value, aws, fields, router })
+      function render () {
+        if (match(path)) {
+          loadAsyncModule('edit').then(edit => {
+            edit({ value, aws, fields, routes })
+          })
+        }
+
+        routes(value).forEach(route => {
+          if (match(route.path)) {
+            route.render(document)
+          }
         })
+      }
+
+      window.addEventListener('popstate', render)
+      window.addEventListener('changestate', render)
+
+      render()
+
+      document.addEventListener('click', e => {
+        const link = e.target.closest('a')
+
+        if (link) {
+          e.preventDefault()
+
+          if (!isUrlExternal(link.href)) {
+            window.history.pushState(null, null, link.href)
+          } else {
+            window.open(link.href)
+          }
+        }
       })
-
-      router(value).forEach(route => (
-        page(route.path, () => {
-          route.render(document)
-        })
-      ))
-
-      page.start()
     })
 }
