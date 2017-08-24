@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import map from 'lodash/map'
+import getInObject from 'lodash/get'
+import setInObject from 'lodash/set'
 import find from 'lodash/find'
 import difference from 'lodash/difference'
 import keys from 'lodash/keys'
@@ -7,11 +9,8 @@ import Setup from './Setup'
 import Auth from './Auth'
 import Fields from './Fields'
 import Button from '../ui/Button'
-
-const isUrlExternal = url => {
-  const domain = url => url.replace('http://', '').replace('https://', '').split('/')[0]
-  return domain(window.location.href) !== domain(url)
-}
+import FieldLink from './FieldLink'
+import Preview from './Preview'
 
 const styles = {
   container: {
@@ -32,7 +31,7 @@ const styles = {
   fields: {
     flex: 'auto',
     overflow: 'auto',
-    maxWidth: 400,
+    width: 300,
     padding: 20,
     paddingLeft: 10
   },
@@ -76,66 +75,120 @@ export default class Editor extends Component {
     }
   }
 
-  onChange = (value) => {
-    this.setState({
-      value
-    })
+  componentDidMount () {
+    console.log('Editor mounted')
   }
 
-  updatePreview () {
-    const { value, previewPath } = this.state
-    const routes = this.props.router(value)
-    const route = find(routes, { path: previewPath })
-    route.render(this.iframe.contentDocument)
+  componentWillUnmount () {
+    console.log('Editor will unmount')
   }
 
-  componentDidUpdate () {
-    this.updatePreview()
+  onValueAtPathChange = (path, value) => {
+    const modified = { ...this.state.value }
+    setInObject(modified, path, value)
+    this.setState({ value: modified })
   }
 
-  onIframeRef = node => {
-    if (node) {
-      this.iframe = node
-      this.onIframeLoad()
-    }
+  onValueChange = value => {
+    this.setState({ value })
   }
 
-  onIframeLoad = () => {
-    this.updatePreview()
-    this.iframe.contentDocument.addEventListener('click', this.onIframeClick)
-  }
+  onPreviewPathChange = e => this.setState({
+    previewPath: e.currentTarget.value
+  })
 
-  onIframeClick = (e) => {
-    const link = e.target.closest('a')
-
-    if (link) {
-      e.preventDefault()
-
-      if (!isUrlExternal(link.href)) {
-        const { pathname, search = '', hash = '' } = link
-
-        this.setState({
-          previewPath: `${pathname}${search}${hash}`
-        })
-      } else {
-        window.open(link.href)
-      }
-    }
-  }
-
-  onPreviewPathChange = (e) => {
-    this.setState({
-      previewPath: e.currentTarget.value
-    })
-  }
+  onPreviewNavigate = path => this.setState({
+    previewPath: path
+  })
 
   onPublishClick = () => {
     console.log('Publish!')
   }
 
+  getFieldPath () {
+    return this.props.location.query.path
+  }
+
+  renderFieldPathNavigation () {
+    const { fields } = this.props
+    const path = this.getFieldPath()
+    const segments = path.split('.')
+
+    const items = segments.map((key, i) => {
+      const path = segments.slice(0, i + 1).join('.')
+      const field = getInObject(fields, path)
+      return {
+        path,
+        label: field.props.label || key
+      }
+    })
+
+    if (items.length) {
+      items.unshift({
+        path: '',
+        label: 'Content'
+      })
+    }
+
+    return (
+      <div>
+        {map(items, ({ path, label }, i) => (
+          <span key={path}>
+            {(i < items.length - 1) && (
+              <span>
+                <FieldLink path={path}>
+                  {label}
+                </FieldLink>
+                <span>{' › '}</span>
+              </span>
+            ) || (
+              <span>{label}</span>
+            )}
+          </span>
+        ))}
+      </div>
+    )
+  }
+
+  renderFields () {
+    const { value } = this.state
+    const { fields } = this.props
+    const fieldPath = this.getFieldPath()
+
+    if (fieldPath) {
+      const pathField = getInObject(fields, fieldPath)
+      const pathValue = getInObject(value, fieldPath)
+      const { components, props, ...children } = pathField
+      const Component = components.default
+
+      return (
+        <div>
+          {this.renderFieldPathNavigation()}
+          <Component
+            path={fieldPath}
+            value={pathValue}
+            fields={children}
+            onChange={this.onValueAtPathChange.bind(this, fieldPath)}
+            {...props}
+          />
+        </div>
+      )
+    } else {
+      return (
+        <Fields
+          fields={this.props.fields}
+          value={this.state.value}
+          onChange={this.onValueChange}
+        />
+      )
+    }
+  }
+
   render () {
     const { previewPath, value } = this.state
-    const { aws, fields, router } = this.props
+    const { aws, router } = this.props
+    const routes = this.props.router(value)
+    const route = find(routes, { path: previewPath })
 
     if (difference(requiredAWSKeys, keys(aws)).length) {
       return <Setup />
@@ -152,14 +205,13 @@ export default class Editor extends Component {
                     <option key={route.path}>{route.path}</option>
                   ))}
                 </select>
-                <iframe
-                  style={styles.iframe}
-                  ref={this.onIframeRef}
-                />
+
+                <Preview route={route} onNavigate={this.onPreviewNavigate} />
               </div>
 
               <div style={styles.fields}>
-                <Fields fields={fields} value={value} onChange={this.onChange} />
+                {this.renderFields()}
+
                 <Button onClick={this.onPublishClick} primary>
                   Publish
                 </Button>

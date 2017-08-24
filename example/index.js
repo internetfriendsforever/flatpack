@@ -16,22 +16,34 @@ flatpack({
     cognitoIdentityPoolId: 'eu-west-1:f6e15082-cd98-4f7f-a71c-559e92e99f88'
   },
 
-  fields: ({ text, list, image }) => ({
+  fields: ({ text, list, image, group }) => ({
     name: text(),
-    about: text(),
+    about: group({
+      label: 'About'
+    }, {
+      body: text(),
+      contributors: list({
+        label: 'Contributors'
+      }, {
+        name: text(),
+        image: image()
+      })
+    }),
     books: list({
-      fields: {
-        title: text(),
-        slug: text(),
-        cover: image(),
-        synopsis: text()
-      }
+      label: 'Books'
+    }, {
+      title: text(),
+      slug: text(),
+      cover: image(),
+      synopsis: text()
     })
   }),
 
   defaultValue: {
     name: 'IFF Books',
-    about: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tristique consequat fringilla. Ut nisl erat, volutpat ac lorem et, consectetur iaculis lacus',
+    about: {
+      body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tristique consequat fringilla. Ut nisl erat, volutpat ac lorem et, consectetur iaculis lacus'
+    },
     books: [{
       title: 'Book of Love',
       slug: 'the-book-of-love',

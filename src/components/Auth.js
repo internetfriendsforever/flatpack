@@ -8,8 +8,6 @@ import Message from '../ui/Message'
 import InputEmail from '../ui/InputEmail'
 import InputPassword from '../ui/InputPassword'
 
-console.log(CognitoIdentityCredentials)
-
 const styles = {
   container: {
     padding: '5vw',

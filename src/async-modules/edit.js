@@ -3,12 +3,15 @@ import ReactDOM from 'react-dom'
 import types from '../types'
 import Editor from '../components/Editor'
 
-export default ({ value, aws, fields, router }) => {
-  const container = document.createElement('div')
+let container
+
+export default ({ fields, ...props }) => {
+  if (!container) {
+    container = document.createElement('div')
+    document.body.appendChild(container)
+  }
 
   ReactDOM.render((
-    <Editor aws={aws} value={value} fields={fields(types)} router={router} />
+    <Editor fields={fields(types)} {...props} />
   ), container)
-
-  document.body.appendChild(container)
 }

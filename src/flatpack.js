@@ -1,4 +1,5 @@
 import page from 'page.js'
+import qs from 'qs'
 
 function loadScript (src, callback) {
   return new Promise((resolve, reject) => {
@@ -17,15 +18,29 @@ export default ({ defaultValue, aws, path, fields, router }) => {
     .then(manifest => {
       const value = manifest.value || defaultValue || {}
 
-      function loadAsyncModule (name) {
-        return loadScript(manifest.asyncModules[name]).then(() => (
-          window.asyncModule[name]
-        ))
-      }
+      const loadAsyncModule = (() => {
+        const modules = {}
 
-      page(path, () => {
+        return name => new Promise((resolve, reject) => {
+          if (modules[name]) {
+            resolve(modules[name])
+          } else {
+            loadScript(manifest.asyncModules[name]).then(() => {
+              modules[name] = window.asyncModule[name]
+              resolve(modules[name])
+            })
+          }
+        })
+      })()
+
+      page((context, next) => {
+        context.query = qs.parse(context.querystring)
+        next()
+      })
+
+      page(path, location => {
         loadAsyncModule('edit').then(edit => {
-          edit({ value, aws, fields, router })
+          edit({ location, value, aws, fields, router })
         })
       })
 

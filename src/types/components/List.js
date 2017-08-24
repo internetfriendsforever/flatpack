@@ -1,6 +1,7 @@
 import React from 'react'
 import Box from '../../ui/Box'
 import Fields from '../../components/Fields'
+import FieldLink from '../../components/FieldLink'
 
 const initialValue = []
 
@@ -36,3 +37,11 @@ export default ({ value = initialValue, onChange, display, fields, label }) => {
     </Box>
   )
 }
+
+export const field = ({ value = initialValue, path, onChange, display, fields, label }) => (
+  <FieldLink path={path}>
+    <Box>
+      <div>{label || 'Group'}</div>
+    </Box>
+  </FieldLink>
+)

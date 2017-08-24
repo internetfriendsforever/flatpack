@@ -8,9 +8,9 @@
   },
   "main": "lib/flatpack.js",
   "scripts": {
-    "start": "./node_modules/.bin/webpack-dev-server --config example/webpack.config.js -p --inline false --history-api-fallback --compress",
-    "watch": "./node_modules/.bin/webpack -p -w",
-    "build": "./node_modules/.bin/webpack -p",
+    "start": "./node_modules/.bin/webpack-dev-server --config example/webpack.config.js --inline false --history-api-fallback --compress",
+    "watch": "./node_modules/.bin/webpack -w",
+    "build": "./node_modules/.bin/webpack",
     "prepublish": "yarn build"
   },
   "standard": {
@@ -31,6 +31,7 @@
     "nanoid": "^0.2.0",
     "page.js": "^4.13.3",
     "prop-types": "^15.5.10",
+    "qs": "^6.5.0",
     "react": "next",
     "react-dom": "next",
     "react-textarea-autosize": "^5.1.0",
