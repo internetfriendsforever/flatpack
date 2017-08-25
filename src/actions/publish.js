@@ -1,39 +1,43 @@
 import S3 from 'aws-sdk/clients/s3'
-import generate from 'nanoid/generate'
+import map from 'lodash/map'
+import mime from 'mime-types'
 
 export default ({ files, credentials, aws }) => {
-  const version = generate('1234567890abcdef', 10)
-  const uploads = files
-    .map(file => versionFile(file, version))
-    .map(file => uploadFile(file, credentials, aws))
+  const blobs = map(files, (content, path) => ({
+    path: path,
+    data: new window.Blob([content], {
+      type: mime.lookup(path)
+    })
+  }))
 
-  return Promise.all(uploads).then(() => releaseVersion({
+  const uploads = blobs.map(file => uploadFile(file, credentials, aws))
+
+  return Promise.all(uploads).then(() => release({
     aws,
-    credentials,
-    version
+    credentials
   }).then(() => {
     console.log('Published!')
   }))
 }
 
-export const releaseVersion = ({ credentials, version, aws }) => {
+export const release = ({ credentials, aws }) => {
   return new Promise((resolve, reject) => {
     const s3 = new S3({
       credentials,
       region: aws.s3Region
     })
 
-    console.log('Releasing version', version)
+    console.log('Releasing version')
     console.log('Updating bucket website config...')
 
     s3.putBucketWebsite({
       Bucket: aws.s3Bucket,
       WebsiteConfiguration: {
         IndexDocument: {
-          Suffix: `${version}-index.html`
+          Suffix: `index.html`
         },
         ErrorDocument: {
-          Key: `${version}-error.html`
+          Key: `error.html`
         }
       }
     }, (err, data) => {
@@ -44,11 +48,6 @@ export const releaseVersion = ({ credentials, version, aws }) => {
       }
     })
   })
-}
-
-function versionFile (file, version) {
-  file.path = file.path.replace(/index\.html$/, `${version}-index.html`)
-  return file
 }
 
 function uploadFile (file, credentials, aws) {

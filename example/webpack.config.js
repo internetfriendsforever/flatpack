@@ -1,12 +1,12 @@
 const path = require('path')
-const FlatpackWebpackPlugin = require('../WebpackPlugin')
+const FlatpackWebpackPlugin = require('../webpack-plugin')
 
 module.exports = {
   entry: path.resolve(__dirname, 'index.js'),
 
   output: {
     path: path.join(__dirname, 'build'),
-    filename: 'assets/[name].js',
+    filename: '[name].js',
     publicPath: '/'
   },
 

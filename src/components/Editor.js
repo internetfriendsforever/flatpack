@@ -12,8 +12,8 @@ import Fields from './Fields'
 import Button from '../ui/Button'
 import FieldLink from './FieldLink'
 import Preview from './Preview'
-import publish from '../actions/publish'
 import pack from '../actions/pack'
+import publish from '../actions/publish'
 
 const styles = {
   container: {
@@ -77,14 +77,6 @@ export default class Editor extends Component {
     }
   }
 
-  componentDidMount () {
-    console.log('Editor mounted')
-  }
-
-  componentWillUnmount () {
-    console.log('Editor will unmount')
-  }
-
   onValueAtPathChange = (path, value) => {
     const modified = { ...this.state.value }
     setInObject(modified, path, value)
@@ -108,6 +100,10 @@ export default class Editor extends Component {
     const { aws, routes, manifest, path } = this.props
     const { value } = this.state
 
+    this.setState({
+      publishing: true
+    })
+
     pack({
       path,
       manifest,
@@ -126,10 +122,6 @@ export default class Editor extends Component {
         publishing: false
       })
     }))
-
-    this.setState({
-      publishing: true
-    })
   }
 
   getFieldPath () {

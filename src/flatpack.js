@@ -9,12 +9,12 @@ function normalizePath (path) {
 }
 
 export default ({ defaultValue, aws, path, fields, routes }) => {
-  window.fetch('/flatpack/manifest.json')
+  window.fetch('/manifest.json')
     .then(res => res.json())
     .then(manifest => {
       const value = manifest.value || defaultValue || {}
 
-      console.log(manifest)
+      console.log('Manifest loaded', manifest)
 
       const loadAsyncModule = (() => {
         const modules = {}

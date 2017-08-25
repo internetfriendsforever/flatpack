@@ -1,9 +1,8 @@
-// const mapValues = require('lodash/mapValues')
 const fs = require('fs')
 const path = require('path')
 const RawSource = require('webpack-sources').RawSource
 
-const flatpackPath = 'flatpack'
+const manifestPath = 'manifest.json'
 
 const asyncModulePath = path.resolve(__dirname, 'lib/async-modules')
 const asyncModuleFilenames = fs.readdirSync(asyncModulePath)
@@ -17,7 +16,6 @@ FlatpackWebpackPlugin.prototype.apply = compiler => {
     const publicPath = compiler.options.output.publicPath || ''
     const getPublicPath = name => `${publicPath}${name}`
     const stats = compilation.getStats().toJson()
-    const manifestPath = `${flatpackPath}/manifest.json`
 
     const manifest = {
       assets: stats.assets.map(asset => getPublicPath(asset.name)),
@@ -36,7 +34,7 @@ FlatpackWebpackPlugin.prototype.apply = compiler => {
       const inputFile = path.join(asyncModulePath, filename)
       const contents = fs.readFileSync(inputFile)
       const source = new RawSource(contents)
-      const outputFile = `${flatpackPath}/async-modules/${filename}`
+      const outputFile = `flatpack-async-modules/${filename}`
       const publicFile = getPublicPath(outputFile)
       compilation.fileDependencies.push(inputFile)
       compilation.assets[outputFile] = source
@@ -45,7 +43,6 @@ FlatpackWebpackPlugin.prototype.apply = compiler => {
     })
 
     manifest.assets.push(getPublicPath(manifestPath))
-
     compilation.assets[manifestPath] = new RawSource(JSON.stringify(manifest))
 
     callback()
