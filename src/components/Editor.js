@@ -12,7 +12,6 @@ import Fields from './Fields'
 import Button from '../ui/Button'
 import FieldLink from './FieldLink'
 import Preview from './Preview'
-import pack from '../actions/pack'
 import publish from '../actions/publish'
 
 const styles = {
@@ -97,31 +96,27 @@ export default class Editor extends Component {
   onPreviewNavigate = path => this.updatePreviewPath(path)
 
   onPublishClick = credentials => {
-    const { aws, routes, manifest, path } = this.props
     const { value } = this.state
 
     this.setState({
       publishing: true
     })
 
-    pack({
-      path,
-      manifest,
-      routes,
-      value
-    }).then(files => publish({
-      files,
+    publish({
+      ...this.props,
       credentials,
-      aws
+      value
     }).then(() => {
+      console.log('Published')
       this.setState({
         publishing: false
       })
-    }).catch(() => {
+    }).catch(e => {
+      console.log(e)
       this.setState({
         publishing: false
       })
-    }))
+    })
   }
 
   getFieldPath () {
