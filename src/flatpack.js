@@ -16,8 +16,6 @@ export default ({ defaultValue, aws, path, fields, routes }) => {
     const modules = {}
 
     return name => new Promise((resolve, reject) => {
-      console.log(name)
-
       if (modules[name]) {
         resolve(modules[name])
       } else {
