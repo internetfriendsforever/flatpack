@@ -1,7 +1,12 @@
 import 'history-events'
 import trimEnd from 'lodash/trimEnd'
+import trimStart from 'lodash/trimStart'
 import isUrlExternal from './utils/isUrlExternal'
 import loadScript from './utils/loadScript'
+
+function normalizePath (path) {
+  return trimStart(trimEnd(path, '/'), '/')
+}
 
 export default ({ defaultValue, aws, path, fields, routes }) => {
   window.fetch('/flatpack/manifest.json')
@@ -27,7 +32,7 @@ export default ({ defaultValue, aws, path, fields, routes }) => {
       })()
 
       function match (expression) {
-        return trimEnd(window.location.pathname, '/') === expression
+        return normalizePath(window.location.pathname) === normalizePath(expression)
       }
 
       function render () {

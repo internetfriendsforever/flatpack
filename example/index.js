@@ -5,7 +5,7 @@ import about from './about'
 import book from './book'
 
 flatpack({
-  path: '/edit',
+  path: 'edit',
 
   aws: {
     s3Region: 'eu-west-1',
