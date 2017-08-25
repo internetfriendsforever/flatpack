@@ -3,7 +3,9 @@ import generate from 'nanoid/generate'
 
 export default ({ files, credentials, aws }) => {
   const version = generate('1234567890abcdef', 10)
-  const uploads = files.map(file => uploadFile(file, credentials, aws))
+  const uploads = files
+    .map(file => versionFile(file, version))
+    .map(file => uploadFile(file, credentials, aws))
 
   return Promise.all(uploads).then(() => releaseVersion({
     aws,
@@ -28,10 +30,10 @@ export const releaseVersion = ({ credentials, version, aws }) => {
       Bucket: aws.s3Bucket,
       WebsiteConfiguration: {
         IndexDocument: {
-          Suffix: 'index.html'
+          Suffix: `${version}-index.html`
         },
         ErrorDocument: {
-          Key: '404.html'
+          Key: `${version}-error.html`
         }
       }
     }, (err, data) => {
@@ -42,6 +44,11 @@ export const releaseVersion = ({ credentials, version, aws }) => {
       }
     })
   })
+}
+
+function versionFile (file, version) {
+  file.path = file.path.replace(/index\.html$/, `${version}-index.html`)
+  return file
 }
 
 function uploadFile (file, credentials, aws) {
