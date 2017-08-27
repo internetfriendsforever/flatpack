@@ -1,7 +1,7 @@
 import zipObject from 'lodash/zipObject'
 
 // Get files from ./fields
-const typeContext = require.context('./Components', false, /\.js$/)
+const typeContext = require.context('./components', false, /\.js$/)
 
 // Map files to keys ./Text.js -> text
 const typeKeys = typeContext.keys().map(key => (
