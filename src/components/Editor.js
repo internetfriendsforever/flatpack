@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import map from 'lodash/map'
-import getInObject from 'lodash/get'
+import filter from 'lodash/filter'
 import setInObject from 'lodash/set'
 import find from 'lodash/find'
 import difference from 'lodash/difference'
@@ -8,9 +8,8 @@ import keys from 'lodash/keys'
 import { getQuery, updateQuery } from '../utils/query'
 import Setup from './Setup'
 import Auth from './Auth'
-import Fields from './Fields'
+import Group from '../types/components/Group'
 import Button from '../ui/Button'
-import FieldLink from './FieldLink'
 import Preview from './Preview'
 import publish from '../actions/publish'
 
@@ -119,6 +118,10 @@ export default class Editor extends Component {
     })
   }
 
+  getSegments () {
+    return filter((getQuery().path || '').split('/'))
+  }
+
   render () {
     const { value, publishing } = this.state
     const { aws, routes } = this.props
@@ -146,8 +149,9 @@ export default class Editor extends Component {
               </div>
 
               <div style={styles.fields}>
-                <Fields
-                  path={getQuery().path}
+                <Group
+                  segments={this.getSegments()}
+                  resolved={[]}
                   fields={this.props.fields}
                   value={this.state.value}
                   onChange={this.onValueChange}

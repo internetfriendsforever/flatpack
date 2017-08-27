@@ -1,24 +1,25 @@
 import React from 'react'
-import remove from 'lodash/remove'
 import Box from '../../ui/Box'
-import Fields from '../../components/Fields'
-import FieldLink from '../../components/FieldLink'
-import { getQuery, getQueryUrl } from '../../utils/query'
+import Group from './Group'
+import PathLink from '../../components/PathLink'
+import PathBreadcrumbs from '../../components/PathBreadcrumbs'
 
 const initialValue = []
 
-export default ({ path = '', value = initialValue, onChange, display, fields, label }) => {
-  const segments = path.split('/')
-  const key = segments.shift()
-  const item = value[key]
-
-  if (item) {
+export default ({ segments, resolved, value = initialValue, onChange, display, fields, label, itemLabel }) => {
+  if (segments.length > resolved.length) {
+    const key = segments[resolved.length]
+    const item = value[key]
     const index = parseInt(key, 10)
+    const label = itemLabel && itemLabel(item) || `Item ${key}`
+
+    resolved.push(label)
 
     return (
       <div>
-        <Fields
-          path={segments.join('/')}
+        <Group
+          segments={segments}
+          resolved={resolved}
           fields={fields}
           value={item}
           onChange={modified => {
@@ -28,43 +29,42 @@ export default ({ path = '', value = initialValue, onChange, display, fields, la
           }}
         />
 
-        {!segments.length && (
-          <button onClick={() => {
-            const nextPath = getQuery().path.split('/').slice(0, -1).join('/')
-            const nextUrl = getQueryUrl({ ...getQuery(), path: nextPath })
-            window.history.replaceState(null, null, nextUrl)
-            onChange(remove(value, (item, i) => i !== index))
-          }}>
-            Remove
-          </button>
+        {segments.length === resolved.length && (
+          <button onClick={() => console.log('Remove')}>Remove</button>
         )}
       </div>
     )
   }
 
   return (
-    <Box title={label || 'List'}>
-      <button onClick={() => {
-        onChange([ ...value, {} ])
-      }}>
-        Add
-      </button>
+    <div>
+      <PathBreadcrumbs segments={segments} resolved={resolved} />
 
-      {value.map((item, i) => (
-        <div key={i}>
-          <FieldLink path={i}>
-            Item
-          </FieldLink>
-        </div>
-      ))}
-    </Box>
+      <Box title={label || 'List'}>
+        <button onClick={() => {
+          onChange([ ...value, {} ])
+        }}>
+          Add
+        </button>
+
+        {value.map((item, i) => (
+          <div key={i}>
+            <PathLink path={[...segments, i].join('/')}>
+              {itemLabel && itemLabel(item) || `Item ${i}`}
+            </PathLink>
+          </div>
+        ))}
+      </Box>
+    </div>
   )
 }
 
-export const field = ({ value = initialValue, path, onChange, display, fields, label }) => (
-  <FieldLink path={path}>
-    <Box>
-      <div>{label || 'Group'}</div>
-    </Box>
-  </FieldLink>
-)
+export const field = ({ path, segments, value = initialValue, onChange, fields, label }) => {
+  return (
+    <PathLink path={[...segments, path].join('/')}>
+      <Box>
+        <div>{label || 'List'}</div>
+      </Box>
+    </PathLink>
+  )
+}

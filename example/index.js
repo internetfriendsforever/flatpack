@@ -23,14 +23,16 @@ flatpack({
     }, {
       body: text(),
       contributors: list({
-        label: 'Contributors'
+        label: 'Contributors',
+        itemLabel: item => item.name
       }, {
         name: text(),
         image: image()
       })
     }),
     books: list({
-      label: 'Books'
+      label: 'Books',
+      itemLabel: item => item.title
     }, {
       title: text(),
       slug: text(),
