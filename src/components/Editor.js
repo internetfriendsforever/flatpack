@@ -119,85 +119,6 @@ export default class Editor extends Component {
     })
   }
 
-  getFieldPath () {
-    return getQuery().content
-  }
-
-  renderFieldPathNavigation () {
-    const { fields } = this.props
-    const path = this.getFieldPath()
-    const segments = path.split('.')
-
-    const items = segments.map((key, i) => {
-      const path = segments.slice(0, i + 1).join('.')
-      const field = getInObject(fields, path)
-      return {
-        path,
-        label: field.props.label || key
-      }
-    })
-
-    if (items.length) {
-      items.unshift({
-        path: '',
-        label: 'Content'
-      })
-    }
-
-    return (
-      <div>
-        {map(items, ({ path, label }, i) => (
-          <span key={path}>
-            {(i < items.length - 1) && (
-              <span>
-                <FieldLink path={path}>
-                  {label}
-                </FieldLink>
-                <span>{' › '}</span>
-              </span>
-            ) || (
-              <span>{label}</span>
-            )}
-          </span>
-        ))}
-      </div>
-    )
-  }
-
-  renderFields () {
-    const { value } = this.state
-    const { fields } = this.props
-    const fieldPath = this.getFieldPath()
-
-    if (fieldPath) {
-      const pathField = getInObject(fields, fieldPath)
-      const pathValue = getInObject(value, fieldPath)
-      const { components, props, ...children } = pathField
-      const Component = components.default
-
-      return (
-        <div>
-          {this.renderFieldPathNavigation()}
-          <Component
-            path={fieldPath}
-            value={pathValue}
-            fields={children}
-            onChange={this.onValueAtPathChange.bind(this, fieldPath)}
-            {...props}
-          />
-        </div>
-      )
-    } else {
-      return (
-        <Fields
-          fields={this.props.fields}
-          value={this.state.value}
-          onChange={this.onValueChange}
-        />
-      )
-    }
-  }
-
   render () {
     const { value, publishing } = this.state
     const { aws, routes } = this.props
@@ -225,7 +146,12 @@ export default class Editor extends Component {
               </div>
 
               <div style={styles.fields}>
-                {this.renderFields()}
+                <Fields
+                  path={getQuery().path}
+                  fields={this.props.fields}
+                  value={this.state.value}
+                  onChange={this.onValueChange}
+                />
 
                 <Button onClick={this.onPublishClick.bind(this, credentials)} disabled={publishing} primary>
                   {publishing ? 'Publishing…' : 'Publish'}

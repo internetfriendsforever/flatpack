@@ -5,11 +5,11 @@ import FieldLink from '../../components/FieldLink'
 
 const initialValue = {}
 
-export default ({ path = '', value = initialValue, onChange, display, fields, label }) => (
+export default ({ path = '', value = initialValue, onChange, fields, label }) => (
   <Fields path={path} fields={fields} value={value} onChange={onChange} />
 )
 
-export const field = ({ path, value = initialValue, onChange, display, fields, label }) => (
+export const field = ({ path, value = initialValue, onChange, fields, label }) => (
   <FieldLink path={path}>
     <Box>
       <div>{label || 'Group'}</div>

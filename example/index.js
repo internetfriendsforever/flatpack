@@ -35,7 +35,12 @@ flatpack({
       title: text(),
       slug: text(),
       cover: image(),
-      synopsis: text()
+      synopsis: text(),
+      deeper: group({
+        label: 'Deeper'
+      }, {
+        title: text()
+      })
     })
   }),
 
