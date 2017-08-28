@@ -8,9 +8,10 @@ function normalizePath (path) {
   return trimStart(trimEnd(path, '/'), '/')
 }
 
-export default ({ defaultValue, aws, path, fields, routes }) => {
-  const manifest = window.manifest
-  const value = manifest.value || defaultValue || {}
+const defaultManifest = window.manifest || {}
+
+export default ({ aws, path, fields, routes, manifest = defaultManifest }) => {
+  const value = manifest.value || {}
 
   const loadAsyncModule = (() => {
     const modules = {}
@@ -47,10 +48,9 @@ export default ({ defaultValue, aws, path, fields, routes }) => {
     })
   }
 
+  window.addEventListener('load', render)
   window.addEventListener('popstate', render)
   window.addEventListener('changestate', render)
-
-  render()
 
   document.addEventListener('click', e => {
     const link = e.target.closest('a')

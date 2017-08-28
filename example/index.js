@@ -47,20 +47,24 @@ flatpack({
     })
   }),
 
-  defaultValue: {
-    name: 'IFF Books',
-    about: {
-      body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tristique consequat fringilla. Ut nisl erat, volutpat ac lorem et, consectetur iaculis lacus'
-    },
-    books: [{
-      title: 'Book of Love',
-      slug: 'the-book-of-love',
-      synopsis: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tristique consequat fringilla. Ut nisl erat, volutpat ac lorem et, consectetur iaculis lacus'
-    }, {
-      title: 'Book of Death',
-      slug: 'the-book-of-death',
-      synopsis: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tristique consequat fringilla. Ut nisl erat, volutpat ac lorem et, consectetur iaculis lacus'
-    }]
+  manifest: {
+    ...window.manifest,
+
+    value: {
+      name: 'IFF Books',
+      about: {
+        body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tristique consequat fringilla. Ut nisl erat, volutpat ac lorem et, consectetur iaculis lacus'
+      },
+      books: [{
+        title: 'Book of Love',
+        slug: 'the-book-of-love',
+        synopsis: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tristique consequat fringilla. Ut nisl erat, volutpat ac lorem et, consectetur iaculis lacus'
+      }, {
+        title: 'Book of Death',
+        slug: 'the-book-of-death',
+        synopsis: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tristique consequat fringilla. Ut nisl erat, volutpat ac lorem et, consectetur iaculis lacus'
+      }]
+    }
   },
 
   routes: value => [
