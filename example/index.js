@@ -38,8 +38,9 @@ flatpack({
       slug: text(),
       cover: image(),
       synopsis: text(),
-      deeper: group({
-        label: 'Deeper'
+      reviews: list({
+        label: 'Reviews',
+        itemLabel: item => item.title
       }, {
         title: text()
       })
