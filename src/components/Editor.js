@@ -6,6 +6,7 @@ import find from 'lodash/find'
 import difference from 'lodash/difference'
 import keys from 'lodash/keys'
 import { getQuery, updateQuery } from '../utils/query'
+import Root from '../ui/Root'
 import Setup from './Setup'
 import Auth from './Auth'
 import Group from '../types/components/Group'
@@ -14,11 +15,6 @@ import Preview from './Preview'
 import publish from '../actions/publish'
 
 const styles = {
-  container: {
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
-    fontSize: 14
-  },
-
   editor: {
     display: 'flex',
     background: '#f6f6f6',
@@ -134,7 +130,7 @@ export default class Editor extends Component {
     }
 
     return (
-      <div style={styles.container}>
+      <Root>
         <Auth aws={aws}>
           {(credentials, signOut) => (
             <div style={styles.editor}>
@@ -168,7 +164,7 @@ export default class Editor extends Component {
             </div>
           )}
         </Auth>
-      </div>
+      </Root>
     )
   }
 }
