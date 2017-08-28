@@ -1,12 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
-import EntypoChevronThinRight from 'react-entypo/lib/entypo/ChevronThinRight'
+import EntypoChevronSmallRight from 'react-entypo/lib/entypo/ChevronSmallRight'
 import map from 'lodash/map'
 import Link from '../ui/Link'
 
 const List = styled.ol`
   list-style: none;
   padding: 0;
+  margin: 0;
+  margin-bottom: 1em;
 `
 
 const Item = styled.li`
@@ -15,7 +17,7 @@ const Item = styled.li`
 
 const Separator = styled.span`
   vertical-align: middle;
-  margin: 0 0.25em;
+  margin: 0 0.15em;
 
   & svg path {
     fill: rgba(0, 0, 0, 0.4);
@@ -33,7 +35,7 @@ export default ({ items }) => (
             </Link>
 
             <Separator>
-              <EntypoChevronThinRight />
+              <EntypoChevronSmallRight />
             </Separator>
           </span>
         ) || label}

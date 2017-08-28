@@ -17,7 +17,7 @@ export default ({ segments, resolved }) => {
   if (items.length) {
     items.unshift({
       path: getQueryUrl({ ...getQuery(), path: '' }),
-      label: 'Content'
+      label: 'Edit'
     })
   }
 

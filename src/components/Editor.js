@@ -15,8 +15,9 @@ import Button from '../ui/Button'
 import Preview from './Preview'
 import publish from '../actions/publish'
 
-const EditorContainer = styled.div`
+const Editor = styled.div`
   display: flex;
+  flex-direction: column;
   background: #F8F8F8;
   position: fixed;
   top: 0;
@@ -25,22 +26,41 @@ const EditorContainer = styled.div`
   bottom: 0;
 `
 
-const FieldsContainer = styled.div`
+const SplitPanel = styled.div`
   flex: auto;
-  overflow: auto;
-  width: 300px;
-  padding: 20px;
-  padding-left: 0;
+  display: flex;
 `
 
-const PreviewContainer = styled.div`
+const PreviewPanel = styled.div`
   flex: auto;
   display: flex;
   flex-direction: column;
   justify-content: middle;
   align-items: middle;
-  padding: 20px;
-  paddingRight: 10px;
+`
+
+const FieldsPanel = styled.div`
+  flex: auto;
+  overflow: auto;
+  min-width: 300px;
+  max-width: 400px;
+  padding: 1em;
+`
+
+const PublishPanel = styled.div`
+  flex: 0 0 auto;
+  padding: 0.25em;
+  background: #5B5E6C;
+`
+
+const PublishActions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`
+
+const PublishAction = styled.div`
+  flex: 0 0 auto;
+  margin: 0.25em;
 `
 
 const requiredAWSKeys = [
@@ -51,7 +71,7 @@ const requiredAWSKeys = [
   'cognitoIdentityPoolId'
 ]
 
-export default class Editor extends Component {
+export default class extends Component {
   state = {
     publishing: false,
     value: {}
@@ -127,35 +147,45 @@ export default class Editor extends Component {
       <Root>
         <Auth aws={aws}>
           {(credentials, signOut) => (
-            <EditorContainer>
-              <PreviewContainer>
-                <select value={previewPath} onChange={this.onPreviewPathSelectChange}>
-                  {map(currentRoutes, route => (
-                    <option key={route.path}>{route.path}</option>
-                  ))}
-                </select>
+            <Editor>
+              <SplitPanel>
+                <PreviewPanel>
+                  <select value={previewPath} onChange={this.onPreviewPathSelectChange}>
+                    {map(currentRoutes, route => (
+                      <option key={route.path}>{route.path}</option>
+                    ))}
+                  </select>
 
-                <Preview route={route} onNavigate={this.onPreviewNavigate} />
-              </PreviewContainer>
+                  <Preview route={route} onNavigate={this.onPreviewNavigate} />
+                </PreviewPanel>
 
-              <FieldsContainer>
-                <Group
-                  segments={this.getSegments()}
-                  resolved={[]}
-                  fields={this.props.fields}
-                  value={this.state.value}
-                  onChange={this.onValueChange}
-                />
+                <FieldsPanel>
+                  <Group
+                    segments={this.getSegments()}
+                    resolved={[]}
+                    fields={this.props.fields}
+                    value={this.state.value}
+                    onChange={this.onValueChange}
+                  />
+                </FieldsPanel>
+              </SplitPanel>
 
-                <Button onClick={this.onPublishClick.bind(this, credentials)} disabled={publishing} primary>
-                  {publishing ? 'Publishing…' : 'Publish'}
-                </Button>
+              <PublishPanel>
+                <PublishActions>
+                  <PublishAction>
+                    <Button onClick={signOut}>
+                      Sign out
+                    </Button>
+                  </PublishAction>
 
-                <Button onClick={signOut}>
-                  Sign out
-                </Button>
-              </FieldsContainer>
-            </EditorContainer>
+                  <PublishAction>
+                    <Button onClick={this.onPublishClick.bind(this, credentials)} disabled={publishing} primary>
+                      {publishing ? 'Publishing…' : 'Publish'}
+                    </Button>
+                  </PublishAction>
+                </PublishActions>
+              </PublishPanel>
+            </Editor>
           )}
         </Auth>
       </Root>

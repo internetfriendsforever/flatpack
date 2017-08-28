@@ -6,6 +6,7 @@ import isUrlExternal from '../utils/isUrlExternal'
 const Iframe = styled.iframe`
   flex: auto;
   background: white;
+  border: 0;
 `
 
 export default class Preview extends Component {

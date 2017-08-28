@@ -4,11 +4,16 @@ import styled, { css } from 'styled-components'
 const Box = styled.div`
   position: relative;
   display: block;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  margin: 1em 0;
+  border: 1px solid rgba(0, 0, 0, 0.15);
   background: white;
   border-radius: 2px;
-  padding: 0.5em 0.75em;
+  padding: 0.75em;
+  margin-bottom: 0.75em;
+
+  ${props => props.title && css`
+    padding-top: 1.35em;
+    padding-bottom: 0.5em;
+  `}
 
   ${props => props.disabled && css`
     opacity: 0.4;
@@ -21,6 +26,9 @@ const Title = styled.div`
   text-transform: uppercase;
   letter-spacing: 0.082em;
   color: #888;
+  position: absolute;
+  top: calc(0.7em / 0.65);
+  left: calc(0.75em / 0.65);
 `
 
 export default ({ children, ...props }) => (
