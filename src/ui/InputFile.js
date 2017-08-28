@@ -1,17 +1,20 @@
 import React from 'react'
+import styled from 'styled-components'
 import Box from './Box'
 
-const styles = {
-  input: {
-    fontSize: 'inherit',
-    margin: '0.25em'
-  }
-}
+const File = styled.input.attrs({
+  type: 'file'
+})`
+  fontSize: inherit;
+  margin: 0.25em;
+`
 
-export default props => (
-  <label>
-    <Box title={props.label} disabled={props.disabled}>
-      <input type='file' style={styles.input} {...props} />
-    </Box>
-  </label>
-)
+export default ({ label, ...props }) => {
+  return (
+    <label>
+      <Box title={label}>
+        <File {...props} />
+      </Box>
+    </label>
+  )
+}

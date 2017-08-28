@@ -32,7 +32,9 @@ export default ({ segments, resolved, value = initialValue, onChange, fields, la
   return (
 
     <div>
-      <PathBreadcrumbs segments={segments} resolved={resolved} />
+      {!!resolved.length && (
+        <PathBreadcrumbs segments={segments} resolved={resolved} />
+      )}
 
       {map(fields, ({ components, props, ...fields }, key) => {
         const Component = components.field || components.default
@@ -62,7 +64,7 @@ export const field = ({ path, segments, value = initialValue, onChange, fields, 
   return (
     <PathLink path={[...segments, path].join('/')}>
       <Box>
-        <div>{label || 'Group'}</div>
+        {label || 'Group'}
       </Box>
     </PathLink>
   )

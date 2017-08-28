@@ -1,33 +1,43 @@
 import React from 'react'
+import styled from 'styled-components'
+import EntypoChevronThinRight from 'react-entypo/lib/entypo/ChevronThinRight'
 import map from 'lodash/map'
+import Link from '../ui/Link'
 
-const styles = {
-  list: {
-    listStyle: 'none',
-    padding: 0
-  },
+const List = styled.ol`
+  list-style: none;
+  padding: 0;
+`
 
-  item: {
-    display: 'inline-block'
-  },
+const Item = styled.li`
+  display: inline-block;
+`
 
-  separator: {
-    margin: '0 0.4em',
-    pointerEvents: 'none'
+const Separator = styled.span`
+  vertical-align: middle;
+  margin: 0 0.25em;
+
+  & svg path {
+    fill: rgba(0, 0, 0, 0.4);
   }
-}
+`
 
 export default ({ items }) => (
-  <ol style={styles.list}>
+  <List>
     {map(items, ({ path, label }, i) => (
-      <li key={path} style={styles.item}>
+      <Item key={path}>
         {i < items.length - 1 && (
           <span>
-            <a href={path}>{label}</a>
-            <span style={styles.separator}>›</span>
+            <Link href={path}>
+              {label}
+            </Link>
+
+            <Separator>
+              <EntypoChevronThinRight />
+            </Separator>
           </span>
         ) || label}
-      </li>
+      </Item>
     ))}
-  </ol>
+  </List>
 )

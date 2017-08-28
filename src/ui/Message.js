@@ -1,29 +1,17 @@
-import React from 'react'
+import styled, { css } from 'styled-components'
 
-const styles = {
-  normal: {
-    background: '#E4FCFA',
-    borderRadius: 2,
-    lineHeight: 1.4,
-    padding: '0.75em',
-    margin: '1em 0'
-  },
+export default styled.div`
+  background: #E4FCFA;
+  border-radius: 2;
+  lineHeight: 1.4;
+  padding: 0.75em;
+  margin: 1em 0;
 
-  warn: {
-    background: '#FCEDE4'
-  },
+  ${props => props.warn && css`
+    background: #FCEDE4;
+  `}
 
-  critical: {
-    background: '#FFD5D5'
-  }
-}
-
-export default ({ children, warn, critical }) => (
-  <div style={{
-    ...styles.normal,
-    ...(warn && styles.warn),
-    ...(critical && styles.critical)
-  }}>
-    {children}
-  </div>
-)
+  ${props => props.critical && css`
+    background: #FFD5D5;
+  `}
+`

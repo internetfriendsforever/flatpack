@@ -19,7 +19,7 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: '0.5em',
+    padding: '0 0.25em',
     cursor: 'move'
   },
 

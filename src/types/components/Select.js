@@ -2,13 +2,13 @@ import React from 'react'
 import map from 'lodash/map'
 import InputSelect from '../../ui/InputSelect'
 
-export default ({ value, onChange, children, options }) => {
-  const defaultValue = '/'
+export default ({ value, onChange, options, label }) => {
+  const defaultValue = ''
   const val = value || defaultValue
-  const label = options[val]
+  const display = options[val]
 
   return (
-    <InputSelect label='Page' display={label} value={val} onChange={e => onChange(e.currentTarget.value)}>
+    <InputSelect label={label || 'Select'} display={display} value={val} onChange={e => onChange(e.currentTarget.value)}>
       {map(options, (label, path) => (
         <option key={path} value={path}>
           {label}

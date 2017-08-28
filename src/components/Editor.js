@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import styled from 'styled-components'
 import map from 'lodash/map'
 import filter from 'lodash/filter'
 import setInObject from 'lodash/set'
@@ -14,40 +15,33 @@ import Button from '../ui/Button'
 import Preview from './Preview'
 import publish from '../actions/publish'
 
-const styles = {
-  editor: {
-    display: 'flex',
-    background: '#f6f6f6',
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0
-  },
+const EditorContainer = styled.div`
+  display: flex;
+  background: #F8F8F8;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+`
 
-  fields: {
-    flex: 'auto',
-    overflow: 'auto',
-    width: 300,
-    padding: 20,
-    paddingLeft: 10
-  },
+const FieldsContainer = styled.div`
+  flex: auto;
+  overflow: auto;
+  width: 300px;
+  padding: 20px;
+  padding-left: 0;
+`
 
-  preview: {
-    flex: 'auto',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'middle',
-    alignItems: 'middle',
-    padding: 20,
-    paddingRight: 10
-  },
-
-  iframe: {
-    flex: 'auto',
-    background: 'white'
-  }
-}
+const PreviewContainer = styled.div`
+  flex: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: middle;
+  align-items: middle;
+  padding: 20px;
+  paddingRight: 10px;
+`
 
 const requiredAWSKeys = [
   's3Region',
@@ -133,8 +127,8 @@ export default class Editor extends Component {
       <Root>
         <Auth aws={aws}>
           {(credentials, signOut) => (
-            <div style={styles.editor}>
-              <div style={styles.preview}>
+            <EditorContainer>
+              <PreviewContainer>
                 <select value={previewPath} onChange={this.onPreviewPathSelectChange}>
                   {map(currentRoutes, route => (
                     <option key={route.path}>{route.path}</option>
@@ -142,9 +136,9 @@ export default class Editor extends Component {
                 </select>
 
                 <Preview route={route} onNavigate={this.onPreviewNavigate} />
-              </div>
+              </PreviewContainer>
 
-              <div style={styles.fields}>
+              <FieldsContainer>
                 <Group
                   segments={this.getSegments()}
                   resolved={[]}
@@ -160,8 +154,8 @@ export default class Editor extends Component {
                 <Button onClick={signOut}>
                   Sign out
                 </Button>
-              </div>
-            </div>
+              </FieldsContainer>
+            </EditorContainer>
           )}
         </Auth>
       </Root>

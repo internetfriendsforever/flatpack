@@ -1,63 +1,46 @@
 import React from 'react'
+import styled, { css } from 'styled-components'
 
-const styles = {
-  button: {
-    display: 'block',
-    fontSize: 'inherit',
-    lineHeight: '1.4em',
-    width: '100%',
-    boxSizing: 'border-box',
-    padding: '0.75em',
-    border: 0,
-    background: '#333',
-    fontWeight: 'bold',
-    color: 'white',
-    cursor: 'pointer'
-  },
+const shared = css`
+  display: block;
+  font-family: inherit;
+  font-size: inherit;
+  lineHeight: 1.4em;
+  width: 100%;
+  boxSizing: border-box;
+  padding: 0.75em;
+  border: 0;
+  background: #333;
+  fontWeight: bold;
+  color: white;
+  cursor: pointer;
 
-  primary: {
-    background: 'rgb(36, 178, 161)'
-  },
+  ${props => props.primary && css`
+    background: rgb(36, 178, 161);
+  `}
 
-  disabled: {
-    pointerEvents: 'none',
-    background: '#ccc'
-  },
+  ${props => props.disabled && css`
+    pointer-events: none;
+    background: #ccc;
+  `}
 
-  loading: {
-    cursor: 'wait',
-    background: '#ccc'
-  }
-}
+  ${props => props.loading && css`
+    cursor: wait;
+    background: #ccc;
+  `}
+`
 
-export default props => {
-  const passProps = {
-    ...props,
-    style: {
-      ...styles.button,
-      ...(props.primary && styles.primary),
-      ...(props.disabled && styles.disabled),
-      ...(props.loading && styles.loading)
-    }
-  }
+const Submit = styled.input.attrs({ type: 'submit' })`${shared}`
 
-  if (props.loading) {
-    passProps.disabled = true
-  }
+const Button = styled.button`${shared}`
 
-  delete passProps.primary
-  delete passProps.submit
-  delete passProps.loading
-
-  if (props.submit) {
-    delete passProps.children
-
-    return React.createElement('input', {
-      ...passProps,
-      type: 'submit',
-      value: props.children
-    })
-  }
-
-  return React.createElement('button', passProps)
-}
+export default ({ submit, children, ...props }) => submit ? (
+  <Submit
+    value={children}
+    {...props}
+  />
+) : (
+  <Button {...props}>
+    {children}
+  </Button>
+)

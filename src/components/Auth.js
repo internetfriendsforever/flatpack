@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import styled from 'styled-components'
 import { CognitoIdentityCredentials, CognitoIdentity } from 'aws-sdk/global'
 import CognitoUserPool from 'amazon-cognito-identity-js/lib/CognitoUserPool'
 import AuthenticationDetails from 'amazon-cognito-identity-js/lib/AuthenticationDetails'
@@ -8,13 +9,11 @@ import Message from '../ui/Message'
 import InputEmail from '../ui/InputEmail'
 import InputPassword from '../ui/InputPassword'
 
-const styles = {
-  container: {
-    padding: '5vw',
-    maxWidth: 300,
-    margin: '0 auto'
-  }
-}
+const Form = styled.form`
+  padding: 5vw;
+  max-width: 300px;
+  margin: 0 auto;
+`
 
 function createCredentials (aws, username, session) {
   return new Promise((resolve, reject) => {
@@ -156,7 +155,7 @@ export default class Auth extends Component {
     }
 
     return (
-      <form style={styles.container} onSubmit={this.onLoginSubmit}>
+      <Form onSubmit={this.onLoginSubmit}>
         {error && (
           <Message critical>
             {error && error.message} 🤔
@@ -182,7 +181,7 @@ export default class Auth extends Component {
         <Button primary submit loading={loggingIn}>
           {loggingIn && 'Logging in…' || error && 'Try again' || 'Login'}
         </Button>
-      </form>
+      </Form>
     )
   }
 }

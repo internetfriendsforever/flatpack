@@ -1,41 +1,31 @@
 import React from 'react'
+import styled, { css } from 'styled-components'
 
-const styles = {
-  box: {
-    position: 'relative',
-    display: 'block',
-    border: '1px solid rgba(0, 0, 0, 0.15)',
-    padding: '0.5em 0.75em',
-    margin: '1em 0',
-    background: 'white',
-    borderRadius: 2
-  },
+const Box = styled.div`
+  position: relative;
+  display: block;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  margin: 1em 0;
+  background: white;
+  border-radius: 2px;
+  padding: 0.5em 0.75em;
 
-  title: {
-    fontSize: '0.75em',
-    fontWeight: 'normal',
-    margin: '0.3em 0 0 0',
-    textTransform: 'uppercase',
-    letterSpacing: '0.082em',
-    color: '#888'
-  },
+  ${props => props.disabled && css`
+    opacity: 0.4;
+  `}
+`
 
-  disabled: {
-    opacity: 0.4
-  }
-}
+const Title = styled.div`
+  font-size: 0.65em;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.082em;
+  color: #888;
+`
 
-export default ({ title, disabled, children }) => (
-  <div style={{
-    ...styles.box,
-    ...(disabled && styles.disabled)
-  }}>
-    {title && (
-      <div style={styles.title}>
-        {title}
-      </div>
-    )}
-
+export default ({ children, ...props }) => (
+  <Box {...props}>
+    {props.title && <Title>{props.title}</Title>}
     {children}
-  </div>
+  </Box>
 )

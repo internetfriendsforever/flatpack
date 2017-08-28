@@ -1,36 +1,33 @@
-import React, { Component } from 'react'
+import React from 'react'
+import { findDOMNode } from 'react-dom'
+import autosize from 'autosize'
+import styled from 'styled-components'
 import Box from './Box'
-import Textarea from 'react-textarea-autosize'
 
-const styles = {
-  input: {
-    display: 'block',
-    fontSize: 'inherit',
-    lineHeight: '1.4',
-    width: '100%',
-    boxSizing: 'border-box',
-    padding: '0.5em 0',
-    border: 0,
-    background: 'transparent',
-    resize: 'none',
-    outline: 'none'
-  }
-}
+const Textarea = styled.textarea`
+  display: block;
+  font-size: inherit;
+  font-family: inherit;
+  lineHeight: 1.4;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.5em 0;
+  border: 0;
+  background: transparent;
+  resize: none;
+  outline: none;
+`
 
-export default class extends Component {
-  componentDidMount () {
-    this.forceUpdate()
-  }
-
-  render () {
-    const { label, ...props } = this.props
-
-    return (
-      <label>
-        <Box title={label} disabled={props.disabled}>
-          <Textarea style={styles.input} {...props} />
-        </Box>
-      </label>
-    )
-  }
+export default ({ label, ...props }) => {
+  return (
+    <label>
+      <Box title={label}>
+        <Textarea rows='1' {...props} ref={node => {
+          if (node) {
+            autosize(findDOMNode(node))
+          }
+        }} />
+      </Box>
+    </label>
+  )
 }

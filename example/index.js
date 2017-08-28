@@ -16,8 +16,15 @@ flatpack({
     cognitoIdentityPoolId: 'eu-west-1:f6e15082-cd98-4f7f-a71c-559e92e99f88'
   },
 
-  fields: ({ text, list, image, group }) => ({
+  fields: ({ text, list, image, group, select }) => ({
     name: text(),
+    mode: select({
+      label: 'Mode',
+      options: {
+        normal: 'Normal',
+        night: 'Night'
+      }
+    }),
     about: group({
       label: 'About'
     }, {
@@ -52,6 +59,7 @@ flatpack({
 
     value: {
       name: 'IFF Books',
+      mode: 'night',
       about: {
         body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tristique consequat fringilla. Ut nisl erat, volutpat ac lorem et, consectetur iaculis lacus'
       },

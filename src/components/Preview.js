@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
+import { findDOMNode } from 'react-dom'
+import styled from 'styled-components'
 import isUrlExternal from '../utils/isUrlExternal'
 
-const styles = {
-  iframe: {
-    flex: 'auto',
-    background: 'white'
-  }
-}
+const Iframe = styled.iframe`
+  flex: auto;
+  background: white;
+`
 
 export default class Preview extends Component {
   componentDidUpdate () {
@@ -22,7 +22,7 @@ export default class Preview extends Component {
 
   onRef = node => {
     if (node) {
-      this.iframe = node
+      this.iframe = findDOMNode(node)
       this.update()
       this.iframe.contentDocument.addEventListener('click', this.onClick)
     }
@@ -49,10 +49,7 @@ export default class Preview extends Component {
 
   render () {
     return (
-      <iframe
-        style={styles.iframe}
-        ref={this.onRef}
-      />
+      <Iframe ref={this.onRef} />
     )
   }
 }
