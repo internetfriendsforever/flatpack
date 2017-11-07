@@ -179,7 +179,7 @@ export default class Auth extends Component {
         />
 
         <Button primary submit loading={loggingIn}>
-          {loggingIn && 'Logging in…' || error && 'Try again' || 'Login'}
+          {loggingIn ? 'Logging in…' : error ? 'Try again' : 'Login'}
         </Button>
       </Form>
     )

@@ -38,7 +38,7 @@ export default ({ segments, resolved, value = initialValue, onChange, fields, la
 
       {map(fields, ({ components, props, ...fields }, key) => {
         const Component = components.field || components.default
-        const label = props && props.label || key
+        const label = props ? props.label : key
 
         return (
           <Component

@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 import map from 'lodash/map'
 import filter from 'lodash/filter'
-import setInObject from 'lodash/set'
 import find from 'lodash/find'
 import difference from 'lodash/difference'
 import keys from 'lodash/keys'
@@ -83,12 +82,6 @@ export default class extends Component {
     if (props.value) {
       this.state.value = props.value
     }
-  }
-
-  onValueAtPathChange = (path, value) => {
-    const modified = { ...this.state.value }
-    setInObject(modified, path, value)
-    this.setState({ value: modified })
   }
 
   onValueChange = value => {
@@ -179,9 +172,12 @@ export default class extends Component {
                   </PublishAction>
 
                   <PublishAction>
-                    <Button onClick={this.onPublishClick.bind(this, credentials)} disabled={publishing} primary>
-                      {publishing ? 'Publishing…' : 'Publish'}
-                    </Button>
+                    <Button
+                      disabled={publishing}
+                      onClick={this.onPublishClick.bind(this, credentials)}
+                      children={publishing ? 'Publishing…' : 'Publish'}
+                      primary
+                    />
                   </PublishAction>
                 </PublishActions>
               </PublishPanel>
