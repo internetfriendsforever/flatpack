@@ -78,7 +78,7 @@ function release ({ credentials, aws, version }) {
       }
     }, (err, data) => {
       if (err) {
-        reject()
+        reject(err)
       } else {
         resolve()
       }
