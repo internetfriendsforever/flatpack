@@ -1,7 +1,7 @@
 {
   "name": "flatpack-js",
   "author": "internetfriendsforever <anyone@internetfriendsforever.com>",
-  "version": "0.3.0",
+  "version": "0.4.0-beta",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/internetfriendsforever/flatpack.git"
