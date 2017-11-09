@@ -1,0 +1,9 @@
+{
+  "name": "flatpack-js-example",
+  "scripts": {
+    "start": "node ../src/cli start"
+  },
+  "dependencies": {
+    "lodash": "^4.17.4"
+  }
+}

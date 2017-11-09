@@ -54,7 +54,7 @@ flatpack({
     })
   }),
 
-  manifest: {
+  manifest: Object.assign({
     value: {
       name: 'IFF Books',
       mode: 'night',
@@ -70,10 +70,8 @@ flatpack({
         slug: 'the-book-of-death',
         synopsis: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tristique consequat fringilla. Ut nisl erat, volutpat ac lorem et, consectetur iaculis lacus'
       }]
-    },
-
-    ...window.manifest
-  },
+    }
+  }, window.manifest),
 
   routes: value => [
     {

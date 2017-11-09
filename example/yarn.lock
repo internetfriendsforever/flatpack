@@ -2,12 +2,6 @@
 # yarn lockfile v1
 
 
-page.js@^4.13.3:
-  version "4.13.3"
-  resolved "https://registry.yarnpkg.com/page.js/-/page.js-4.13.3.tgz#d5f7febedd15ac851ad18d3e4ff45d54c320276e"
-  dependencies:
-    path-to-regexp "0.1.7"
-
-path-to-regexp@0.1.7:
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-0.1.7.tgz#df604178005f522f15eb4490e7247a1bfaa67f8c"
+lodash@^4.17.4:
+  version "4.17.4"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
