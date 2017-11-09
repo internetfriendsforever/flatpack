@@ -2,7 +2,7 @@ const path = require('path')
 const fs = require('fs')
 const chalk = require('chalk')
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
-const FlatpackPlugin = require('../../../../../webpack-plugin')
+const FlatpackPlugin = require('../../../../webpack-plugin')
 
 module.exports = function ({ port }) {
   const projectBabelConfigPath = path.resolve(process.cwd(), '.babelrc')
@@ -21,7 +21,8 @@ module.exports = function ({ port }) {
     entry: path.resolve(process.cwd(), 'index.js'),
 
     output: {
-      path: path.resolve(process.cwd(), '.flatpack')
+      path: path.resolve(process.cwd(), '.flatpack'),
+      publicPath: '/'
     },
 
     module: {
@@ -41,7 +42,9 @@ module.exports = function ({ port }) {
       new FlatpackPlugin(),
       new FriendlyErrorsWebpackPlugin({
         compilationSuccessInfo: {
-          messages: ['✨ Open ' + chalk.underline(chalk.bold('http://localhost:' + port)) + ' to view website']
+          messages: [
+            '✨ Open ' + chalk.underline(chalk.bold('http://localhost:' + port)) + ' to view website'
+          ]
         }
       })
     ],
@@ -51,6 +54,11 @@ module.exports = function ({ port }) {
         path.resolve(process.cwd(), 'node_modules'),
         path.resolve(__dirname, '../../node_modules')
       ]
+    },
+
+    devServer: {
+      quiet: true,
+      historyApiFallback: true
     }
   }
 }

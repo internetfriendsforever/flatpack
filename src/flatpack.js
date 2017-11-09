@@ -8,9 +8,16 @@ function normalizePath (path) {
   return trimStart(trimEnd(path, '/'), '/')
 }
 
-const defaultManifest = window.manifest || {}
+const defaultOptions = {
+  aws: null,
+  path: 'edit',
+  fields: {},
+  routes: () => [],
+  manifest: window.manifest || {}
+}
 
-export default ({ aws, path, fields, routes, manifest = defaultManifest }) => {
+export default options => {
+  const { aws, path, fields, routes, manifest } = Object.assign({}, defaultOptions, options)
   const value = manifest.value || {}
 
   const loadAsyncModule = (() => {
