@@ -1,13 +1,14 @@
 {
   "name": "flatpack-js",
   "author": "internetfriendsforever <anyone@internetfriendsforever.com>",
-  "version": "0.4.3-beta",
+  "version": "0.4.4-beta",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/internetfriendsforever/flatpack.git"
   },
   "files": [
     "lib",
+    "src/cli",
     "webpack-plugin.js"
   ],
   "main": "lib/flatpack.js",
