@@ -1,11 +1,15 @@
 {
   "name": "flatpack-js",
   "author": "internetfriendsforever <anyone@internetfriendsforever.com>",
-  "version": "0.4.2-beta",
+  "version": "0.4.3-beta",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/internetfriendsforever/flatpack.git"
   },
+  "files": [
+    "lib",
+    "webpack-plugin.js"
+  ],
   "main": "lib/flatpack.js",
   "scripts": {
     "build": "./node_modules/.bin/webpack -p",
