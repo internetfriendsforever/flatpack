@@ -1,7 +1,7 @@
 {
   "name": "flatpack-js",
   "author": "internetfriendsforever <anyone@internetfriendsforever.com>",
-  "version": "0.4.4-beta",
+  "version": "0.4.5-beta",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/internetfriendsforever/flatpack.git"
@@ -48,9 +48,8 @@
     "webpack": "^3.8.1",
     "webpack-dev-server": "^2.9.4"
   },
-
   "devDependencies": {
-    "babel-preset-stage-0": "^6.24.1",
-    "babel-eslint": "^7.2.3"
+    "babel-eslint": "^7.2.3",
+    "babel-preset-stage-0": "^6.24.1"
   }
 }
