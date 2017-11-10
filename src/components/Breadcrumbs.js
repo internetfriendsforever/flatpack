@@ -27,7 +27,7 @@ export default ({ items }) => (
   <List>
     {map(items, ({ path, label }, i) => (
       <Item key={path}>
-        {i < items.length - 1 && (
+        {i < items.length - 1 ? (
           <span>
             <Link href={path}>
               {label}
@@ -37,7 +37,7 @@ export default ({ items }) => (
               <EntypoChevronSmallRight />
             </Separator>
           </span>
-        ) || label}
+        ) : label}
       </Item>
     ))}
   </List>
