@@ -52,6 +52,33 @@ That’s it! Now you can view the app in your browser, and navigate to `/edit` t
 
 ## Usage
 
+### Publishing to Amazon Web Services
+
+Use Flatpack’s built-in publisher that leverages S3, CloudFront and Cognito
+for publishing blazing fast editable websites.
+
+Setup AWS and get your config using the command-line tool
+```
+./node_modules/.bin/flatpack aws setup
+```
+
+Add `aws` config to your flatpack config in `index.js`
+```js
+flatpack({
+  aws: {
+    s3Region: ...,
+    s3Bucket: ...,
+    cloudfrontDistributionId: ...,
+    cognitoUserPoolId: ...,
+    cognitoUserPoolClientId: ...,
+    cognitoIdentityPoolId: ...
+  },
+
+  // rest of your config...
+})
+```
+
+
 ### Using React
 
 Install dependencies
