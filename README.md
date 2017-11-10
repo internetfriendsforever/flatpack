@@ -152,35 +152,6 @@ Run server `./node_modules/.bin/webpack-dev-server`
 
 Note: If you want to use ES6 with a custom webpack config, you need to set this up the usual way (with [babel](http://babeljs.io/)/[babel-loader](https://github.com/babel/babel-loader) or another transpiler)
 
-### ES5 usage
-```js
-var flatpack = require('flatpack')
-
-flatpack({
-  fields: function (types) {
-    return {
-      title: types.text()
-    }
-  },
-
-  routes: function (value) {
-    return [{
-      path: '/',
-      render: function (document) {
-        document.title = value.title
-        document.body.innerHTML = `
-          <h1>${value.title}</h1>
-        `
-      }
-    }]
-  }
-})
-```
-
-### Custom editor field types
-
-To be implemented…
-
 ### Using content for defining routes
 
 You can use values from the editor to define your routes. This example leverages ES6 spread syntax to create a list of books that map to their respective urls
