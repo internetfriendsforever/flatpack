@@ -13,6 +13,7 @@
   ],
   "main": "lib/flatpack.js",
   "scripts": {
+    "dev": "./node_modules/.bin/webpack -w",
     "build": "./node_modules/.bin/webpack -p",
     "prepublish": "yarn build"
   },

@@ -18,10 +18,10 @@ const Display = styled.div`
   padding: 0.25em 0;
 `
 
-export default ({ label, display, ...props }) => {
+export default ({ label, invert, display, ...props }) => {
   return (
     <label>
-      <Box title={label} disabled={props.disabled}>
+      <Box title={label} invert={invert} disabled={props.disabled}>
         <Display>{display || props.value}</Display>
         <Select {...props} />
       </Box>

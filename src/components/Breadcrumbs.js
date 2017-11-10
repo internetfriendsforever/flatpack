@@ -7,8 +7,7 @@ import Link from '../ui/Link'
 const List = styled.ol`
   list-style: none;
   padding: 0;
-  margin: 0;
-  margin-bottom: 1em;
+  margin: 1em 0.5em;
 `
 
 const Item = styled.li`

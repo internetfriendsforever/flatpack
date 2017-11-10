@@ -119,7 +119,7 @@ export const field = ({ path, segments, value = initialValue, onChange, fields, 
   return (
     <PathLink path={[...segments, path].join('/')}>
       <Box>
-        <div>{label || 'List'}</div>
+        {label || 'List'}
       </Box>
     </PathLink>
   )

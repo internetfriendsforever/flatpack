@@ -5,16 +5,16 @@ import mime from 'mime-types'
 
 export default ({ manifest, value, path, routes, credentials, aws }) => {
   const version = generate('1234567890abcdef', 10)
-  const currentManifest = {
+  const publishManifest = {
     ...manifest,
     assets: manifest.assets.map(path => getAssetPath(path)),
     value
   }
 
   const currentRoutes = routes(value)
-  const renderRoutes = Promise.all(currentRoutes.map(({ render }) => renderToString(render, currentManifest)))
+  const renderRoutes = Promise.all(currentRoutes.map(({ render }) => renderToString(render, publishManifest)))
   const fetchAssets = Promise.all(manifest.assets.map(asset => window.fetch(asset).then(res => res.text())))
-  const renderEdit = renderToString(document => {}, currentManifest)
+  const renderEdit = renderToString(document => {}, publishManifest)
 
   return Promise.all([
     renderRoutes,
@@ -34,7 +34,7 @@ export default ({ manifest, value, path, routes, credentials, aws }) => {
       })
     })
 
-    currentManifest.assets.forEach((path, i) => {
+    publishManifest.assets.forEach((path, i) => {
       files.push({
         path: stripPath(path),
         data: new window.Blob([assets[i]], { type: mime.lookup(path) })

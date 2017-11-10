@@ -147,7 +147,10 @@ export default class Auth extends Component {
     const { username, password, credentials, fetchingCredentials, loggingIn, error } = this.state
 
     if (credentials) {
-      return children(credentials, this.signOut)
+      return children({
+        credentials,
+        signOut: this.signOut
+      })
     }
 
     if (fetchingCredentials) {
