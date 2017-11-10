@@ -50,9 +50,7 @@ yarn start
 
 That’s it! Now you can view the app in your browser, and navigate to `/edit` to use the editor
 
-## Usage
-
-### Publishing to Amazon Web Services
+## Publishing to Amazon Web Services
 
 Use Flatpack’s built-in publisher that leverages S3, CloudFront and Cognito
 for publishing blazing fast editable websites.
@@ -79,7 +77,7 @@ flatpack({
 ```
 
 
-### Using React
+## Using React
 
 Install dependencies
 ```
@@ -112,6 +110,8 @@ flatpack({
   }]
 })
 ```
+
+## Advanced
 
 ### Custom babel config
 
