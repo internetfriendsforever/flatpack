@@ -50,9 +50,34 @@ yarn start
 
 That’s it! Now you can view the app in your browser, and navigate to `/edit` to use the editor
 
-## Usage
+## Publishing to Amazon Web Services
 
-### Using React
+Use Flatpack’s built-in publisher that leverages S3, CloudFront and Cognito
+for publishing blazing fast editable websites.
+
+Setup AWS and get your config using the command-line tool
+```
+./node_modules/.bin/flatpack aws setup
+```
+
+Add `aws` config to your flatpack config in `index.js`
+```js
+flatpack({
+  aws: {
+    s3Region: ...,
+    s3Bucket: ...,
+    cloudfrontDistributionId: ...,
+    cognitoUserPoolId: ...,
+    cognitoUserPoolClientId: ...,
+    cognitoIdentityPoolId: ...
+  },
+
+  // rest of your config...
+})
+```
+
+
+## Using React
 
 Install dependencies
 ```
@@ -85,6 +110,8 @@ flatpack({
   }]
 })
 ```
+
+## Advanced
 
 ### Custom babel config
 
@@ -124,35 +151,6 @@ module.exports = {
 Run server `./node_modules/.bin/webpack-dev-server`
 
 Note: If you want to use ES6 with a custom webpack config, you need to set this up the usual way (with [babel](http://babeljs.io/)/[babel-loader](https://github.com/babel/babel-loader) or another transpiler)
-
-### ES5 usage
-```js
-var flatpack = require('flatpack')
-
-flatpack({
-  fields: function (types) {
-    return {
-      title: types.text()
-    }
-  },
-
-  routes: function (value) {
-    return [{
-      path: '/',
-      render: function (document) {
-        document.title = value.title
-        document.body.innerHTML = `
-          <h1>${value.title}</h1>
-        `
-      }
-    }]
-  }
-})
-```
-
-### Custom editor field types
-
-To be implemented…
 
 ### Using content for defining routes
 
