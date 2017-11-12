@@ -1,8 +1,9 @@
 import React from 'react'
 import map from 'lodash/map'
-import InputSelect from '../../ui/InputSelect'
+import InputSelect from '../ui/InputSelect'
+import createType from './createType'
 
-export default ({ value, onChange, options, label }) => {
+const Edit = ({ value, onChange, options, label }) => {
   const defaultValue = ''
   const val = value || defaultValue
   const display = options[val]
@@ -17,3 +18,5 @@ export default ({ value, onChange, options, label }) => {
     </InputSelect>
   )
 }
+
+export default createType({ Edit })

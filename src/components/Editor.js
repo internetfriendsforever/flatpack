@@ -6,11 +6,13 @@ import find from 'lodash/find'
 import { getQuery, updateQuery } from '../utils/query'
 import Root from '../ui/Root'
 import Auth from './Auth'
-import Group from '../types/components/Group'
 import InputSelect from '../ui/InputSelect'
 import Button from '../ui/Button'
 import Preview from './Preview'
 import publish from '../actions/publish'
+import group from '../types/group'
+
+const Group = group().components.Edit
 
 const Editor = styled.div`
   display: flex;

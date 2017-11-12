@@ -1,17 +1,18 @@
 import React from 'react'
 import map from 'lodash/map'
-import Box from '../../ui/Box'
-import PathLink from '../../components/PathLink'
-import PathBreadcrumbs from '../../components/PathBreadcrumbs'
+import Box from '../ui/Box'
+import PathLink from '../components/PathLink'
+import PathBreadcrumbs from '../components/PathBreadcrumbs'
+import createType from './createType'
 
 const initialValue = {}
 
-export default ({ segments, resolved, value = initialValue, onChange, fields, label }) => {
+const Edit = ({ segments, resolved, value = initialValue, onChange, fields, label }) => {
   if (segments.length > resolved.length) {
     const key = segments[resolved.length]
     const field = fields[key]
     const { components, props } = field
-    const Component = components.default
+    const Component = components.Edit
     const label = field.props.label || key
 
     return (
@@ -30,14 +31,13 @@ export default ({ segments, resolved, value = initialValue, onChange, fields, la
   }
 
   return (
-
     <div>
       {!!resolved.length && (
         <PathBreadcrumbs segments={segments} resolved={resolved} />
       )}
 
       {map(fields, ({ components, props, ...fields }, key) => {
-        const Component = components.field || components.default
+        const Component = components.Field || components.Edit
         const label = props ? props.label : key
 
         return (
@@ -60,7 +60,7 @@ export default ({ segments, resolved, value = initialValue, onChange, fields, la
   )
 }
 
-export const field = ({ path, segments, value = initialValue, onChange, fields, label }) => {
+const Field = ({ path, segments, value = initialValue, onChange, fields, label }) => {
   return (
     <PathLink path={[...segments, path].join('/')}>
       <Box>
@@ -69,3 +69,5 @@ export const field = ({ path, segments, value = initialValue, onChange, fields, 
     </PathLink>
   )
 }
+
+export default createType({ Edit, Field })

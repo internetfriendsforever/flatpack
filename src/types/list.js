@@ -1,11 +1,14 @@
 import React from 'react'
 import { SortableContainer, SortableElement, SortableHandle, arrayMove } from 'react-sortable-hoc'
 import EntypoMenu from 'react-entypo/lib/entypo/Menu'
-import Root from '../../ui/Root'
-import Box from '../../ui/Box'
-import Group from './Group'
-import PathLink from '../../components/PathLink'
-import PathBreadcrumbs from '../../components/PathBreadcrumbs'
+import Root from '../ui/Root'
+import Box from '../ui/Box'
+import PathLink from '../components/PathLink'
+import PathBreadcrumbs from '../components/PathBreadcrumbs'
+import createType from './createType'
+import group from './group'
+
+const Group = group().components.Edit
 
 const initialValue = []
 
@@ -63,7 +66,7 @@ const List = SortableContainer(({ items }) => {
   )
 })
 
-export default ({ segments, resolved, value = initialValue, onChange, display, fields, label, itemLabel }) => {
+const Edit = ({ segments, resolved, value = initialValue, onChange, display, fields, label, itemLabel }) => {
   if (segments.length > resolved.length) {
     const key = segments[resolved.length]
     const item = value[key]
@@ -115,7 +118,7 @@ export default ({ segments, resolved, value = initialValue, onChange, display, f
   )
 }
 
-export const field = ({ path, segments, value = initialValue, onChange, fields, label }) => {
+const Field = ({ path, segments, value = initialValue, onChange, fields, label }) => {
   return (
     <PathLink path={[...segments, path].join('/')}>
       <Box>
@@ -124,3 +127,5 @@ export const field = ({ path, segments, value = initialValue, onChange, fields, 
     </PathLink>
   )
 }
+
+export default createType({ Edit, Field })
