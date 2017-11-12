@@ -68,7 +68,7 @@ export default ({ segments, resolved, value = initialValue, onChange, display, f
     const key = segments[resolved.length]
     const item = value[key]
     const index = parseInt(key, 10)
-    const label = itemLabel && itemLabel(item) || `Item ${key}`
+    const label = itemLabel ? itemLabel(item) : `Item ${key}`
 
     resolved.push(label)
 
@@ -106,7 +106,7 @@ export default ({ segments, resolved, value = initialValue, onChange, display, f
 
         <List useDragHandle items={value.map((item, i) => ({
           path: [...segments, i].join('/'),
-          label: itemLabel && itemLabel(item) || `Item`
+          label: itemLabel ? itemLabel(item) : `Item`
         }))} onSortEnd={({ oldIndex, newIndex }) => {
           onChange(arrayMove(value, oldIndex, newIndex))
         }} />
