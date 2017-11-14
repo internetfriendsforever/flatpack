@@ -4,6 +4,7 @@ export default book => document => {
   document.title = book.title
   document.body.innerHTML = `
     <h1>${book.title || ''}</h1>
+    ${book.rating ? `<p>Rating: ${book.rating}</p>` : ''}
     <p>${book.synopsis || ''}</p>
     <p><a href="/">Back to index</a></p>
     ${book.cover ? `<img src="${book.cover.variations[0].url}" />` : ''}

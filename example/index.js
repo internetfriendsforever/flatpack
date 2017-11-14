@@ -16,7 +16,7 @@ flatpack({
     cognitoIdentityPoolId: 'eu-west-1:f6e15082-cd98-4f7f-a71c-559e92e99f88'
   },
 
-  fields: ({ text, list, image, group, select }) => ({
+  fields: ({ text, list, image, group, select, slider }) => ({
     name: text(),
     mode: select({
       label: 'Mode',
@@ -43,6 +43,9 @@ flatpack({
     }, {
       title: text(),
       slug: text(),
+      rating: slider({
+        max: 10
+      }),
       cover: image({
         interval: 500,
         thumbnailSize: 20
