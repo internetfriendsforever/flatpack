@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Box from '../../ui/Box'
 import InputFile from '../../ui/InputFile'
 import createType from '../createType'
 import createThumbnail from './createThumbnail'
@@ -65,24 +66,28 @@ const Edit = class extends Component {
       const supportedFormatsFriendly = supportedMimes.map(mime => mime.split('/')[1]).join(', ')
       window.alert(`Only images of types ${supportedFormatsFriendly} are supported`)
     }
+  }
 
-    // Traverse for blobs when uploading, and get blob back by using fetch
-    // window.fetch(url)
-    //   .then(res => res.blob())
-    //   .then(blob => {
-    //     console.log(blob)
-    //   })
-    // }
+  onRemoveClick = e => {
+    this.props.onChange(null)
   }
 
   render () {
-    const { label } = this.props
+    const { label, value } = this.props
 
     return (
-      <InputFile
-        label={label || 'Image'}
-        onChange={this.onChange}
-      />
+      value ? (
+        <Box title={label || 'Image'}>
+          <img src={value.url} style={{ maxWidth: 100 }} />
+          <div><button onClick={this.onRemoveClick}>Remove</button></div>
+        </Box>
+      ) : (
+        <InputFile
+          label={label || 'Image'}
+          onChange={this.onChange}
+        />
+      )
+
     )
   }
 }
