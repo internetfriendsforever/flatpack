@@ -43,7 +43,10 @@ flatpack({
     }, {
       title: text(),
       slug: text(),
-      cover: image(),
+      cover: image({
+        interval: 500,
+        thumbnailSize: 20
+      }),
       synopsis: text(),
       reviews: list({
         label: 'Reviews',

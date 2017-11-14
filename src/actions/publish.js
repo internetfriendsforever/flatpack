@@ -2,16 +2,19 @@ import S3 from 'aws-sdk/clients/s3'
 import filter from 'lodash/filter'
 import generate from 'nanoid/generate'
 import mime from 'mime-types'
+import traverse from 'traverse'
 
-export default ({ manifest, value, path, routes, credentials, aws }) => {
+export default async ({ manifest, value, path, routes, credentials, aws }) => {
   const version = generate('1234567890abcdef', 10)
+  const attachments = await createAttachments(value)
+
   const publishManifest = {
     ...manifest,
     assets: manifest.assets.map(path => getAssetPath(path)),
-    value
+    value: attachments.modifiedValue
   }
 
-  const currentRoutes = routes(value)
+  const currentRoutes = routes(attachments.modifiedValue)
   const renderRoutes = Promise.all(currentRoutes.map(({ render }) => renderToString(render, publishManifest)))
   const fetchAssets = Promise.all(manifest.assets.map(asset => window.fetch(asset).then(res => res.text())))
   const renderEdit = renderToString(document => {}, publishManifest)
@@ -45,6 +48,8 @@ export default ({ manifest, value, path, routes, credentials, aws }) => {
       path: getDocumentPath(path, version),
       data: new window.Blob([edit], { type: 'text/html' })
     })
+
+    files.push(...attachments.files)
 
     const uploads = files.map(file => uploadFile(file, credentials, aws))
 
@@ -164,4 +169,37 @@ function uploadFile (file, credentials, aws) {
       }
     })
   })
+}
+
+async function createAttachments (value) {
+  const items = []
+
+  const modifiedValue = traverse.map(value, value => {
+    if (typeof value === 'string' && value.startsWith('blob:')) {
+      const relativePath = `assets/${generate('1234567890abcdef', 10)}`
+      const absolutePath = `/${relativePath}`
+
+      items.push({
+        relativePath: relativePath,
+        absolutePath: absolutePath,
+        source: value
+      })
+
+      return absolutePath
+    }
+  })
+
+  const blobs = await Promise.all(items.map(item => (
+    window.fetch(item.source).then(res => res.blob())
+  )))
+
+  const files = items.map((item, i) => ({
+    path: item.relativePath,
+    data: blobs[i]
+  }))
+
+  return {
+    modifiedValue,
+    files
+  }
 }

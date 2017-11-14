@@ -7,7 +7,10 @@ const asyncModuleFilenames = fs.readdirSync(asyncModulePath)
 
 const asyncModuleEntries = zipObject(
   asyncModuleFilenames.map(filename => filename.replace(/\.js$/, '')),
-  asyncModuleFilenames.map(filename => path.resolve(asyncModulePath, filename))
+  asyncModuleFilenames.map(filename => [
+    'babel-polyfill',
+    path.resolve(asyncModulePath, filename)
+  ])
 )
 
 module.exports = [
