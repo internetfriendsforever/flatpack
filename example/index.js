@@ -47,10 +47,13 @@ flatpack({
         interval: 500,
         thumbnailSize: 20
       }),
-      synopsis: text(),
+      synopsis: text({
+        label: 'Synopsis',
+        rich: true
+      }),
       reviews: list({
         label: 'Reviews',
-        itemLabel: item => item.title
+        itemLabel: item => item.title || 'New review'
       }, {
         title: text()
       })
@@ -67,11 +70,11 @@ flatpack({
       books: [{
         title: 'Book of Love',
         slug: 'the-book-of-love',
-        synopsis: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tristique consequat fringilla. Ut nisl erat, volutpat ac lorem et, consectetur iaculis lacus'
+        synopsis: '<p><b>Lorem</b> ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tristique consequat fringilla. Ut nisl erat, volutpat ac lorem et, consectetur iaculis lacus</p>'
       }, {
         title: 'Book of Death',
         slug: 'the-book-of-death',
-        synopsis: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tristique consequat fringilla. Ut nisl erat, volutpat ac lorem et, consectetur iaculis lacus'
+        synopsis: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tristique consequat fringilla. Ut nisl erat, volutpat ac lorem et, consectetur iaculis lacus</p>'
       }]
     }
   }, window.manifest),

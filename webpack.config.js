@@ -1,16 +1,14 @@
 const path = require('path')
 const fs = require('fs')
 const zipObject = require('lodash/zipObject')
+const MinifyPlugin = require('babel-minify-webpack-plugin')
 
 const asyncModulePath = './src/async-modules'
 const asyncModuleFilenames = fs.readdirSync(asyncModulePath)
 
 const asyncModuleEntries = zipObject(
   asyncModuleFilenames.map(filename => filename.replace(/\.js$/, '')),
-  asyncModuleFilenames.map(filename => [
-    'babel-polyfill',
-    path.resolve(asyncModulePath, filename)
-  ])
+  asyncModuleFilenames.map(filename => [path.resolve(asyncModulePath, filename)])
 )
 
 module.exports = [
@@ -36,7 +34,11 @@ module.exports = [
           loader: 'babel-loader'
         }
       ]
-    }
+    },
+
+    plugins: [
+      new MinifyPlugin()
+    ]
   },
 
   {
@@ -58,6 +60,10 @@ module.exports = [
           loader: 'babel-loader'
         }
       ]
-    }
+    },
+
+    plugins: [
+      new MinifyPlugin()
+    ]
   }
 ]

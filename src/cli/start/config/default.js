@@ -12,7 +12,7 @@ module.exports = function ({ port }) {
     babelOptions.babelrc = projectBabelConfigPath
   } else {
     babelOptions.presets = [
-      require.resolve('babel-preset-es2015'),
+      require.resolve('babel-preset-env'),
       require.resolve('babel-preset-react')
     ]
   }
@@ -21,6 +21,7 @@ module.exports = function ({ port }) {
     entry: path.resolve(process.cwd(), 'index.js'),
 
     output: {
+      filename: '[name]-[hash].js',
       path: path.resolve(process.cwd(), '.flatpack'),
       publicPath: '/'
     },

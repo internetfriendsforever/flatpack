@@ -4,60 +4,61 @@ import generate from 'nanoid/generate'
 import mime from 'mime-types'
 import traverse from 'traverse'
 
-export default async ({ manifest, value, path, routes, credentials, aws }) => {
+export default ({ manifest, value, path, routes, credentials, aws }) => {
   const version = generate('1234567890abcdef', 10)
-  const attachments = await createAttachments(value)
 
-  const publishManifest = {
-    ...manifest,
-    assets: manifest.assets.map(path => getAssetPath(path)),
-    value: attachments.modifiedValue
-  }
+  return createAttachments(value).then(attachments => {
+    const publishManifest = {
+      ...manifest,
+      assets: manifest.assets.map(path => getAssetPath(path)),
+      value: attachments.modifiedValue
+    }
 
-  const currentRoutes = routes(attachments.modifiedValue)
-  const renderRoutes = Promise.all(currentRoutes.map(({ render }) => renderToString(render, publishManifest)))
-  const fetchAssets = Promise.all(manifest.assets.map(asset => window.fetch(asset).then(res => res.text())))
-  const renderEdit = renderToString(document => {}, publishManifest)
+    const currentRoutes = routes(attachments.modifiedValue)
+    const renderRoutes = Promise.all(currentRoutes.map(({ render }) => renderToString(render, publishManifest)))
+    const fetchAssets = Promise.all(manifest.assets.map(asset => window.fetch(asset).then(res => res.text())))
+    const renderEdit = renderToString(document => {}, publishManifest)
 
-  return Promise.all([
-    renderRoutes,
-    fetchAssets,
-    renderEdit
-  ]).then(([
-    rendered,
-    assets,
-    edit
-  ]) => {
-    const files = []
+    return Promise.all([
+      renderRoutes,
+      fetchAssets,
+      renderEdit
+    ]).then(([
+      rendered,
+      assets,
+      edit
+    ]) => {
+      const files = []
 
-    currentRoutes.forEach((route, i) => {
-      files.push({
-        path: getDocumentPath(route.path, version),
-        data: new window.Blob([rendered[i]], { type: 'text/html' })
+      currentRoutes.forEach((route, i) => {
+        files.push({
+          path: getDocumentPath(route.path, version),
+          data: new window.Blob([rendered[i]], { type: 'text/html' })
+        })
       })
-    })
 
-    publishManifest.assets.forEach((path, i) => {
-      files.push({
-        path: stripPath(path),
-        data: new window.Blob([assets[i]], { type: mime.lookup(path) })
+      publishManifest.assets.forEach((path, i) => {
+        files.push({
+          path: stripPath(path),
+          data: new window.Blob([assets[i]], { type: mime.lookup(path) })
+        })
       })
+
+      files.push({
+        path: getDocumentPath(path, version),
+        data: new window.Blob([edit], { type: 'text/html' })
+      })
+
+      files.push(...attachments.files)
+
+      const uploads = files.map(file => uploadFile(file, credentials, aws))
+
+      return Promise.all(uploads).then(() => release({
+        aws,
+        credentials,
+        version
+      }))
     })
-
-    files.push({
-      path: getDocumentPath(path, version),
-      data: new window.Blob([edit], { type: 'text/html' })
-    })
-
-    files.push(...attachments.files)
-
-    const uploads = files.map(file => uploadFile(file, credentials, aws))
-
-    return Promise.all(uploads).then(() => release({
-      aws,
-      credentials,
-      version
-    }))
   })
 }
 
@@ -171,7 +172,7 @@ function uploadFile (file, credentials, aws) {
   })
 }
 
-async function createAttachments (value) {
+function createAttachments (value) {
   const items = []
 
   const modifiedValue = traverse.map(value, value => {
@@ -189,17 +190,17 @@ async function createAttachments (value) {
     }
   })
 
-  const blobs = await Promise.all(items.map(item => (
+  return Promise.all(items.map(item => (
     window.fetch(item.source).then(res => res.blob())
-  )))
+  ))).then(blobs => {
+    const files = items.map((item, i) => ({
+      path: item.relativePath,
+      data: blobs[i]
+    }))
 
-  const files = items.map((item, i) => ({
-    path: item.relativePath,
-    data: blobs[i]
-  }))
-
-  return {
-    modifiedValue,
-    files
-  }
+    return {
+      modifiedValue,
+      files
+    }
+  })
 }
