@@ -11,6 +11,12 @@ const asyncModuleEntries = zipObject(
   asyncModuleFilenames.map(filename => [path.resolve(asyncModulePath, filename)])
 )
 
+const plugins = []
+
+if (process.env.NODE_ENV === 'production') {
+  plugins.push(new MinifyPlugin())
+}
+
 module.exports = [
   {
     entry: {
@@ -36,13 +42,13 @@ module.exports = [
       ]
     },
 
-    plugins: [
-      new MinifyPlugin()
-    ]
+    plugins
   },
 
   {
     entry: asyncModuleEntries,
+
+    cache: false,
 
     output: {
       path: path.join(__dirname, 'lib'),
@@ -62,8 +68,6 @@ module.exports = [
       ]
     },
 
-    plugins: [
-      new MinifyPlugin()
-    ]
+    plugins
   }
 ]
