@@ -37,12 +37,10 @@ const Title = styled.div`
   color: #aaa;
 `
 
-export default ({ children, ...props }) => (
-  <Box {...props}>
-    {props.title && (
-      <Title {...props}>
-        {props.title}
-      </Title>
+export default ({ children, title, ...props }) => (
+  <Box {...props} title={title}>
+    {title && (
+      <Title>{title}</Title>
     )}
     {children}
   </Box>
